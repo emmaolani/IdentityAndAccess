@@ -1,7 +1,7 @@
 import UserAccount from "../../domain/model/userAccount/userAccount";
 import UserAccountRepository from "../../domain/model/userAccount/UserAccountRepository";
 import UserAccountFactory from "../../domain/model/userAccount/userAccountFactory";
-import UserAccountCreationForm from "../../domain/model/userAccount/userAccountCreationForm";
+import UserAccountCreationForm from "../../domain/model/userAccount/userAccountForm";
 
 class UserAccountApplicationService {
     private userAccountRepository: UserAccountRepository;

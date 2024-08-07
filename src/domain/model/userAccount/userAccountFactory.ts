@@ -1,14 +1,13 @@
-import UserAccount from "./userAccount";
+/* import UserAccount from "./userAccount";
 import UserAccountID from "./userAccountID";
-import UserAccountPersonalInfo from "./userAccountPersonalInfo";
-import UserAccountContactDetails from "./fullName";
-import Address from "./address";
-import UserAccountCreationForm from "./userAccountCreationForm";
-import UUIDGeneratorService from "../../service/uuidGeneratorService";
+import UserAccountPersonalInfo from "./userAccountPersonalInfo/userAccountPersonalInfo";
+import UserAccountContactDetails from "./userAccountPersonalInfo/fullName";
+import Address from "../sharedPersonalInfoDetails/address";
+import UserAccountCreationForm from "./userAccountForm";
+import UUIDGeneratorService from "../../../port/service/uuidGeneratorService";
 
 class UserAccountFactory{
     initializeUserAccount(aUserAccountCreationForm: UserAccountCreationForm){
-
         this.applyIDTo(aUserAccountCreationForm);
         this.applyStatusTo(aUserAccountCreationForm)
         this.applyOTP(aUserAccountCreationForm)
@@ -70,4 +69,4 @@ class UserAccountFactory{
 }
 
 
-export default UserAccountFactory
+export default UserAccountFactory */

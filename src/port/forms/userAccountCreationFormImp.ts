@@ -1,17 +1,8 @@
-import UserAccountCreationForm from "../../domain/model/userAccount/userAccountCreationForm";
+import UserAccountCreationForm from "../../domain/model/userAccount/userAccountForm";
 
 class UserAccountCreationFormImp implements UserAccountCreationForm{
     id: string;
-    email: string;
     password: string;
-    firstName: string;
-    lastName: string;
-    phoneNumber: string;
-    country: string;
-    state: string;
-    town: string;
-    postalCode: string;
-    status: string;
 }
 
 

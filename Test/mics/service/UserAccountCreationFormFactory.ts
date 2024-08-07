@@ -1,4 +1,4 @@
-import UserAccountCreationFormImp from "../../src/port/forms/userAccountCreationFormImp";
+/* import UserAccountCreationFormImp from "../../src/port/forms/userAccountCreationFormImp";
 import { option } from "../types/option";
 
 
@@ -161,3 +161,15 @@ class UserAccountCreationFormFactory {
 
 
 export default UserAccountCreationFormFactory;
+
+let userAccountCreationFormFactory: UserAccountCreationFormFactory = new UserAccountCreationFormFactory();
+const option: option = {
+            shouldFillForm: true,
+            shouldEnterInvalidInputInField: false,
+            shouldEnterEmptyStringInField: true,
+            field: ['firstName']
+        }
+    
+const emptyUserAccountCreationform: UserAccountCreationFormImp= userAccountCreationFormFactory.getNewFormWith(option);  
+
+ */

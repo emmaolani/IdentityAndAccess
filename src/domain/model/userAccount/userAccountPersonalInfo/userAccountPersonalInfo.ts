@@ -1,6 +1,6 @@
-import FullName from "./fullName";
-import Address from "./address";
-import PhoneNumber from "./phoneNumber";
+import FullName from "../../sharedPersonalInfoDetails/fullName";
+import Address from "../../sharedPersonalInfoDetails/address";
+import PhoneNumber from "../../sharedPersonalInfoDetails/phoneNumber";
 
 class UserAccountPersonalInfo {
     private contactDetails: FullName;

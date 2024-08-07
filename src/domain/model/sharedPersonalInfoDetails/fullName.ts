@@ -1,11 +1,12 @@
-import UserAccountCreationForm from "./userAccountCreationForm";
+import ValueObject from "../../valueObject";
 
- class FullName {
+ class FullName extends ValueObject{
     private firstName: string;
     private lastName: string;
-    constructor(aUserAccountCreationForm: UserAccountCreationForm){
-        this.setFirstName(aUserAccountCreationForm.firstName)
-        this.setLastName(aUserAccountCreationForm.lastName)
+    constructor(aFirstName: string, aLastName: string){
+      super()
+      this.setFirstName(aFirstName)
+      this.setLastName(aLastName)
     }
 
     getFirstName(): string{
@@ -42,8 +43,8 @@ import UserAccountCreationForm from "./userAccountCreationForm";
       let validName: string = aName
 
       validName = validName.replace(/\s{2,}/gi, ' ') // replacing multiple white space between words with single white space
-      validName = validName.replace(/^\s+/gi, '') // if string starts with a space we will remove it
-      validName = validName.replace(/\s+$/gi, '') // if string ends with a space we will remove it
+      validName = validName.replace(/^\s+/gi, '') // removes white space at the beginning of the string
+      validName = validName.replace(/\s+$/gi, '') // removes white space at the end of the string
 
       return validName
     }
