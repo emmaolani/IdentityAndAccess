@@ -1,7 +1,7 @@
 import VerificationCode from "../../../../src/domain/model/sharedPersonalInfoDetails/verificationCode";
 
 
-describe('A test for the verificationCode', () => {
+describe('Unit test for verificationCode class', () => {
 
     it('should throw an error if code is not an integer', ()=>{
         const stringCode = 'string';

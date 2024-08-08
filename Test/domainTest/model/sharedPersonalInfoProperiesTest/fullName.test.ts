@@ -1,6 +1,6 @@
 import FullName from "../../../../src/domain/model/sharedPersonalInfoDetails/fullName";
 
-describe('testing fullName class', () => {
+describe('Unit Test fullName class', () => {
       
     it('fullname should throw error if firstname is not provided', () => { 
         const firstName = ''
