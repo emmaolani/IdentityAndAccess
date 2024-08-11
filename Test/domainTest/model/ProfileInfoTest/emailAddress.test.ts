@@ -1,10 +1,9 @@
-import EmailAddress from "../../../../src/domain/model/sharedPersonalInfoDetails/emailAddress";
-import VerificationCode from "../../../../src/domain/model/sharedPersonalInfoDetails/verificationCode";
+import EmailAddress from "../../../../src/domain/model/PersonalInfo/emailAddress";
+import VerificationCode from "../../../../src/domain/model/PersonalInfo/verificationCode";
 
 describe('Unit Test for EmailAddress class', () => {
     it('should remove white spaces from email address', ()=>{
         const email = ' tes t@coral.com ';
-
         const emailAddress = new EmailAddress(email, true, null);
 
         expect(emailAddress.getValue()).toBe('test@coral.com')
@@ -27,7 +26,7 @@ describe('Unit Test for EmailAddress class', () => {
         const verificationCode = new VerificationCode(code, timeStamp);
         const emailAddress = new EmailAddress(email, false, verificationCode);
 
-        emailAddress.activateEmailAddress(code);
+        emailAddress.activateEmailAddressWith(code);
 
         expect(emailAddress.getValue()).toBe(email);
     })
@@ -41,7 +40,7 @@ describe('Unit Test for EmailAddress class', () => {
         const verificationCode = new VerificationCode(code, expiredTimeStamp);
         const emailAddress = new EmailAddress(email, false, verificationCode);
 
-        expect(() => emailAddress.activateEmailAddress(code)).toThrow('This code is expired');
+        expect(() => emailAddress.activateEmailAddressWith(code)).toThrow('This code is expired');
     })
 
     it('should not activate email address with invalid verification code', ()=>{
@@ -54,8 +53,17 @@ describe('Unit Test for EmailAddress class', () => {
         const verificationCode = new VerificationCode(code, timeStamp);
         const emailAddress = new EmailAddress(email, false, verificationCode);
 
-        expect(() => emailAddress.activateEmailAddress(invalidCode)).toThrow('Invalid code');
+        expect(() => emailAddress.activateEmailAddressWith(invalidCode)).toThrow('Invalid code');
 
+    })
+
+    it('should throw an error on email activation if email is already active', ()=>{
+        const email = 'test@coral.com';
+        const verificationCode  = null
+
+        const emailAddress = new EmailAddress(email, true, verificationCode);
+
+        expect(() => emailAddress.activateEmailAddressWith('1234567')).toThrow('Email is already activated');
     })
 })
 

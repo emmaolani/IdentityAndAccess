@@ -1,4 +1,4 @@
-import VerificationCode from "../../../../src/domain/model/sharedPersonalInfoDetails/verificationCode";
+import VerificationCode from "../../../../src/domain/model/PersonalInfo/verificationCode";
 
 
 describe('Unit test for verificationCode class', () => {

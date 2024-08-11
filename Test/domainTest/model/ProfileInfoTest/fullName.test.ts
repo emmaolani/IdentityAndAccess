@@ -1,4 +1,4 @@
-import FullName from "../../../../src/domain/model/sharedPersonalInfoDetails/fullName";
+import FullName from "../../../../src/domain/model/PersonalInfo/fullName";
 
 describe('Unit Test fullName class', () => {
       

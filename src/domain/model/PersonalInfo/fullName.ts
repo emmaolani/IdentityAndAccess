@@ -1,5 +1,6 @@
 import ValueObject from "../../valueObject";
 
+
  class FullName extends ValueObject{
     private firstName: string;
     private lastName: string;

@@ -26,6 +26,7 @@ import ValueObject from "../../valueObject";
       this.verificationCode = aVerificationCode
     }
 
+
     private removeWhiteSpace(aValue: string): string{
       return aValue.replace(/\s+/g, '')
     }
@@ -38,17 +39,20 @@ import ValueObject from "../../valueObject";
       return this.value
     }
 
-    activateEmailAddress(code: string){
+    activateEmailAddressWith(code: string){
+        if(this.isActive){
+          throw new Error('Email is already activated')
+        }
+
         if(this.verificationCode === null){
           throw new Error('No verification code found')
         }
         
-        if(this.verificationCode.getValue() != code){
+        if(this.verificationCode.getValue() !== code){
           throw new Error('Invalid code')
         }
   
         this.isActive = true
-        this.verificationCode = null
         this.removeVerificationCode()
     }
 

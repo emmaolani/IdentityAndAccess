@@ -1,4 +1,4 @@
-import UserAccountPersonalInfo from "./userAccountPersonalInfo/userAccountPersonalInfo"
+/* import UserAccountPersonalInfo from "../userAccountPersonalInfo/userAccountPersonalInfo"
 import UserAccountID from "./userAccountID";
 import UserAccountCreationForm from "./userAccountForm";
 import EmailAddress from "./emailAddress";
@@ -42,3 +42,4 @@ class UserAccount {
 }
 
 export default UserAccount;
+*/

@@ -62,7 +62,6 @@ class VerificationCode extends ValueObject{
             return true
         }
     }
-
     
 }
 
