@@ -1,7 +1,7 @@
-import TelcomSpecification from "../../../src/domain/model/globalSettings/telecomSpecification";
+import ITUandISOSpecs from "../../../src/domain/model/globalSettings/telecomSpecification";
 
 
-class TelcomSpecificationDud extends TelcomSpecification{
+class ITUandISOSpecsDud extends ITUandISOSpecs{
     constructor(aId: string, aCountryID: string, aCountryCode: string, aPhoneNumberLength: number) {
         super(aId, aCountryID, aCountryCode, aPhoneNumberLength);
     }
@@ -10,10 +10,10 @@ class TelcomSpecificationDud extends TelcomSpecification{
             id: this.id,
             countryID: this.countryID,
             countryCode: this.countryCode,
-            phoneNumberLength: this.phoneNumberLength
+            callingCode: this.callingCode
         }
     }
 }
 
 
-export default TelcomSpecificationDud;
+export default ITUandISOSpecsDud;

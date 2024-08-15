@@ -1,32 +1,37 @@
-import TelcomSpecificationDud from "../../dud/TelecomSpecificationDud";
+import ITUandISOSpecsDud from "../../dud/TelecomSpecificationDud";
+import PhoneNumber from "../../../../src/domain/model/PersonalInfo/phoneNumber";
 
-describe('TelecomSpecification', () => {
-    let telecomSpecification: TelcomSpecificationDud;
+describe('ITUandISOSpecs', () => {
+    let specs: ITUandISOSpecsDud;
     let id: string;
     let countryID: string;
     let countryCode: string;
-    let phoneNumberLength: number;
+    let callingCode: number;
 
     beforeEach(() => {
         id = 'id';
         countryID = 'countryID';
         countryCode = 'countryCode';
-        phoneNumberLength = 10;
-        telecomSpecification = new TelcomSpecificationDud(id, countryID, countryCode, phoneNumberLength);
+        callingCode = 234;
+        specs = new ITUandISOSpecsDud(id, countryID, countryCode, callingCode);
     });
 
 
     it('should create an instance', () => {
-        expect(telecomSpecification).toBeTruthy();
+        expect(specs).toBeTruthy();
     });
 
     it('should return the correct data', () => {
-        expect(telecomSpecification.Data()).toEqual({
+        expect(specs.Data()).toEqual({
             id: id,
             countryID: countryID,
             countryCode: countryCode,
-            phoneNumberLength: phoneNumberLength
+            callingCode: callingCode
         });
+    });
+
+    it('should create a phone number', () => {
+        expect(specs.newPhoneNumber('12345678')).toBeInstanceOf(PhoneNumber);
     });
     
 });
