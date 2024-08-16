@@ -5,7 +5,8 @@ class VerificationCode extends ValueObject{
     private value: string;
     private timeStamp: number;
     private validLengthOfCode: number = 7;
-    private allowedDurationOfCode: number = 300000;
+    private allowedTimeDurationOfCode: number = 300000;
+
 
     constructor(aValue: string, aTimeStamp: number){
         super();
@@ -19,12 +20,6 @@ class VerificationCode extends ValueObject{
         this.value = aValue
     }
 
-    private setTimeStamp(aTimeStamp: number){
-        this.checkIfTimeStampIsInvalid(aTimeStamp)
-        this.timeStamp = aTimeStamp
-    }
-
-
     private checkIfValueIsInt(aValue: string){
         if (Number.isNaN(parseInt(aValue)) == true || aValue.includes('.') == true) {
             throw Error('invalid code');
@@ -37,6 +32,11 @@ class VerificationCode extends ValueObject{
         }
     }
 
+    private setTimeStamp(aTimeStamp: number){
+        this.checkIfTimeStampIsInvalid(aTimeStamp)
+        this.timeStamp = aTimeStamp
+    }
+
     private checkIfTimeStampIsInvalid(aTimeStamp: number){
         if (aTimeStamp > Date.now() || aTimeStamp < 0) {
             throw Error('TimeStamp is invalid');
@@ -45,7 +45,6 @@ class VerificationCode extends ValueObject{
         }
     }
 
-
     getValue(): string{
         if (this.isValid()) {
             return this.value;
@@ -53,10 +52,9 @@ class VerificationCode extends ValueObject{
             throw new Error('This code is expired');
         }
     }
-
     
     private isValid(): boolean{
-        if ((Date.now() - this.timeStamp) > this.allowedDurationOfCode) {
+        if ((Date.now() - this.timeStamp) > this.allowedTimeDurationOfCode) {
             return false
         }else{
             return true
@@ -64,5 +62,6 @@ class VerificationCode extends ValueObject{
     }
     
 }
+
 
 export default VerificationCode;

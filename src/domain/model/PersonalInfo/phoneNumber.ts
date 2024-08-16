@@ -8,7 +8,9 @@ class PhoneNumber extends ValueObject{
     private isActive: boolean;
     private verificationCode: VerificationCode | null;
 
-    constructor(value: string, telcomSpecificationID: string, isActive: boolean, verificationCode: VerificationCode | null){
+    
+    constructor(value: string, telcomSpecificationID: string, isActive: boolean, 
+        verificationCode: VerificationCode | null){
         super();
         this.setValue(value);
         this.setTelcomSpecificationID(telcomSpecificationID);
@@ -19,6 +21,10 @@ class PhoneNumber extends ValueObject{
     private setValue(aValue: string){
         const newValue = this.removeWhiteSpace(aValue);
         this.value = newValue;
+    };
+
+    private removeWhiteSpace(aValue: string): string{
+        return aValue.replace(/\s+/g, '');
     };
 
     private setTelcomSpecificationID(aTelcomSpecificationID: string){
@@ -33,10 +39,6 @@ class PhoneNumber extends ValueObject{
         this.verificationCode = aVerificationCode;
     };
 
-
-    private removeWhiteSpace(aValue: string): string{
-        return aValue.replace(/\s+/g, '');
-    };
 
     getValue(): string {
         if(!this.isActive){

@@ -1,4 +1,4 @@
-import ITUandISOSpecsDud from "../../dud/TelecomSpecificationDud";
+import ITUandISOSpecsDud from "../../mock/ituAndIsoSpecsMock";
 import PhoneNumber from "../../../../src/domain/model/PersonalInfo/phoneNumber";
 
 
@@ -9,6 +9,7 @@ describe('ITUandISOSpecs', () => {
     let countryCode: string;
     let callingCode: string;
 
+    
     beforeEach(() => {
         id = 'id';
         countryID = 'countryID';
@@ -38,4 +39,5 @@ describe('ITUandISOSpecs', () => {
     it('should get complete phone number', () => {
         expect(ituAndIsospecs.getCompletePhoneNumber('12345678')).toBe('+23412345678');
     });
+
 });

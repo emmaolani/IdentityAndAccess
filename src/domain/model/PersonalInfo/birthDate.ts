@@ -1,10 +1,31 @@
-class BirthDate {
-    private year: string;
-    private month: string;
-    private day: string;
-    constructor(){
+import ValueObject from "../../valueObject";
 
-    }
-}
 
-export default BirthDate
+class BirthDate extends ValueObject{
+    private value: Date;
+
+
+    constructor(aValue: string) {
+        super();
+        this.setBirthDate(aValue);
+    };
+
+    private setBirthDate(aValue: string) {
+        const date = new Date(aValue); 
+
+        this.checkIfDateIsValid(date.toString());
+
+        this.value = date;
+    };
+
+    private checkIfDateIsValid(date: string) {
+        if (date === "Invalid Date") {
+            throw new Error("Invalid birth date");
+        }
+
+    } 
+
+};
+
+
+export default BirthDate;

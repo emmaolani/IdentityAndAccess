@@ -1,4 +1,4 @@
-import ITUandISOSpecs from "../../../src/domain/model/globalSettings/telecomSpecification";
+import ITUandISOSpecs from "../../../src/domain/model/globalSettings/ituAndIsoSpecs";
 
 
 class ITUandISOSpecsDud extends ITUandISOSpecs{

@@ -20,14 +20,11 @@ class Address extends ValueObject{
     }
 
     getDetails(){
-        return this.createAddressInObjFormat()
+        const addressCountryId = this.countryId
+        const addressStateId = this.stateId
+        return {addressCountryId, addressStateId}
     }
 
-    private createAddressInObjFormat(){
-        const country = this.countryId
-        const state = this.stateId
-        return {country, state}
-    }
 }
 
 

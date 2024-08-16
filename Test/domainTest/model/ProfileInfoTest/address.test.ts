@@ -1,15 +1,18 @@
 import Address from "../../../../src/domain/model/PersonalInfo/address";
 
 
-describe('Unit test for address class', () => {
+describe('address', () => {
+    let countryId: string = 'countryID';
+    let stateId: string = 'stateID';
+
+
     it('should return users country and address ids when required', () => {
-        let countryId: string = 'countryID';
-        let stateId: string = 'stateID';
-
         const address: Address = new Address(countryId, stateId);
-        const {country, state} = address.getDetails();
 
-        expect(country).toBe('countryID');
-        expect(state).toBe('stateID');
+        const {addressCountryId, addressStateId} = address.getDetails();
+
+        expect(addressCountryId).toBe('countryID');
+        expect(addressStateId).toBe('stateID');
     });
-})
+
+});
