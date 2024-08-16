@@ -6,9 +6,9 @@ class ITUandISOSpecs {
     protected id: string;
     protected countryID: string;
     protected countryCode: string;
-    protected callingCode: number;
+    protected callingCode: string;
 
-  constructor(aId: string, aCountryID: string, aCountryCode: string, aCallingCode: number) {
+  constructor(aId: string, aCountryID: string, aCountryCode: string, aCallingCode: string) {
     this.setID(aId);
     this.setCountryID(aCountryID);
     this.setCountryCode(aCountryCode);
@@ -27,7 +27,7 @@ class ITUandISOSpecs {
     this.countryCode = aCountryCode;
   }; 
 
-  private setCallingCode(aCallingCode: number) {
+  private setCallingCode(aCallingCode: string) {
     this.callingCode = aCallingCode;
   };
 
@@ -45,6 +45,12 @@ class ITUandISOSpecs {
   private getSevenDigitCode(): string {
     return Math.floor(1000000 + Math.random() * 9000000).toString();
   };
+
+
+  getCompletePhoneNumber(aNumber: string): string {
+    const completeNumber = '+' + this.callingCode + aNumber
+    return completeNumber
+  }
 
 };
 

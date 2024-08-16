@@ -2,7 +2,7 @@ import ITUandISOSpecs from "../../../src/domain/model/globalSettings/telecomSpec
 
 
 class ITUandISOSpecsDud extends ITUandISOSpecs{
-    constructor(aId: string, aCountryID: string, aCountryCode: string, aPhoneNumberLength: number) {
+    constructor(aId: string, aCountryID: string, aCountryCode: string, aPhoneNumberLength: string) {
         super(aId, aCountryID, aCountryCode, aPhoneNumberLength);
     }
     Data(){

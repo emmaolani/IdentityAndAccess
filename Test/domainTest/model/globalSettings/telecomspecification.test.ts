@@ -1,28 +1,29 @@
 import ITUandISOSpecsDud from "../../dud/TelecomSpecificationDud";
 import PhoneNumber from "../../../../src/domain/model/PersonalInfo/phoneNumber";
 
+
 describe('ITUandISOSpecs', () => {
-    let specs: ITUandISOSpecsDud;
+    let ituAndIsospecs: ITUandISOSpecsDud;
     let id: string;
     let countryID: string;
     let countryCode: string;
-    let callingCode: number;
+    let callingCode: string;
 
     beforeEach(() => {
         id = 'id';
         countryID = 'countryID';
         countryCode = 'countryCode';
-        callingCode = 234;
-        specs = new ITUandISOSpecsDud(id, countryID, countryCode, callingCode);
+        callingCode = '234';
+        ituAndIsospecs = new ITUandISOSpecsDud(id, countryID, countryCode, callingCode);
     });
 
 
     it('should create an instance', () => {
-        expect(specs).toBeTruthy();
+        expect(ituAndIsospecs).toBeTruthy();
     });
 
     it('should return the correct data', () => {
-        expect(specs.Data()).toEqual({
+        expect(ituAndIsospecs.Data()).toEqual({
             id: id,
             countryID: countryID,
             countryCode: countryCode,
@@ -31,7 +32,10 @@ describe('ITUandISOSpecs', () => {
     });
 
     it('should create a phone number', () => {
-        expect(specs.newPhoneNumber('12345678')).toBeInstanceOf(PhoneNumber);
+        expect(ituAndIsospecs.newPhoneNumber('12345678')).toBeInstanceOf(PhoneNumber);
     });
-    
+
+    it('should get complete phone number', () => {
+        expect(ituAndIsospecs.getCompletePhoneNumber('12345678')).toBe('+23412345678');
+    });
 });
