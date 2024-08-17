@@ -58,8 +58,14 @@ class PersonalInfo {
         this.setAddress(address);
     }
 
+    
+
     changeEmailAddress(emailAddress: EmailAddress) {
         this.setEmailAddress(emailAddress);
+    }
+
+    activateEmailAddressWith(code: string){
+        this.emailAddress.activateEmailAddressWith(code)
     }
 
 

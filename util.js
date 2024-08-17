@@ -61,5 +61,63 @@ let phoneNumberWithInValidCode: PhoneNumber = new PhoneNumber('123456789', 'spec
 
 let personalInfo: PersonalInfo = new PersonalInfo(fullName, birthDate, address, activatedEmailAddress, activatedPhoneNumber);
 let personalInfoWithEmailAndPhoneNumberWithInvalidCode = new PersonalInfo(fullName, birthDate, address, emailAddressWithInValidCode, phoneNumberWithInValidCode);
-let personalInfoWithEmailAndPhoneNumberWithValidCode = new PersonalInfo(fullName, birthDate, address, emailAddressWithValidCode, phoneNumberWithValidCode);   
+let personalInfoWithEmailAndPhoneNumberWithValidCode = new PersonalInfo(fullName, birthDate, address, emailAddressWithValidCode, phoneNumberWithValidCode); 
+
+
+
+
+
+
+
+
+
+
+
+let fullName: FullName;
+
+let birthDate: BirthDate;
+
+let address: Address;
+
+let validVerificationCode: VerificationCode ;
+let expiredVerificationCode: VerificationCode;
+
+let activatedEmailAddress: EmailAddress;
+let emailAddressWithValidCode: EmailAddress;
+let emailAddressWithInValidCode: EmailAddress;
+
+let activatedPhoneNumber: PhoneNumber;
+let phoneNumberWithValidCode: PhoneNumber;
+let phoneNumberWithInValidCode: PhoneNumber;
+
+let personalInfo: PersonalInfo;
+let personalInfoWithEmailAndPhoneNumberWithInvalidCode: PersonalInfo;
+let personalInfoWithEmailAndPhoneNumberWithValidCode: PersonalInfo; 
+
+
+ // refreshing all objects before each testcases
+    const refreshobject = () => {
+    fullName = new FullName('John', 'Doe');
+
+    birthDate = new BirthDate('1990-01-01');
+
+    address = new Address('countryId', 'stateId');
+
+    validVerificationCode = new VerificationCode('1234567', Date.now());
+    expiredVerificationCode = new VerificationCode('1234567', Date.now() - 50000);
+
+    activatedEmailAddress = new EmailAddress('admin@coral.com', true, null);
+    emailAddressWithValidCode= new EmailAddress('admin@coral.com', false, validVerificationCode);
+    emailAddressWithInValidCode =  new EmailAddress('admin@coral.com', false, expiredVerificationCode);
+    
+    activatedPhoneNumber = new PhoneNumber('123456789', 'specId', true, null);
+    phoneNumberWithValidCode = new PhoneNumber('123456789', 'specId', false, validVerificationCode);
+    phoneNumberWithInValidCode = new PhoneNumber('123456789', 'specId', false, expiredVerificationCode);
+
+    personalInfo = new PersonalInfo(fullName, birthDate, address, activatedEmailAddress, activatedPhoneNumber);
+    personalInfoWithEmailAndPhoneNumberWithInvalidCode = new PersonalInfo(fullName, birthDate, address, emailAddressWithInValidCode, phoneNumberWithInValidCode);
+    personalInfoWithEmailAndPhoneNumberWithValidCode = new PersonalInfo(fullName, birthDate, address, emailAddressWithValidCode, phoneNumberWithValidCode);
+    }
+
+    beforeEach(refreshobject);
 */
