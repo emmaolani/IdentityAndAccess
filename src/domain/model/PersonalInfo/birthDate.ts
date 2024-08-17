@@ -25,6 +25,10 @@ class BirthDate extends ValueObject{
 
     } 
 
+    getValue() {        
+        return this.value.toISOString().split('T')[0];
+    }
+
 };
 
 

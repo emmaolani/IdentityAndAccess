@@ -18,6 +18,10 @@ import ValueObject from "../../valueObject";
       return this.lastName
     }
 
+    getFullName(): string{
+      return `${this.firstName} ${this.lastName}`
+    }
+
     private setFirstName(aFirstName: string): void{
       if (this.IsAnEmpty(aFirstName)) {
         throw new Error('first name is empty')
