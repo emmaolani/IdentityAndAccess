@@ -1,81 +1,81 @@
 import ValueObject from "../../valueObject";
 import VerificationCode from "./verificationCode";
 
+class PhoneNumber extends ValueObject {
+  private value: string;
+  private ituAndIsoSpecId: string; // This is the ID of the telcom specification that this phone number belongs to
+  private isActive: boolean;
+  private verificationCode: VerificationCode | null;
 
-class PhoneNumber extends ValueObject{
-    private value: string;
-    private telcomSpecificationID: string; // This is the ID of the telcom specification that this phone number belongs to
-    private isActive: boolean;
-    private verificationCode: VerificationCode | null;
+  constructor(
+    aValue: string,
+    aItuAndIsoSpecId: string,
+    isActive: boolean,
+    aVerificationCode: VerificationCode | null
+  ) {
+    super();
+    this.setValue(aValue);
+    this.setItuAndIsoSpecId(aItuAndIsoSpecId);
+    this.setActiveStatus(isActive);
+    this.setVerificationCode(aVerificationCode);
+  }
 
-    
-    constructor(value: string, telcomSpecificationID: string, isActive: boolean, 
-        verificationCode: VerificationCode | null){
-        super();
-        this.setValue(value);
-        this.setTelcomSpecificationID(telcomSpecificationID);
-        this.setActiveStatus(isActive);
-        this.setVerificationCode(verificationCode);
-    };
+  private setValue(aValue: string) {
+    const newValue = this.removeWhiteSpace(aValue);
+    this.value = newValue;
+  }
 
-    private setValue(aValue: string){
-        const newValue = this.removeWhiteSpace(aValue);
-        this.value = newValue;
-    };
+  private removeWhiteSpace(aValue: string): string {
+    return aValue.replace(/\s+/g, "");
+  }
 
-    private removeWhiteSpace(aValue: string): string{
-        return aValue.replace(/\s+/g, '');
-    };
+  private setItuAndIsoSpecId(aItuAndIsoSpecId: string) {
+    this.ituAndIsoSpecId = aItuAndIsoSpecId;
+  }
 
-    private setTelcomSpecificationID(aTelcomSpecificationID: string){
-        this.telcomSpecificationID = aTelcomSpecificationID;
-    };
+  private setActiveStatus(aStatus: boolean) {
+    this.isActive = aStatus;
+  }
 
-    private setActiveStatus(aStatus: boolean){
-        this.isActive = aStatus;
-    };
+  private setVerificationCode(aVerificationCode: VerificationCode | null) {
+    this.verificationCode = aVerificationCode;
+  }
 
-    private setVerificationCode(aVerificationCode: VerificationCode | null){
-        this.verificationCode = aVerificationCode;
-    };
+  replaceVerificationCodeWith(aVerificationCode: VerificationCode) {
+    this.verificationCode = aVerificationCode;
+  }
 
+  getValue(): string {
+    if (!this.isActive) {
+      throw new Error("Phone number is not active");
+    }
+    return this.value;
+  }
 
-    getValue(): string {
-        if(!this.isActive){
-            throw new Error('Phone number is not active');
-        };
-        return this.value;
-    };
+  getItuAndIsoSpecId(): string {
+    return this.ituAndIsoSpecId;
+  }
 
-    getTelcomSpecificationID(): string{
-        if(!this.isActive){
-            throw new Error('Phone number is not active');
-        };
-        return this.telcomSpecificationID;
-    };
+  activateWith(code: string) {
+    if (this.isActive) {
+      throw new Error("Phone number is already activated");
+    }
 
-    activatePhoneNumberWith(code: string){
-        if(this.isActive){
-            throw new Error('Phone number is already activated');
-        };
+    if (this.verificationCode === null) {
+      throw new Error("No verification code found");
+    }
 
-        if(this.verificationCode === null){
-            throw new Error('No verification code found');
-        };
-        
-        if(this.verificationCode.getValue() !== code){
-            throw new Error('Invalid code');
-        };
+    if (this.verificationCode.getValue() !== code) {
+      throw new Error("Invalid code");
+    }
 
-        this.isActive = true;
-        this.removeVerificationCode();
-    };
+    this.isActive = true;
+    this.removeVerificationCode();
+  }
 
-    private removeVerificationCode(){
-        this.verificationCode = null
-    };
+  private removeVerificationCode() {
+    this.verificationCode = null;
+  }
+}
 
-};
-
-
-export default PhoneNumber
+export default PhoneNumber;

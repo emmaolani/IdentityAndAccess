@@ -3,90 +3,104 @@ import FullName from "./fullName";
 import BirthDate from "./birthDate";
 import EmailAddress from "./emailAddress";
 import PhoneNumber from "./phoneNumber";
-
-
+import VerificationCode from "./verificationCode";
 
 class PersonalInfo {
-    private fullName: FullName;
-    private birthDate: BirthDate;
-    private address: Address;
-    private emailAddress: EmailAddress;
-    private phoneNumber: PhoneNumber;
+  private fullName: FullName;
+  private birthDate: BirthDate;
+  private address: Address;
+  private emailAddress: EmailAddress;
+  private phoneNumber: PhoneNumber;
 
+  constructor(
+    fullName: FullName,
+    birthDate: BirthDate,
+    address: Address,
+    emailAddress: EmailAddress,
+    phoneNumber: PhoneNumber
+  ) {
+    this.setFullName(fullName);
+    this.setBirthDate(birthDate);
+    this.setAddress(address);
+    this.setEmailAddress(emailAddress);
+    this.setPhoneNumber(phoneNumber);
+  }
 
-    constructor(fullName: FullName, birthDate: BirthDate, address: Address, emailAddress: EmailAddress, phoneNumber: PhoneNumber) {
-        this.setFullName(fullName);
-        this.setBirthDate(birthDate);
-        this.setAddress(address);
-        this.setEmailAddress(emailAddress);
-        this.setPhoneNumber(phoneNumber);
-        
-    }
+  private setFullName(fullName: FullName) {
+    this.fullName = fullName;
+  }
 
+  private setBirthDate(birthDate: BirthDate) {
+    this.birthDate = birthDate;
+  }
 
-    private setFullName(fullName: FullName) {
-        this.fullName = fullName;
-    }
+  private setAddress(address: Address) {
+    this.address = address;
+  }
 
-    private setBirthDate(birthDate: BirthDate) {    
-        this.birthDate = birthDate;
-    }
+  private setEmailAddress(emailAddress: EmailAddress) {
+    this.emailAddress = emailAddress;
+  }
 
-    private setAddress(address: Address) {
-        this.address = address;
-    }
+  private setPhoneNumber(phoneNumber: PhoneNumber) {
+    this.phoneNumber = phoneNumber;
+  }
 
-    private setEmailAddress(emailAddress: EmailAddress) {
-        this.emailAddress = emailAddress;
-    }   
+  changeFullName(fullName: FullName) {
+    this.setFullName(fullName);
+  }
 
-    private setPhoneNumber(phoneNumber: PhoneNumber) {
-        this.phoneNumber = phoneNumber;
-    } 
-    
+  changeBirthDate(birthDate: BirthDate) {
+    this.setBirthDate(birthDate);
+  }
 
+  changeAddress(address: Address) {
+    this.setAddress(address);
+  }
 
-    changeFullName(fullName: FullName) {
-        this.setFullName(fullName);
-    }
+  changeEmailAddress(emailAddress: EmailAddress) {
+    this.setEmailAddress(emailAddress);
+  }
 
-    changeBirthDate(birthDate: BirthDate) { 
-        this.setBirthDate(birthDate);
-    }
-    
-    changeAddress(address: Address) {
-        this.setAddress(address);
-    }
+  changePhoneNumber(phoneNumber: PhoneNumber) {
+    this.setPhoneNumber(phoneNumber);
+  }
 
-    
+  replaceEmailVerificationCodeWith(aVerificationCode: VerificationCode) {
+    this.emailAddress.replaceVerificationCodeWith(aVerificationCode);
+  }
 
-    changeEmailAddress(emailAddress: EmailAddress) {
-        this.setEmailAddress(emailAddress);
-    }
+  replacePhoneVerificationCodeWith(aVerificationCode: VerificationCode) {
+    this.phoneNumber.replaceVerificationCodeWith(aVerificationCode);
+  }
 
-    activateEmailAddressWith(code: string){
-        this.emailAddress.activateEmailAddressWith(code)
-    }
+  getFullName(): string {
+    return this.fullName.getFullName();
+  }
 
+  getBirthDate(): string {
+    return this.birthDate.getValue();
+  }
 
+  getAddress(): { addressCountryId: string; addressStateId: string } {
+    return this.address.getAddress();
+  }
 
-    getFullName(): string {
-        return this.fullName.getFullName();
-    }
+  getEmailAddress(): string {
+    return this.emailAddress.getValue();
+  }
 
-    getBirthDate(): string {
-        return this.birthDate.getValue();
-    }
+  getPhoneNumber(): string {
+    return this.phoneNumber.getValue();
+  }
 
-    getAddress(): {addressCountryId: string, addressStateId: string} {
-        return this.address.getDetails();
-    }
+  activatePhoneNumberWith(code: string) {
+    this.phoneNumber.activateWith(code);
+  }
 
-    getEmailAddress(): string {
-        return this.emailAddress.getValue();
-    }
-    
+  activateEmailAddressWith(code: string) {
+    this.emailAddress.activateWith(code);
+  }
 }
-
 
 export default PersonalInfo;

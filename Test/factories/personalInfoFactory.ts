@@ -36,21 +36,25 @@ class PersonalInfoFactory{
 
     private getEmailWith(anOption: option): EmailAddress {
         const verificationCode = this.getVerificationCode(anOption.emailVerificationCodeType);
+
         if (anOption.emailType === 'active'){
             return new EmailAddress('admin@coral.com', true, verificationCode);
         } else if(anOption.emailType === 'inActive'){
             return new EmailAddress('admin@coral.com', false, verificationCode);
         }
+        
         throw new Error('Invalid option type');
     }
 
     private getPhoneNumber(anOption: option): PhoneNumber {     
         const verificationCode = this.getVerificationCode(anOption.phoneVerificationCodeType);
+
         if (anOption.phoneType === 'active'){
             return new PhoneNumber('123456789', 'specId', true, verificationCode);
         } else if(anOption.phoneType === 'inActive'){
             return new PhoneNumber('123456789', 'specId', false, verificationCode);
         }
+
         throw new Error('Invalid option type');
     }
 

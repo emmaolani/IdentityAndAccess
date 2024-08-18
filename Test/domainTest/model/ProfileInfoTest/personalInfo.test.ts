@@ -8,128 +8,342 @@ import VerificationCode from "../../../../src/domain/model/PersonalInfo/verifica
 import { option } from "../../../factories/option";
 import PersonalInfoFactory from "../../../factories/personalInfoFactory";
 
+describe("PersonalInfo", () => {
+  const personalInfoFactory = new PersonalInfoFactory();
 
+  it("should create PersonalInfo instance", () => {
+    const option: option = getSuitableOption("active", "active", "new", "new");
 
+    expect(personalInfoFactory.getPersonalInfoWith(option)).toBeInstanceOf(
+      PersonalInfo
+    );
+  });
 
-describe('PersonalInfo', () => {
-    const defaultOption: option = {
-        emailType: 'active',
-        phoneType: 'active',
-        phoneVerificationCodeType: 'new',
-        emailVerificationCodeType: 'new'
-    }
+  it("should change fullName", () => {
+    const option: option = getSuitableOption(
+      "active",
+      "active",
+      "null",
+      "null"
+    );
 
-    const personalInfoFactory = new PersonalInfoFactory();
+    const personalInfo: PersonalInfo =
+      personalInfoFactory.getPersonalInfoWith(option);
 
+    const newFullName: FullName = new FullName("Jane", "Doe");
 
-    
-    it('should create PersonalInfo instance', () => {
-        const personalInfo: PersonalInfo = personalInfoFactory.getPersonalInfoWith(defaultOption); 
-        expect(personalInfo).toBeInstanceOf(PersonalInfo);
+    personalInfo.changeFullName(newFullName);
+
+    expect(personalInfo.getFullName()).toEqual("Jane Doe");
+  });
+
+  it("should change birthDate", () => {
+    const option: option = getSuitableOption(
+      "active",
+      "active",
+      "null",
+      "null"
+    );
+
+    const personalInfo: PersonalInfo =
+      personalInfoFactory.getPersonalInfoWith(option);
+
+    const newBirthDate: BirthDate = new BirthDate("1990-01-02");
+
+    personalInfo.changeBirthDate(newBirthDate);
+
+    expect(personalInfo.getBirthDate()).toEqual("1990-01-02");
+  });
+
+  it("should change address", () => {
+    const option: option = getSuitableOption(
+      "active",
+      "active",
+      "null",
+      "null"
+    );
+
+    const personalInfo: PersonalInfo =
+      personalInfoFactory.getPersonalInfoWith(option);
+
+    const newAddress: Address = new Address("newCountryId", "newStateId");
+
+    personalInfo.changeAddress(newAddress);
+
+    expect(personalInfo.getAddress()).toEqual({
+      addressCountryId: "newCountryId",
+      addressStateId: "newStateId",
     });
+  });
 
-    it('should change fullname', () => {
-        const personalInfo: PersonalInfo = personalInfoFactory.getPersonalInfoWith(defaultOption); 
+  it("should change email address", () => {
+    const option: option = getSuitableOption(
+      "active",
+      "active",
+      "null",
+      "null"
+    );
 
-        const newFullName: FullName = new FullName('Jane', 'Doe');
+    let personalInfo: PersonalInfo =
+      personalInfoFactory.getPersonalInfoWith(option);
 
-        personalInfo.changeFullName(newFullName);
+    let newEmailAddress: EmailAddress = new EmailAddress(
+      "nonAdmin@coral.com",
+      true,
+      null
+    );
 
-        expect(personalInfo.getFullName()).toEqual('Jane Doe');
-    })
+    personalInfo.changeEmailAddress(newEmailAddress);
 
-    it('should change birthdate', () => {
-        const personalInfo: PersonalInfo = personalInfoFactory.getPersonalInfoWith(defaultOption); 
+    expect(personalInfo.getEmailAddress()).toEqual("nonAdmin@coral.com");
+  });
 
-        const newBirthDate: BirthDate = new BirthDate('1990-01-02');
+  it("should not return email address unless email is activated", () => {
+    const option: option = getSuitableOption(
+      "inActive",
+      "active",
+      "null",
+      "new"
+    );
 
-        personalInfo.changeBirthDate(newBirthDate);
+    const personalInfo: PersonalInfo =
+      personalInfoFactory.getPersonalInfoWith(option);
 
-        expect(personalInfo.getBirthDate()).toEqual('1990-01-02');
-    })  
+    expect(() => personalInfo.getEmailAddress()).toThrow("Email is not active");
 
-    it('should change address', () => {
-        const personalInfo: PersonalInfo = personalInfoFactory.getPersonalInfoWith(defaultOption); 
+    personalInfo.activateEmailAddressWith("1234567");
 
-        const newAddress: Address = new Address('newcountryId', 'newstateId');
+    expect(personalInfo.getEmailAddress()).toEqual("admin@coral.com");
+  });
 
-        personalInfo.changeAddress(newAddress);
+  it("should throw an error if email is being activated with wrong code", () => {
+    const option: option = getSuitableOption(
+      "inActive",
+      "active",
+      "new",
+      "new"
+    );
 
-        expect(personalInfo.getAddress()).toEqual({addressCountryId: 'newcountryId', addressStateId: 'newstateId'});
-    })
+    const personalInfo: PersonalInfo =
+      personalInfoFactory.getPersonalInfoWith(option);
 
+    expect(() => personalInfo.activateEmailAddressWith("123456")).toThrow(
+      "Invalid code"
+    );
+  });
 
+  it("should throw an error if an active-email is being activated", () => {
+    const option: option = getSuitableOption(
+      "active",
+      "active",
+      "null",
+      "null"
+    );
 
+    const personalInfo: PersonalInfo =
+      personalInfoFactory.getPersonalInfoWith(option);
 
-    it('should change email address', () => {
-        let personalInfo: PersonalInfo = personalInfoFactory.getPersonalInfoWith(defaultOption); 
+    expect(() => personalInfo.activateEmailAddressWith("1234567")).toThrow(
+      "Email is already activated"
+    );
+  });
 
-        let newEmailAddress: EmailAddress = new EmailAddress('nonAdmin@coral.com', true, null);
+  it("should throw error if email verificationCode is expired", () => {
+    const option: option = getSuitableOption(
+      "inActive",
+      "active",
+      "null",
+      "expired"
+    );
 
-        personalInfo.changeEmailAddress(newEmailAddress);
+    const personalInfo: PersonalInfo =
+      personalInfoFactory.getPersonalInfoWith(option);
 
-        expect(personalInfo.getEmailAddress()).toEqual('nonAdmin@coral.com');    
-    })
+    expect(() => personalInfo.activateEmailAddressWith("1234567")).toThrow(
+      "This code is expired"
+    );
+  });
 
-    it('should not return email address unless email is activated', () => {
-        const option: option = {
-            emailType: 'inActive',
-            phoneType: 'active',
-            phoneVerificationCodeType: 'new',
-            emailVerificationCodeType: 'new'
-        }
+  it("should throw an error if no verification code is found in personalInfo email", () => {
+    const option: option = getSuitableOption(
+      "inActive",
+      "active",
+      "null",
+      "null"
+    );
 
-        const personalInfo = personalInfoFactory.getPersonalInfoWith(option);
+    const personalInfo: PersonalInfo =
+      personalInfoFactory.getPersonalInfoWith(option);
 
-        expect(()=> personalInfo.getEmailAddress()).toThrow('Email is not active');
+    expect(() => personalInfo.activateEmailAddressWith("1234567")).toThrow(
+      "No verification code found"
+    );
+  });
 
-        personalInfo.activateEmailAddressWith('1234567');
+  it("should replace email verification code with new verification code", () => {
+    const option: option = getSuitableOption(
+      "inActive",
+      "active",
+      "null",
+      "expired"
+    );
 
-        expect(personalInfo.getEmailAddress()).toEqual('admin@coral.com');
+    const personalInfo: PersonalInfo =
+      personalInfoFactory.getPersonalInfoWith(option);
 
-    })
+    expect(() => personalInfo.activateEmailAddressWith("1234567")).toThrow(
+      "This code is expired"
+    );
 
-    it('should throw an error if email is being activated with wrong code', () => {
-        const option: option = {
-            emailType: 'inActive',
-            phoneType: 'active',
-            phoneVerificationCodeType: 'new',
-            emailVerificationCodeType: 'new'
-        }
+    personalInfo.replaceEmailVerificationCodeWith(
+      new VerificationCode("7654321", Date.now())
+    );
 
-        const personalInfo = personalInfoFactory.getPersonalInfoWith(option);
+    personalInfo.activateEmailAddressWith("7654321");
 
-        expect(()=> personalInfo.activateEmailAddressWith('123456')).toThrow('Invalid code');
-    })
+    expect(personalInfo.getEmailAddress()).toEqual("admin@coral.com");
+  });
 
-    it('should throw an error if active email is being activated', () => {
-        const option: option = {
-            emailType: 'active',
-            phoneType: 'active',
-            phoneVerificationCodeType: 'null',
-            emailVerificationCodeType: 'null'
-        }
+  it("should change phone number", () => {
+    const option: option = getSuitableOption(
+      "active",
+      "active",
+      "null",
+      "null"
+    );
 
-        const personalInfo = personalInfoFactory.getPersonalInfoWith(option);
+    let personalInfo: PersonalInfo =
+      personalInfoFactory.getPersonalInfoWith(option);
 
-        expect(()=> personalInfo.activateEmailAddressWith('1234567')).toThrow('Email is already activated');
-    })
+    personalInfo.changePhoneNumber(
+      new PhoneNumber("223456789", "Id", true, null)
+    );
 
-    it('should throw an error if no verification code is found in personalInfo email', () => {
-        const option: option = {
-            emailType: 'inActive',
-            phoneType: 'active',
-            phoneVerificationCodeType: 'null',
-            emailVerificationCodeType: 'null'
-        }
+    expect(personalInfo.getPhoneNumber()).toEqual("223456789");
+  });
 
-        const personalInfo = personalInfoFactory.getPersonalInfoWith(option);
+  it("should not return phone number unless phone is activated", () => {
+    const option: option = getSuitableOption(
+      "active",
+      "inActive",
+      "new",
+      "null"
+    );
 
-        expect(()=> personalInfo.activateEmailAddressWith('1234567')).toThrow('No verification code found');
-    })  
+    const personalInfo: PersonalInfo =
+      personalInfoFactory.getPersonalInfoWith(option);
 
-   
+    expect(() => personalInfo.getPhoneNumber()).toThrow(
+      "Phone number is not active"
+    );
+
+    personalInfo.activatePhoneNumberWith("1234567");
+
+    expect(personalInfo.getPhoneNumber()).toEqual("123456789");
+  });
+
+  it("should throw an error if phone is being activated with wrong code", () => {
+    const option: option = getSuitableOption(
+      "active",
+      "inActive",
+      "new",
+      "null"
+    );
+
+    const personalInfo: PersonalInfo =
+      personalInfoFactory.getPersonalInfoWith(option);
+
+    expect(() => personalInfo.activatePhoneNumberWith("123456")).toThrow(
+      "Invalid code"
+    );
+  });
+
+  it("should throw an error if an active-phone is being activated", () => {
+    const option: option = getSuitableOption(
+      "active",
+      "active",
+      "null",
+      "null"
+    );
+
+    const personalInfo: PersonalInfo =
+      personalInfoFactory.getPersonalInfoWith(option);
+
+    expect(() => personalInfo.activatePhoneNumberWith("1234567")).toThrow(
+      "Phone number is already activated"
+    );
+  });
+
+  it("should throw error if phone verificationCode is expired", () => {
+    const option: option = getSuitableOption(
+      "active",
+      "inActive",
+      "expired",
+      "null"
+    );
+
+    const personalInfo: PersonalInfo =
+      personalInfoFactory.getPersonalInfoWith(option);
+
+    expect(() => personalInfo.activatePhoneNumberWith("1234567")).toThrow(
+      "This code is expired"
+    );
+  });
+
+  it("should throw an error if no verification code is found in personalInfo phoneNumber", () => {
+    const option: option = getSuitableOption(
+      "active",
+      "inActive",
+      "null",
+      "null"
+    );
+
+    const personalInfo: PersonalInfo =
+      personalInfoFactory.getPersonalInfoWith(option);
+
+    expect(() => personalInfo.activatePhoneNumberWith("1234567")).toThrow(
+      "No verification code found"
+    );
+  });
+
+  it("should replace phone verification code with new verification code", () => {
+    const option: option = getSuitableOption(
+      "active",
+      "inActive",
+      "expired",
+      "null"
+    );
+
+    const personalInfo: PersonalInfo =
+      personalInfoFactory.getPersonalInfoWith(option);
+
+    expect(() => personalInfo.activatePhoneNumberWith("1234567")).toThrow(
+      "This code is expired"
+    );
+
+    personalInfo.replacePhoneVerificationCodeWith(
+      new VerificationCode("7654321", Date.now())
+    );
+
+    personalInfo.activatePhoneNumberWith("7654321");
+
+    expect(personalInfo.getPhoneNumber()).toEqual("123456789");
+  });
 });
 
+// function used to retrieve suitable option to create personalInfo object in personalInfoFactory
+function getSuitableOption(
+  aEmailType: "active" | "inActive",
+  aPhoneType: "active" | "inActive",
+  aPhoneVerificationCodeType: "new" | "expired" | "null",
+  emailVerificationCodeType: "new" | "expired" | "null"
+): option {
+  const option: option = {
+    emailType: aEmailType,
+    phoneType: aPhoneType,
+    phoneVerificationCodeType: aPhoneVerificationCodeType,
+    emailVerificationCodeType: emailVerificationCodeType,
+  };
 
-
+  return option;
+}

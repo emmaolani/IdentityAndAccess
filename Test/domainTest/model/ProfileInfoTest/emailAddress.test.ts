@@ -1,65 +1,109 @@
 import EmailAddress from "../../../../src/domain/model/PersonalInfo/emailAddress";
 import VerificationCode from "../../../../src/domain/model/PersonalInfo/verificationCode";
 
-describe('Unit Test for EmailAddress class', () => {
-    let invalidEmail: string;
-    let validEmail: string;
+describe("Unit Test for EmailAddress class", () => {
+  let invalidEmail: string = " tes t@coral.com ";
+  let validEmail: string = "test@coral.com";
 
-    let active: boolean;
-    let notActive: boolean;
+  let active: boolean = true;
+  let notActive: boolean = false;
 
-    let emptyVerificationCode: null;
-    let expiredverificationCode: VerificationCode;
-    let validVerificationCode: VerificationCode;
+  let emptyVerificationCode: null = null;
+  let expiredVerificationCode: VerificationCode = new VerificationCode(
+    "1234567",
+    Date.now() - 500000
+  );
+  let validVerificationCode: VerificationCode = new VerificationCode(
+    "1234567",
+    Date.now()
+  );
 
-    beforeEach(() => {
-        invalidEmail = ' tes t@coral.com ';
-        validEmail = 'test@coral.com';
+  it("should remove white spaces from email address", () => {
+    const emailAddress = new EmailAddress(
+      invalidEmail,
+      active,
+      validVerificationCode
+    );
 
-        active = true;
-        notActive = false;
+    expect(emailAddress.getValue()).toBe(validEmail);
+  });
 
-        emptyVerificationCode = null;
-        expiredverificationCode = new VerificationCode('1234567', 1722885594112);
-        validVerificationCode = new VerificationCode('1234567', Date.now());
-    });
+  it("should not return email address unless emailAddress object is activated", () => {
+    const emailAddress = new EmailAddress(
+      validEmail,
+      notActive,
+      validVerificationCode
+    );
 
-    it('should remove white spaces from email address', ()=>{
-        const emailAddress = new EmailAddress(invalidEmail, active, validVerificationCode);
+    expect(() => emailAddress.getValue()).toThrow("Email is not active");
 
-        expect(emailAddress.getValue()).toBe(validEmail);
-    });
+    emailAddress.activateWith(validVerificationCode.getValue());
 
-    it('should throw an error if email is not active', ()=>{
-        const emailAddress = new EmailAddress(validEmail, notActive, validVerificationCode);
+    expect(emailAddress.getValue()).toBe(validEmail);
+  });
 
-        expect(() => emailAddress.getValue()).toThrow('Email is not active');
-    });
+  it("should not activate email address with expired verification code", () => {
+    const emailAddress = new EmailAddress(
+      validEmail,
+      notActive,
+      expiredVerificationCode
+    );
 
-    it('should activate email address with valid verification code', ()=>{
-        const emailAddress = new EmailAddress(validEmail, notActive, validVerificationCode);
+    expect(() => emailAddress.activateWith("124567")).toThrow(
+      "This code is expired"
+    );
+  });
 
-        emailAddress.activateEmailAddressWith(validVerificationCode.getValue());
+  it("should not activate email address with invalid verification code", () => {
+    const emailAddress = new EmailAddress(
+      validEmail,
+      notActive,
+      validVerificationCode
+    );
 
-        expect(emailAddress.getValue()).toBe(validEmail);
-    });
+    expect(() => emailAddress.activateWith("123456")).toThrow("Invalid code");
+  });
 
-    it('should not activate email address with expired verification code', ()=>{
-        const emailAddress = new EmailAddress(validEmail, notActive, expiredverificationCode);
+  it("should throw an error on email activation if email is already active", () => {
+    const emailAddress = new EmailAddress(
+      validEmail,
+      active,
+      emptyVerificationCode
+    );
 
-        expect(() => emailAddress.activateEmailAddressWith(expiredverificationCode.getValue())).toThrow('This code is expired');
-    });
+    expect(() =>
+      emailAddress.activateWith(validVerificationCode.getValue())
+    ).toThrow("Email is already activated");
+  });
 
-    it('should not activate email address with invalid verification code', ()=>{
-        const emailAddress = new EmailAddress(validEmail, notActive, validVerificationCode);
+  it("should throw an error if no verification code is found in email address", () => {
+    const emailAddress = new EmailAddress(validEmail, notActive, null);
 
-        expect(() => emailAddress.activateEmailAddressWith('123456')).toThrow('Invalid code');
-    });
+    expect(() => emailAddress.activateWith("1234567")).toThrow(
+      "No verification code found"
+    );
+  });
 
-    it('should throw an error on email activation if email is already active', ()=>{
-        const emailAddress = new EmailAddress(validEmail, active, emptyVerificationCode);
+  it("should replace verification code with a new verification code", () => {
+    const emailAddress = new EmailAddress(
+      validEmail,
+      notActive,
+      expiredVerificationCode
+    );
 
-        expect(() => emailAddress.activateEmailAddressWith(validVerificationCode.getValue())).toThrow('Email is already activated');
-    });
+    expect(() => emailAddress.activateWith("1234567")).toThrow(
+      "This code is expired"
+    );
+
+    const newVerificationCode: VerificationCode = new VerificationCode(
+      "7654321",
+      Date.now()
+    );
+
+    emailAddress.replaceVerificationCodeWith(newVerificationCode);
+
+    emailAddress.activateWith("7654321");
+
+    expect(emailAddress.getValue()).toBe(validEmail);
+  });
 });
-

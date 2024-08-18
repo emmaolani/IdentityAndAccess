@@ -1,67 +1,67 @@
 import ValueObject from "../../valueObject";
 
+class VerificationCode extends ValueObject {
+  private value: string;
+  private timeStamp: number;
+  private validLengthOfCode: number = 7;
+  private allowedTimeDurationOfCode: number = 300000;
 
-class VerificationCode extends ValueObject{
-    private value: string;
-    private timeStamp: number;
-    private validLengthOfCode: number = 7;
-    private allowedTimeDurationOfCode: number = 300000;
+  constructor(aValue: string, aTimeStamp: number) {
+    super();
+    this.setValue(aValue);
+    this.setTimeStamp(aTimeStamp);
+  }
 
+  private setValue(aValue: string) {
+    this.checkIfValueIsInt(aValue);
+    this.isCodeLengthValid(aValue);
+    this.value = aValue;
+  }
 
-    constructor(aValue: string, aTimeStamp: number){
-        super();
-        this.setValue(aValue);
-        this.setTimeStamp(aTimeStamp);
+  private checkIfValueIsInt(aValue: string) {
+    if (
+      Number.isNaN(parseInt(aValue)) == true ||
+      aValue.includes(".") == true
+    ) {
+      throw Error("invalid code");
     }
+  }
 
-    private setValue(aValue: string){
-        this.checkIfValueIsInt(aValue);
-        this.isCodeLengthValid(aValue); 
-        this.value = aValue
+  private isCodeLengthValid(aValue: string) {
+    if (aValue.length != this.validLengthOfCode) {
+      throw Error("invalid code length");
     }
+  }
 
-    private checkIfValueIsInt(aValue: string){
-        if (Number.isNaN(parseInt(aValue)) == true || aValue.includes('.') == true) {
-            throw Error('invalid code');
-        }
-    }
+  private setTimeStamp(aTimeStamp: number) {
+    this.checkIfTimeStampIsInvalid(aTimeStamp);
+    this.timeStamp = aTimeStamp;
+  }
 
-    private isCodeLengthValid(aValue: string){
-        if (aValue.length != this.validLengthOfCode){
-            throw Error('invalid code length');
-        }
+  private checkIfTimeStampIsInvalid(aTimeStamp: number) {
+    if (aTimeStamp > Date.now() || aTimeStamp < 0) {
+      throw Error("TimeStamp is invalid");
+    } else {
+      return;
     }
+  }
 
-    private setTimeStamp(aTimeStamp: number){
-        this.checkIfTimeStampIsInvalid(aTimeStamp)
-        this.timeStamp = aTimeStamp
+  getValue(): string {
+    // checking if verification code has expired
+    if (this.isValid()) {
+      return this.value;
+    } else {
+      throw new Error("This code is expired");
     }
+  }
 
-    private checkIfTimeStampIsInvalid(aTimeStamp: number){
-        if (aTimeStamp > Date.now() || aTimeStamp < 0) {
-            throw Error('TimeStamp is invalid');
-        }else{
-            return
-        }
+  private isValid(): boolean {
+    if (Date.now() - this.timeStamp > this.allowedTimeDurationOfCode) {
+      return false;
+    } else {
+      return true;
     }
-
-    getValue(): string{
-        if (this.isValid()) {
-            return this.value;
-        }else{
-            throw new Error('This code is expired');
-        }
-    }
-    
-    private isValid(): boolean{
-        if ((Date.now() - this.timeStamp) > this.allowedTimeDurationOfCode) {
-            return false
-        }else{
-            return true
-        }
-    }
-    
+  }
 }
-
 
 export default VerificationCode;

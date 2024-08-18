@@ -1,81 +1,120 @@
 import PhoneNumber from "../../../../src/domain/model/PersonalInfo/phoneNumber";
 import VerificationCode from "../../../../src/domain/model/PersonalInfo/verificationCode";
 
+describe("Unit Test for PhoneNumber class", () => {
+  let invalidPhoneNumber: string = " 123  456 78  ";
+  let validPhoneNumber: string = "12345678";
 
-describe('Unit Test for PhoneNumber class', () => {
-    let invalidPhoneNumber: string;
-    let validPhoneNumber: string;
+  let ituAndIsoSpecId: string = "id";
 
-    let telcomSpecificationID: string;
+  let active: boolean = true;
+  let notActive: boolean = false;
 
-    let active: boolean;
-    let notActive: boolean;
+  let emptyVerificationCode: null = null;
+  let expiredVerificationCode: VerificationCode = new VerificationCode(
+    "1234567",
+    Date.now() - 500000
+  );
+  let validVerificationCode: VerificationCode = new VerificationCode(
+    "1234567",
+    Date.now()
+  );
 
-    let emptyVerificationCode: null;
-    let expiredverificationCode: VerificationCode;
-    let validVerificationCode: VerificationCode;
+  it("should remove white spaces from phone number", () => {
+    const phoneNumber = new PhoneNumber(
+      invalidPhoneNumber,
+      ituAndIsoSpecId,
+      active,
+      validVerificationCode
+    );
 
-    beforeEach(() => {
-        invalidPhoneNumber = ' 123  456 78  ';
-        validPhoneNumber = '12345678';
+    expect(phoneNumber.getValue()).toBe(validPhoneNumber);
+  });
 
-        telcomSpecificationID = 'id';
+  it("should not return phone number unless phoneNumber object is activated", () => {
+    const phoneNumber = new PhoneNumber(
+      validPhoneNumber,
+      ituAndIsoSpecId,
+      notActive,
+      validVerificationCode
+    );
 
-        active = true;
-        notActive = false;
+    expect(() => phoneNumber.getValue()).toThrow("Phone number is not active");
 
-        emptyVerificationCode = null;
-        expiredverificationCode = new VerificationCode('1234567', 1722885594112);
-        validVerificationCode = new VerificationCode('1234567', Date.now());
-    });
+    phoneNumber.activateWith(validVerificationCode.getValue());
 
-    it('should remove white spaces from phone number', ()=>{
-        const phoneNumber = new PhoneNumber(invalidPhoneNumber, telcomSpecificationID, active, validVerificationCode);
-        
-        expect(phoneNumber.getValue()).toBe(validPhoneNumber);
-    })
+    expect(phoneNumber.getValue()).toBe(validPhoneNumber);
+  });
 
-    it('should throw an error if phone number is not active', ()=>{
-        const phoneNumber = new PhoneNumber(validPhoneNumber, telcomSpecificationID, notActive, validVerificationCode);
+  it("should return the phoneNumber object ITU&ISOspec Id", () => {
+    const phoneNumber = new PhoneNumber(
+      validPhoneNumber,
+      ituAndIsoSpecId,
+      active,
+      validVerificationCode
+    );
 
-        expect(() => phoneNumber.getValue()).toThrow('Phone number is not active');
-    });
+    expect(phoneNumber.getItuAndIsoSpecId()).toBe(ituAndIsoSpecId);
+  });
 
-    it('should return the correct telcom specification ID if phone number is active', ()=>{
-        const phoneNumber = new PhoneNumber(validPhoneNumber, telcomSpecificationID, active, validVerificationCode);
+  it("should not activate phone number with expired verification code", () => {
+    const phoneNumber = new PhoneNumber(
+      validPhoneNumber,
+      ituAndIsoSpecId,
+      notActive,
+      expiredVerificationCode
+    );
 
-        expect(phoneNumber.getTelcomSpecificationID()).toBe(telcomSpecificationID);
-    });
+    expect(() =>
+      phoneNumber.activateWith(expiredVerificationCode.getValue())
+    ).toThrow("This code is expired");
+  });
 
-    it('should throw an error if phone number is not active', ()=>{
-        const phoneNumber = new PhoneNumber(validPhoneNumber, telcomSpecificationID, notActive, validVerificationCode);
+  it("should not activate phone number with invalid verification code", () => {
+    const phoneNumber = new PhoneNumber(
+      validPhoneNumber,
+      ituAndIsoSpecId,
+      notActive,
+      validVerificationCode
+    );
 
-        expect(() => phoneNumber.getTelcomSpecificationID()).toThrow('Phone number is not active');
-    });
+    expect(() => phoneNumber.activateWith("123456")).toThrow("Invalid code");
+  });
 
-    it('should activate phone number with valid verification code', ()=>{
-        const phoneNumber = new PhoneNumber(validPhoneNumber, telcomSpecificationID, notActive, validVerificationCode);
+  it("should throw an error on phone number activation if phone number is already active", () => {
+    const phoneNumber = new PhoneNumber(
+      validPhoneNumber,
+      ituAndIsoSpecId,
+      active,
+      emptyVerificationCode
+    );
 
-        phoneNumber.activatePhoneNumberWith(validVerificationCode.getValue());
+    expect(() => phoneNumber.activateWith("1234567")).toThrow(
+      "Phone number is already activated"
+    );
+  });
 
-        expect(phoneNumber.getValue()).toBe(validPhoneNumber);
-    });
+  it("should replace the old verification code with a new verification code", () => {
+    const phoneNumber = new PhoneNumber(
+      validPhoneNumber,
+      ituAndIsoSpecId,
+      notActive,
+      expiredVerificationCode
+    );
 
-    it('should not activate phone number with expired verification code', ()=>{
-        const phoneNumber = new PhoneNumber(validPhoneNumber, telcomSpecificationID, notActive, expiredverificationCode);
+    expect(() => phoneNumber.activateWith("1234567")).toThrow(
+      "This code is expired"
+    );
 
-        expect(() => phoneNumber.activatePhoneNumberWith(expiredverificationCode.getValue())).toThrow('This code is expired');
-    });
+    const newVerificationCode: VerificationCode = new VerificationCode(
+      "7654321",
+      Date.now()
+    );
 
-    it('should not activate phone number with invalid verification code', ()=>{
-        const phoneNumber = new PhoneNumber(validPhoneNumber, telcomSpecificationID, notActive, validVerificationCode);
+    phoneNumber.replaceVerificationCodeWith(newVerificationCode);
 
-        expect(() => phoneNumber.activatePhoneNumberWith('invalidCode')).toThrow('Invalid code');
-    });
+    phoneNumber.activateWith("7654321");
 
-    it('should throw an error on phone number activation if phone number is already active', ()=>{
-        const phoneNumber = new PhoneNumber(validPhoneNumber, telcomSpecificationID, active, emptyVerificationCode);
-
-        expect(() => phoneNumber.activatePhoneNumberWith('code')).toThrow('Phone number is already activated');
-    });
+    expect(phoneNumber.getValue()).toBe(validPhoneNumber);
+  });
 });

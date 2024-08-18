@@ -1,34 +1,38 @@
 import FullName from "../../../../src/domain/model/PersonalInfo/fullName";
 
+describe("Unit Test fullName class", () => {
+  const validFirstName = "Dr James";
+  const emptyFirstName = "";
+  const whiteSpaceFirstName = " Dr  James   ";
 
-describe('Unit Test fullName class', () => {  
-    const validFirstName = 'James';
-    const emptyFirstName = '';
-    const whiteSpaceFirstName = '  James   M';
+  const validLastName = "M Thomas";
+  const emptyLastName = "";
+  const whiteSpacedLastName = "  M  Thomas ";
 
-    const validLastName = 'Thomas';
-    const emptyLastName = '';
-    const whiteSpacedlastName = ' M  Thomas ';
+  it("should throw error if firstName is not provided", () => {
+    expect(() => new FullName(emptyFirstName, validLastName)).toThrow(
+      "first name is empty"
+    );
+  });
 
+  it("should throw error if lastName is not provided", () => {
+    expect(() => new FullName(validFirstName, emptyLastName)).toThrow(
+      "last name is empty"
+    );
+  });
 
-    it('should throw error if firstname is not provided', () => { 
-        expect(() => new FullName(emptyFirstName, validLastName)).toThrow('first name is empty');
-    });
+  it("should correct invalid white spaces in firstName", () => {
+    const fullName: FullName = new FullName(whiteSpaceFirstName, validLastName);
 
-    it('should throw error if lastname is not provided', () => {  
-        expect(() => new FullName(validFirstName, emptyLastName)).toThrow('last name is empty');
-    });
+    expect(fullName.getFullName()).toBe(`${validFirstName} ${validLastName}`);
+  });
 
-    it('should correct invalid white spaces in firstname', ()=>{
-        const fullName: FullName =  new FullName(whiteSpaceFirstName, validLastName);
+  it("should correct invalid white spaces in lastName", () => {
+    const fullName: FullName = new FullName(
+      validFirstName,
+      whiteSpacedLastName
+    );
 
-        expect(fullName.getFirstName()).toBe('James M');
-    });
-
-    it('should correct invalid white spaces in lastName', ()=>{
-        const fullName: FullName =  new FullName(validFirstName, whiteSpacedlastName);
-
-        expect(fullName.getLastName()).toBe('M Thomas');
-    });
-
+    expect(fullName.getFullName()).toBe(`${validFirstName} ${validLastName}`);
+  });
 });
