@@ -31,9 +31,7 @@ class FullName extends ValueObject {
   }
 
   private IsAnEmpty(aName: string): boolean {
-    const regex: RegExp = new RegExp("^s*$", "ig");
-
-    return regex.test(aName); // checking if the string is empty
+    return aName.trim().length === 0; // checking if the string is empty // checking if the string is empty
   }
 
   private getValid(aName: string): string {

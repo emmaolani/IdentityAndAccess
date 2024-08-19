@@ -1,45 +1,54 @@
-/* import UserAccountPersonalInfo from "../userAccountPersonalInfo/userAccountPersonalInfo"
-import UserAccountID from "./userAccountID";
-import UserAccountCreationForm from "./userAccountForm";
-import EmailAddress from "./emailAddress";
+import UserName from "./userName";
+import Password from "./password";
 
 class UserAccount {
-    private userAccountID: UserAccountID;
-    private personalInfo: UserAccountPersonalInfo;
-    private emailAddress: EmailAddress
-    private password: string;
-    private status: string;
-    constructor(aUserAccountID: UserAccountID, aPersonalInfo: UserAccountPersonalInfo, 
-        aUserAccountCreationForm: UserAccountCreationForm) {
-        this.setUserAccountID(aUserAccountID);
-        this.setPersonalInfo(aPersonalInfo);
-        this.setSecurityCredential(aUserAccountCreationForm.password);
-        this.setStatus(aUserAccountCreationForm.status);
+  private Id: string;
+  private personalInfoId: string;
+  private username: UserName;
+  private password: Password;
+  private isActive: boolean;
+
+  constructor(
+    anId: string,
+    aPersonalInfoId: string,
+    aUsername: UserName,
+    aPassword: Password,
+    aStatus: boolean
+  ) {
+    this.setId(anId);
+    this.setPersonalInfoId(aPersonalInfoId);
+    this.setUsername(aUsername);
+    this.setPassword(aPassword);
+    this.setActive(aStatus);
+  }
+
+  private setId(anId: string) {
+    this.Id = anId;
+  }
+
+  private setPersonalInfoId(aPersonalInfoId: string) {
+    this.personalInfoId = aPersonalInfoId;
+  }
+
+  private setUsername(aUsername: UserName) {
+    this.username = aUsername;
+  }
+
+  private setPassword(aPassword: Password) {
+    this.password = aPassword;
+  }
+
+  private setActive(isActive: boolean) {
+    this.isActive = isActive;
+  }
+
+  validate(username: string, password: string): boolean {
+    if (!this.isActive) {
+      return false;
     }
 
-    private setUserAccountID(aUserAccountID: UserAccountID){
-        this.userAccountID = aUserAccountID;
-        
-    }
-
-    private setPersonalInfo(aPersonalInfo: UserAccountPersonalInfo){
-       this.personalInfo = aPersonalInfo; 
-    }
-
-    private setSecurityCredential(aSecurityCredential: string){
-        this.password = aSecurityCredential;
-        
-    }
-
-    private setStatus(aStatus: string){
-        this.status = aStatus;
-    }
-
-    private id(){
-        return this.userAccountID
-    }
-   
+    return this.username.compare(username) && this.password.compare(password);
+  }
 }
 
 export default UserAccount;
-*/
