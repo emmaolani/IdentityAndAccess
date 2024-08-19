@@ -4,7 +4,7 @@ describe("Password", () => {
   it("should throw an error when password is empty", () => {
     expect(() => new Password("")).toThrow("password is empty");
   });
-
+  //
   it("should remove white space from password", () => {
     const password = new Password("  password  ");
 
