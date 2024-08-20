@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36" version="24.7.7">
   <diagram name="Page-1" id="2YBvvXClWsGukQMizWep">
-    <mxGraphModel dx="1567" dy="1734" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1120" dy="1639" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -498,7 +498,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="YY9x1Kv6m4PW0GLoKf8L-4" value="isThereUserAccountProfileWith(email):boolean" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="YY9x1Kv6m4PW0GLoKf8L-3" connectable="0" vertex="1">
+        <mxCell id="YY9x1Kv6m4PW0GLoKf8L-4" value="isThereUserAccountProfileWith(userNmae):boolean" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="YY9x1Kv6m4PW0GLoKf8L-3" connectable="0" vertex="1">
           <mxGeometry x="-0.1454" y="1" relative="1" as="geometry">
             <mxPoint x="14" as="offset" />
           </mxGeometry>
@@ -644,7 +644,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="vAnZ-FL5wsYkbNKWijkx-21" value="getEmail():string" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="vAnZ-FL5wsYkbNKWijkx-20" connectable="0" vertex="1">
+        <mxCell id="vAnZ-FL5wsYkbNKWijkx-21" value="getUsername():string" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="vAnZ-FL5wsYkbNKWijkx-20" connectable="0" vertex="1">
           <mxGeometry x="0.0348" relative="1" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
