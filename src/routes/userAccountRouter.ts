@@ -1,8 +1,8 @@
-import { Router } from "express";
-import { getUsers } from "../port/adapters/restControllerAdapter/userAccountController";
+// import { Router } from "express";
+// import { getUsers } from "../port/adapters/restControllerAdapter/userAccountController";
 
-const userAccountRouter : Router = Router();
+// const userAccountRouter : Router = Router();
 
-userAccountRouter.get('./', getUsers)
+// userAccountRouter.get('./', getUsers)
 
-export default userAccountRouter;
+// export default userAccountRouter;
