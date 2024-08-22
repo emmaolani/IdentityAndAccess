@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import UserAccountApplicationService from "../../../application/userAccount/userAccountService";
+import UserAccountApplicationService from "../../../application/userAccount/userAccountApplicationService";
 import NewUserAccountCommand from "../../../application/userAccount/newUserAccountCommand";
 import NewPersonalInfoCommand from "../../../application/userAccount/newPersonalInfoCommand";
 
