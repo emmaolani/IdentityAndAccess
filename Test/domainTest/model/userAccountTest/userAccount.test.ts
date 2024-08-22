@@ -6,7 +6,6 @@ describe("UserAccount", () => {
   it("should create a user account", () => {
     const userAccount = new UserAccount(
       "id",
-      "pId",
       new UserName("username"),
       new Password("password"),
       true
@@ -18,7 +17,6 @@ describe("UserAccount", () => {
   it("should return true if a user's username and password is valid", () => {
     const userAccount = new UserAccount(
       "id",
-      "pId",
       new UserName("username"),
       new Password("password"),
       true
@@ -31,7 +29,6 @@ describe("UserAccount", () => {
   it("should return false if active status is false", () => {
     const userAccount = new UserAccount(
       "id",
-      "pId",
       new UserName("username"),
       new Password("password"),
       false

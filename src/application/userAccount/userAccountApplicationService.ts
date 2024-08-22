@@ -1,9 +1,8 @@
 import RepositoryFactory from "../../domain/repositoryFactory";
-import NewUserAccountCommand from "./newUserAccountCommand";
-import NewPersonalInfoCommand from "./newPersonalInfoCommand";
 import DomainEventPublisher from "../../domain/domainEventPublisher";
 import DomainEventSubscriber from "../../domain/domainEventSubscriber";
-import DomainEvent from "../../domain/domainEvent";
+import NewUserAccountCommand from "./newUserAccountCommand";
+import EventStoreDelegate from "../eventStoreDelegate";
 
 class UserAccountApplicationService {
   private repositoryFactory: RepositoryFactory;
@@ -12,35 +11,33 @@ class UserAccountApplicationService {
     this.repositoryFactory = aRepositoryFactory;
   }
 
-  createUserAccount(
-    userAccountForm: NewUserAccountCommand,
-    personalInfoForm: NewPersonalInfoCommand
-  ) {
+  createUserAccount(newUserAccountCommand: NewUserAccountCommand) {
     const { userAccountRepository, eventStore } =
-      this.repositoryFactory.getUserAccountRepositoryAndEventStore();
+      this.getUserAccountRepositoryAndEventStore();
 
     const doesUserAccountExist = userAccountRepository.doesUserAccountExist(
-      userAccountForm.getUsername()
+      newUserAccountCommand.getUsername()
     );
 
     if (!doesUserAccountExist) {
       const domainEventPublisher: DomainEventPublisher =
-        new DomainEventPublisher();
-
-      domainEventPublisher.subscribe(
-        new (class subscriber implements DomainEventSubscriber {
-          subscribeToEventType(): string {
-            return "UserAccountCreated";
-          }
-
-          handleEvent(anEvent: DomainEvent) {
-            eventStore.append(anEvent);
-          }
-        })()
-      );
+        this.initializeDomainEventPublisher(new EventStoreDelegate(eventStore));
     } else {
       throw new Error("User account already exists");
     }
+  }
+
+  private getUserAccountRepositoryAndEventStore() {
+    return this.repositoryFactory.getUserAccountRepositoryAndEventStore();
+  }
+
+  private initializeDomainEventPublisher(subscriber: DomainEventSubscriber) {
+    const domainEventPublisher: DomainEventPublisher =
+      new DomainEventPublisher();
+
+    domainEventPublisher.subscribe(subscriber);
+
+    return domainEventPublisher;
   }
 }
 

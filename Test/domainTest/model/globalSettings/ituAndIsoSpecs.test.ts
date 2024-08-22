@@ -1,4 +1,4 @@
-import ITUandISOSpecsDud from "../../mock/ituAndIsoSpecsMock";
+import ITUandISOSpecs from "../../../../src/domain/model/globalSettings/ituAndIsoSpecs";
 import PhoneNumber from "../../../../src/domain/model/PersonalInfo/phoneNumber";
 
 describe("ITUandISOSpecs", () => {
@@ -6,7 +6,7 @@ describe("ITUandISOSpecs", () => {
   let countryID: string = "countryID";
   let countryCode: string = "countryCode";
   let callingCode: string = "234";
-  let ituAndIsoSpec: ITUandISOSpecsDud = new ITUandISOSpecsDud(
+  let ituAndIsoSpec: ITUandISOSpecs = new ITUandISOSpecs(
     id,
     countryID,
     countryCode,
@@ -14,16 +14,7 @@ describe("ITUandISOSpecs", () => {
   );
 
   it("should create an instance", () => {
-    expect(ituAndIsoSpec).toBeTruthy();
-  });
-
-  it("should return the correct data", () => {
-    expect(ituAndIsoSpec.Data()).toEqual({
-      id: id,
-      countryID: countryID,
-      countryCode: countryCode,
-      callingCode: callingCode,
-    });
+    expect(ituAndIsoSpec).toBeInstanceOf(ITUandISOSpecs);
   });
 
   it("should create a phone number", () => {

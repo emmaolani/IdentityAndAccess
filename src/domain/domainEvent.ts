@@ -1,6 +1,6 @@
 interface DomainEvent {
   occurredOn(): Date;
-  eventName(): string;
+  getEventName(): string;
 }
 
 export default DomainEvent;
