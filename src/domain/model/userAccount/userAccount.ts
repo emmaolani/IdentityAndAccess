@@ -1,5 +1,7 @@
 import UserName from "./userName";
 import Password from "./password";
+import DomainEventPublisher from "../../domainEventPublisher";
+import NewUserAccountCreated from "./newUserAccountCreated";
 
 class UserAccount {
   private id: string;
@@ -41,6 +43,18 @@ class UserAccount {
     }
 
     return this.username.compare(username) && this.password.compare(password);
+  }
+
+  publishNewUserAccountCreatedEvent(
+    aDomainEventPublisher: DomainEventPublisher
+  ) {
+    if (aDomainEventPublisher) {
+      aDomainEventPublisher.publish(
+        new NewUserAccountCreated(this.id, this.username.getValue())
+      );
+    } else {
+      throw new Error("DomainEventPublisher is not given");
+    }
   }
 }
 

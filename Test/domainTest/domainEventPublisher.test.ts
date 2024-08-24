@@ -1,5 +1,5 @@
 import DomainEventPublisher from "../../src/domain/domainEventPublisher";
-import TestingEvent from "./mock/domainEventMock";
+import NewUserAccountCreated from "../../src/domain/model/userAccount/newUserAccountCreated";
 import AllEventSubscriber from "./mock/domainEventSubscriberMock/AllEventSubscriberMock";
 import TestingEventSubscriber from "./mock/domainEventSubscriberMock/TestingEventSubscriberMock";
 
@@ -11,7 +11,7 @@ describe("Domain Event Publisher", () => {
     // register subscriber to publisher
     domainEventPublisher.subscribe(subscriber);
 
-    const testingEvent = new TestingEvent();
+    const testingEvent = new NewUserAccountCreated('userId', 'username');
     // publishing an event
     domainEventPublisher.publish(testingEvent);
 
@@ -25,7 +25,7 @@ describe("Domain Event Publisher", () => {
     // register subscriber to publisher
     domainEventPublisher.subscribe(subscriber);
 
-    const testingEvent = new TestingEvent();
+    const testingEvent = new NewUserAccountCreated('userId', 'username');
     // publishing an event
     domainEventPublisher.publish(testingEvent);
 

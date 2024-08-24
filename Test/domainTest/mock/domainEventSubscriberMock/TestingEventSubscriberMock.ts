@@ -3,7 +3,7 @@ import DomainEvent from "../../../../src/domain/domainEvent";
 
 class TestingEventSubscriber implements DomainEventSubscriber {
   event: DomainEvent;
-  expectedEventsType: string[] = ["TestingEvent"];
+  expectedEventsType: string[] = ["NewUserAccountCreated"];
 
   getSubscribedEventNames() {
     return this.expectedEventsType;

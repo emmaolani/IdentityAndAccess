@@ -1,6 +1,9 @@
 import UserAccount from "../../../../src/domain/model/userAccount/userAccount";
 import UserName from "../../../../src/domain/model/userAccount/userName";
 import Password from "../../../../src/domain/model/userAccount/password";
+import DomainEventPublisher from "../../../../src/domain/domainEventPublisher";
+import AllEventSubscriber from "../../mock/domainEventSubscriberMock/AllEventSubscriberMock";
+import NewUserAccountCreated from "../../../../src/domain/model/userAccount/newUserAccountCreated";
 
 describe("UserAccount", () => {
   it("should create a user account", () => {
@@ -35,5 +38,25 @@ describe("UserAccount", () => {
     );
 
     expect(userAccount.validate("username", "password")).toBe(false);
+  });
+
+  it("should publish new user account created event", () => {
+    const userAccount = new UserAccount(
+      "id",
+      new UserName("username"),
+      new Password("password"),
+      true
+    );
+
+    const domainEventPublisher: DomainEventPublisher =
+      new DomainEventPublisher();
+
+    const subscriber: AllEventSubscriber = new AllEventSubscriber();
+
+    domainEventPublisher.subscribe(subscriber);
+
+    userAccount.publishNewUserAccountCreatedEvent(domainEventPublisher);
+
+    expect(subscriber.getEvent()).toBeInstanceOf(NewUserAccountCreated);
   });
 });

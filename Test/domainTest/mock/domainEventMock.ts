@@ -4,7 +4,7 @@ class TestingEvent implements DomainEvent {
   EventName: string = "TestingEvent";
   constructor() {}
 
-  occurredOn(): Date {
+  getOccurredOn(): Date {
     return new Date();
   }
   getEventName(): string {

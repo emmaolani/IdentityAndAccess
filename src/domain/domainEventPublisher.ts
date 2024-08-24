@@ -1,6 +1,7 @@
 import DomainEvent from "./domainEvent";
 import DomainEventSubscriber from "./domainEventSubscriber";
 
+// TODO: make publish differentiate between All and array specific event
 class DomainEventPublisher {
   private subscribers: DomainEventSubscriber[];
 

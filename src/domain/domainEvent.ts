@@ -1,5 +1,5 @@
 interface DomainEvent {
-  occurredOn(): Date;
+  getOccurredOn(): Date;
   getEventName(): string;
 }
 
