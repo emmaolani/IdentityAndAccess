@@ -1,5 +1,5 @@
-import PhoneNumber from "../PersonalInfo/phoneNumber";
-import VerificationCode from "../PersonalInfo/verificationCode";
+import WorkPhoneNumber from "../WorkAccountProfile.ts/WorkPhoneNumber";
+import VerificationCode from "../WorkAccountProfile.ts/verificationCode";
 
 // TODO: create an interface to retrieve country code
 class ITUandISOSpecs {
@@ -38,7 +38,7 @@ class ITUandISOSpecs {
 
   newPhoneNumber(aPhoneNumber: string) {
     const verificationCode: VerificationCode = this.newVerificationCode();
-    return new PhoneNumber(aPhoneNumber, this.id, false, verificationCode);
+    return new WorkPhoneNumber(aPhoneNumber, this.id, false, verificationCode);
   }
 
   private newVerificationCode(): VerificationCode {

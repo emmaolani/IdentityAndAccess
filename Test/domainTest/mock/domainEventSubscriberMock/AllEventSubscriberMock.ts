@@ -5,7 +5,7 @@ class AllEventSubscriber implements DomainEventSubscriber {
   event: DomainEvent;
   expectedEventsType: string[] = ["All"];
 
-  subscribeToEventType() {
+  getSubscribedEventNames() {
     return this.expectedEventsType;
   }
 

@@ -1,5 +1,5 @@
 import ITUandISOSpecs from "../../../../src/domain/model/globalSettings/ituAndIsoSpecs";
-import PhoneNumber from "../../../../src/domain/model/PersonalInfo/phoneNumber";
+import WorkPhoneNumber from "../../../../src/domain/model/WorkAccountProfile.ts/WorkPhoneNumber";
 
 describe("ITUandISOSpecs", () => {
   let id: string = "id";
@@ -19,7 +19,7 @@ describe("ITUandISOSpecs", () => {
 
   it("should create a phone number", () => {
     expect(ituAndIsoSpec.newPhoneNumber("12345678")).toBeInstanceOf(
-      PhoneNumber
+      WorkPhoneNumber
     );
   });
 

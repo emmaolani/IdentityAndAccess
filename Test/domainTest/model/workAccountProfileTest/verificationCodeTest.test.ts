@@ -1,4 +1,4 @@
-import VerificationCode from "../../../../src/domain/model/PersonalInfo/verificationCode";
+import VerificationCode from "../../../../src/domain/model/WorkAccountProfile.ts/verificationCode";
 
 describe("Unit test for verificationCode class", () => {
   const validCode = "1234567";

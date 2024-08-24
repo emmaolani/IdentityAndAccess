@@ -5,7 +5,7 @@ class TestingEventSubscriber implements DomainEventSubscriber {
   event: DomainEvent;
   expectedEventsType: string[] = ["TestingEvent"];
 
-  subscribeToEventType() {
+  getSubscribedEventNames() {
     return this.expectedEventsType;
   }
 

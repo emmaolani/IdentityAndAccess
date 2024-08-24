@@ -4,14 +4,14 @@ import EventStore from "../domain/eventStore";
 
 class EventStoreDelegate implements DomainEventSubscriber {
   private eventStore: EventStore;
-  private eventType = ["ALL"];
+  private subscribedEventNames = ["ALL"];
 
   constructor(anEventStore: EventStore) {
     this.eventStore = anEventStore;
   }
 
-  subscribeToEventType(): string[] {
-    return this.eventType;
+  getSubscribedEventNames(): string[] {
+    return this.subscribedEventNames;
   }
 
   handleEvent(anEvent: DomainEvent) {

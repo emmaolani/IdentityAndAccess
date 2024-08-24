@@ -1,4 +1,4 @@
-import FullName from "../../../../src/domain/model/PersonalInfo/fullName";
+import FullName from "../../../../src/domain/model/WorkAccountProfile.ts/fullName";
 
 describe("Unit Test fullName class", () => {
   const validFirstName = "Dr James";

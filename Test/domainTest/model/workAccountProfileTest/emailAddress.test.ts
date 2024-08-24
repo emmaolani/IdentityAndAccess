@@ -1,5 +1,5 @@
-import EmailAddress from "../../../../src/domain/model/PersonalInfo/emailAddress";
-import VerificationCode from "../../../../src/domain/model/PersonalInfo/verificationCode";
+import WorkEmailAddress from "../../../../src/domain/model/WorkAccountProfile.ts/WorkEmailAddress";
+import VerificationCode from "../../../../src/domain/model/WorkAccountProfile.ts/verificationCode";
 
 describe("Unit Test for EmailAddress class", () => {
   let invalidEmail: string = " tes t@coral.com ";
@@ -19,7 +19,7 @@ describe("Unit Test for EmailAddress class", () => {
   );
 
   it("should remove white spaces from email address", () => {
-    const emailAddress = new EmailAddress(
+    const emailAddress = new WorkEmailAddress(
       invalidEmail,
       active,
       validVerificationCode
@@ -29,7 +29,7 @@ describe("Unit Test for EmailAddress class", () => {
   });
 
   it("should not return email address unless emailAddress object is activated", () => {
-    const emailAddress = new EmailAddress(
+    const emailAddress = new WorkEmailAddress(
       validEmail,
       notActive,
       validVerificationCode
@@ -43,7 +43,7 @@ describe("Unit Test for EmailAddress class", () => {
   });
 
   it("should not activate email address with expired verification code", () => {
-    const emailAddress = new EmailAddress(
+    const emailAddress = new WorkEmailAddress(
       validEmail,
       notActive,
       expiredVerificationCode
@@ -55,7 +55,7 @@ describe("Unit Test for EmailAddress class", () => {
   });
 
   it("should not activate email address with invalid verification code", () => {
-    const emailAddress = new EmailAddress(
+    const emailAddress = new WorkEmailAddress(
       validEmail,
       notActive,
       validVerificationCode
@@ -65,7 +65,7 @@ describe("Unit Test for EmailAddress class", () => {
   });
 
   it("should throw an error on email activation if email is already active", () => {
-    const emailAddress = new EmailAddress(
+    const emailAddress = new WorkEmailAddress(
       validEmail,
       active,
       emptyVerificationCode
@@ -77,7 +77,7 @@ describe("Unit Test for EmailAddress class", () => {
   });
 
   it("should throw an error if no verification code is found in email address", () => {
-    const emailAddress = new EmailAddress(validEmail, notActive, null);
+    const emailAddress = new WorkEmailAddress(validEmail, notActive, null);
 
     expect(() => emailAddress.activateWith("1234567")).toThrow(
       "No verification code found"
@@ -85,7 +85,7 @@ describe("Unit Test for EmailAddress class", () => {
   });
 
   it("should replace verification code with a new verification code", () => {
-    const emailAddress = new EmailAddress(
+    const emailAddress = new WorkEmailAddress(
       validEmail,
       notActive,
       expiredVerificationCode

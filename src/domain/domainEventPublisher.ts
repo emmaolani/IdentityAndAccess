@@ -16,9 +16,9 @@ class DomainEventPublisher {
     this.subscribers.forEach((subscriber) => {
       if (
         subscriber
-          .subscribeToEventType()
+          .getSubscribedEventNames()
           .includes(domainEvent.getEventName()) ||
-        subscriber.subscribeToEventType().includes("All")
+        subscriber.getSubscribedEventNames().includes("All")
       ) {
         subscriber.handleEvent(domainEvent);
       }
