@@ -1,7 +1,6 @@
 import DomainEvent from "./domainEvent";
 import DomainEventSubscriber from "./domainEventSubscriber";
 
-// TODO: make publish differentiate between All and array specific event
 class DomainEventPublisher {
   private subscribers: DomainEventSubscriber[];
 
@@ -15,15 +14,45 @@ class DomainEventPublisher {
 
   publish(domainEvent: DomainEvent) {
     this.subscribers.forEach((subscriber) => {
+      const subscribedTo = subscriber.getSubscribedEventNames();
+
       if (
-        subscriber
-          .getSubscribedEventNames()
-          .includes(domainEvent.getEventName()) ||
-        subscriber.getSubscribedEventNames().includes("All")
+        this.subscribedToIsStringAndEqualToEventName(
+          subscribedTo,
+          domainEvent.getEventName()
+        )
+      ) {
+        subscriber.handleEvent(domainEvent);
+      } else if (
+        this.subscribedToIsArrayAndContainsEventName(
+          subscribedTo,
+          domainEvent.getEventName()
+        )
       ) {
         subscriber.handleEvent(domainEvent);
       }
     });
+  }
+
+  private subscribedToIsStringAndEqualToEventName(
+    subscribedTo: string | string[],
+    anEventName: string
+  ) {
+    return (
+      typeof subscribedTo === "string" &&
+      (subscribedTo === anEventName || "ALL")
+    );
+  }
+
+  private subscribedToIsArrayAndContainsEventName(
+    subscribedToEvent: string | string[],
+    anEventName: string
+  ) {
+    return (
+      Array.isArray(subscribedToEvent) &&
+      (subscribedToEvent.includes(anEventName) ||
+        subscribedToEvent.includes("ALL"))
+    );
   }
 }
 

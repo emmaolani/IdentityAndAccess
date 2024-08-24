@@ -2,7 +2,7 @@ import DomainEvent from "./domainEvent";
 
 interface DomainEventSubscriber {
   handleEvent(event: DomainEvent): void;
-  getSubscribedEventNames(): string[];
+  getSubscribedEventNames(): string[] | string;
 }
 
 export default DomainEventSubscriber;

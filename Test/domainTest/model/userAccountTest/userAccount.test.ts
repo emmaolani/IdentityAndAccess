@@ -2,7 +2,7 @@ import UserAccount from "../../../../src/domain/model/userAccount/userAccount";
 import UserName from "../../../../src/domain/model/userAccount/userName";
 import Password from "../../../../src/domain/model/userAccount/password";
 import DomainEventPublisher from "../../../../src/domain/domainEventPublisher";
-import AllEventSubscriber from "../../mock/domainEventSubscriberMock/AllEventSubscriberMock";
+import TestingEventSubscriber from "../../mock/domainEventSubscriberMock/TestingEventSubscriberMock";
 import NewUserAccountCreated from "../../../../src/domain/model/userAccount/newUserAccountCreated";
 
 describe("UserAccount", () => {
@@ -51,7 +51,9 @@ describe("UserAccount", () => {
     const domainEventPublisher: DomainEventPublisher =
       new DomainEventPublisher();
 
-    const subscriber: AllEventSubscriber = new AllEventSubscriber();
+    const subscriber: TestingEventSubscriber = new TestingEventSubscriber(
+      "NewUserAccountCreated"
+    );
 
     domainEventPublisher.subscribe(subscriber);
 
