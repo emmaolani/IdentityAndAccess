@@ -1,5 +1,5 @@
-import WorkPhoneNumber from "../WorkAccountProfile.ts/WorkPhoneNumber";
-import VerificationCode from "../WorkAccountProfile.ts/verificationCode";
+import WorkPhoneNumber from "../access/WorkAccountProfile.ts/WorkPhoneNumber";
+import VerificationCode from "../access/WorkAccountProfile.ts/verificationCode";
 
 // TODO: create an interface to retrieve country code
 class ITUandISOSpecs {

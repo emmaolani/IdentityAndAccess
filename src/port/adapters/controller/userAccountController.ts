@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import UserAccountApplicationService from "../../../application/userAccount/userAccountApplicationService";
-import NewUserAccountCommand from "../../../application/userAccount/newUserAccountCommand";
+import UserAccountApplicationService from "../../../application/identity/userAccount/userAccountApplicationService";
+import NewUserAccountCommand from "../../../application/identity/userAccount/newUserAccountCommand";
 import NewPersonalInfoCommand from "../../../application/personalInfo/newPersonalInfoCommand";
 
 class UserAccountController {

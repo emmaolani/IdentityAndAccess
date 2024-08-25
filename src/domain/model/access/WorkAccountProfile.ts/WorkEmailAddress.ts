@@ -1,5 +1,5 @@
 import VerificationCode from "./verificationCode";
-import ValueObject from "../../valueObject";
+import ValueObject from "../../../valueObject";
 
 class WorkEmailAddress extends ValueObject {
   private value: string;

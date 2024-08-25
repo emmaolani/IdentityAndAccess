@@ -1,6 +1,6 @@
 import UserName from "./userName";
 import Password from "./password";
-import DomainEventPublisher from "../../domainEventPublisher";
+import DomainEventPublisher from "../../../domainEventPublisher";
 import NewUserAccountCreated from "./newUserAccountCreated";
 
 class UserAccount {
@@ -39,10 +39,12 @@ class UserAccount {
 
   validate(username: string, password: string): boolean {
     if (!this.isActive) {
-      return false;
+      throw new Error("User account is not active");
     }
 
-    return this.username.compare(username) && this.password.compare(password);
+    return (
+      this.username.compareTo(username) && this.password.compareTo(password)
+    );
   }
 
   publishNewUserAccountCreatedEvent(

@@ -1,4 +1,4 @@
-import DomainEvent from "../../domainEvent";
+import DomainEvent from "../../../domainEvent";
 
 class NewUserAccountCreated implements DomainEvent {
   private eventName: string;

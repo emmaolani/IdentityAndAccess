@@ -1,6 +1,6 @@
 import EventStoreDelegate from "../../src/application/eventStoreDelegate";
 import EventStoreMock from "./mock/eventStoreMock";
-import NewUserAccountCreated from "../../src/domain/model/userAccount/newUserAccountCreated";
+import NewUserAccountCreated from "../../src/domain/model/identity/userAccount/newUserAccountCreated";
 
 describe("EventStoreDelegate", () => {
   it("should be subscribed to All domain events", () => {
@@ -17,6 +17,8 @@ describe("EventStoreDelegate", () => {
       new NewUserAccountCreated("userId", "userName")
     );
 
-    expect(eventStore.domainEvents).toBeInstanceOf(NewUserAccountCreated);
+    expect(eventStore.getAllStoredEvents()).toBeInstanceOf(
+      NewUserAccountCreated
+    );
   });
 });

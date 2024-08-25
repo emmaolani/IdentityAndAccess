@@ -1,4 +1,4 @@
-import ValueObject from "../../valueObject";
+import ValueObject from "../../../valueObject";
 
 class VerificationCode extends ValueObject {
   private value: string;

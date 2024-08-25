@@ -1,11 +1,11 @@
-import RepositoryFactory from "../../domain/repositoryFactory";
-import DomainEventPublisher from "../../domain/domainEventPublisher";
-import DomainEventSubscriber from "../../domain/domainEventSubscriber";
-import EventStoreDelegate from "../eventStoreDelegate";
+import RepositoryFactory from "../../../domain/repositoryFactory";
+import DomainEventPublisher from "../../../domain/domainEventPublisher";
+import DomainEventSubscriber from "../../../domain/domainEventSubscriber";
+import EventStoreDelegate from "../../eventStoreDelegate";
 import NewUserAccountCommand from "./newUserAccountCommand";
-import UserAccount from "../../domain/model/userAccount/userAccount";
-import UserName from "../../domain/model/userAccount/userName";
-import Password from "../../domain/model/userAccount/password";
+import UserAccount from "../../../domain/model/identity/userAccount/userAccount";
+import UserName from "../../../domain/model/identity/userAccount/userName";
+import Password from "../../../domain/model/identity/userAccount/password";
 
 // TODO: create tests for this class
 class UserAccountApplicationService {

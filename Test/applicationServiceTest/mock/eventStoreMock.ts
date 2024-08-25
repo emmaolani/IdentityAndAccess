@@ -2,10 +2,16 @@ import EventStore from "../../../src/domain/eventStore";
 import DomainEvent from "../../../src/domain/domainEvent";
 
 class EventStoreMock implements EventStore {
-  domainEvents: DomainEvent;
+  private domainEvents: DomainEvent | null = null;
 
   append(anEvent: DomainEvent) {
     this.domainEvents = anEvent;
+  }
+  getAllStoredEvents(): DomainEvent | null {
+    return this.domainEvents;
+  }
+  clear() {
+    this.domainEvents = null;
   }
 }
 

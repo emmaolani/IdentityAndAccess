@@ -1,5 +1,5 @@
 import ITUandISOSpecs from "../../../../src/domain/model/globalSettings/ituAndIsoSpecs";
-import WorkPhoneNumber from "../../../../src/domain/model/WorkAccountProfile.ts/WorkPhoneNumber";
+import WorkPhoneNumber from "../../../../src/domain/model/access/WorkAccountProfile.ts/WorkPhoneNumber";
 
 describe("ITUandISOSpecs", () => {
   let id: string = "id";

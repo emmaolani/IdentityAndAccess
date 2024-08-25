@@ -1,4 +1,4 @@
-import ValueObject from "../../valueObject";
+import ValueObject from "../../../valueObject";
 
 class Address extends ValueObject {
   private countryId: string;

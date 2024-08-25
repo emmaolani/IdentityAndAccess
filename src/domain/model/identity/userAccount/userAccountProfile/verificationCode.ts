@@ -1,4 +1,4 @@
-import ValueObject from "../../valueObject";
+import ValueObject from "../../../../../../test/domainTest/model/identity/userAccountTest/userAccountMockObjectuserAccountCreationFormMock.ts/domain/model/identity/valueObject";
 
 class VerificationCode extends ValueObject {
   private value: string;

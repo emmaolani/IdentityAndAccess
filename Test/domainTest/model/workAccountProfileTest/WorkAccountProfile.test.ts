@@ -1,9 +1,9 @@
-import WorkAccountProfile from "../../../../src/domain/model/WorkAccountProfile.ts/workAccountProfile";
-import FullName from "../../../../src/domain/model/WorkAccountProfile.ts/fullName";
-import Address from "../../../../src/domain/model/WorkAccountProfile.ts/address";
-import WorkEmailAddress from "../../../../src/domain/model/WorkAccountProfile.ts/WorkEmailAddress";
-import WorkPhoneNumber from "../../../../src/domain/model/WorkAccountProfile.ts/WorkPhoneNumber";
-import VerificationCode from "../../../../src/domain/model/WorkAccountProfile.ts/verificationCode";
+import WorkAccountProfile from "../../../../src/domain/model/access/WorkAccountProfile.ts/workAccountProfile";
+import FullName from "../../../../src/domain/model/access/WorkAccountProfile.ts/fullName";
+import Address from "../../../../src/domain/model/access/WorkAccountProfile.ts/address";
+import WorkEmailAddress from "../../../../src/domain/model/access/WorkAccountProfile.ts/WorkEmailAddress";
+import WorkPhoneNumber from "../../../../src/domain/model/access/WorkAccountProfile.ts/WorkPhoneNumber";
+import VerificationCode from "../../../../src/domain/model/access/WorkAccountProfile.ts/verificationCode";
 import { option } from "../../../factories/option";
 import PersonalInfoFactory from "../../../factories/personalInfoFactory";
 

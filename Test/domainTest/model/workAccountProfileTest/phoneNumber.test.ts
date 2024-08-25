@@ -1,5 +1,5 @@
-import WorkPhoneNumber from "../../../../src/domain/model/WorkAccountProfile.ts/WorkPhoneNumber";
-import VerificationCode from "../../../../src/domain/model/WorkAccountProfile.ts/verificationCode";
+import WorkPhoneNumber from "../../../../src/domain/model/access/WorkAccountProfile.ts/WorkPhoneNumber";
+import VerificationCode from "../../../../src/domain/model/access/WorkAccountProfile.ts/verificationCode";
 
 describe("Unit Test for PhoneNumber class", () => {
   let invalidPhoneNumber: string = " 123  456 78  ";

@@ -1,5 +1,5 @@
-import WorkEmailAddress from "../../../../src/domain/model/WorkAccountProfile.ts/WorkEmailAddress";
-import VerificationCode from "../../../../src/domain/model/WorkAccountProfile.ts/verificationCode";
+import WorkEmailAddress from "../../../../src/domain/model/access/WorkAccountProfile.ts/WorkEmailAddress";
+import VerificationCode from "../../../../src/domain/model/access/WorkAccountProfile.ts/verificationCode";
 
 describe("Unit Test for EmailAddress class", () => {
   let invalidEmail: string = " tes t@coral.com ";

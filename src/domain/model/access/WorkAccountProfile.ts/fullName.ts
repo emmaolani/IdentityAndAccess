@@ -1,4 +1,4 @@
-import ValueObject from "../../valueObject";
+import ValueObject from "../../../valueObject";
 
 class FullName extends ValueObject {
   private firstName: string;

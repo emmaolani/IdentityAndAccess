@@ -1,16 +1,16 @@
-import UserAccount from "../../../../src/domain/model/userAccount/userAccount";
-import UserName from "../../../../src/domain/model/userAccount/userName";
-import Password from "../../../../src/domain/model/userAccount/password";
-import DomainEventPublisher from "../../../../src/domain/domainEventPublisher";
-import TestingEventSubscriber from "../../mock/domainEventSubscriberMock/TestingEventSubscriberMock";
-import NewUserAccountCreated from "../../../../src/domain/model/userAccount/newUserAccountCreated";
+import UserAccount from "../../../../../src/domain/model/identity/userAccount/userAccount";
+import UserName from "../../../../../src/domain/model/identity/userAccount/userName";
+import Password from "../../../../../src/domain/model/identity/userAccount/password";
+import DomainEventPublisher from "../../../../../src/domain/domainEventPublisher";
+import TestingEventSubscriber from "../../../mock/domainEventSubscriberMock/TestingEventSubscriberMock";
+import NewUserAccountCreated from "../../../../../src/domain/model/identity/userAccount/newUserAccountCreated";
 
 describe("UserAccount", () => {
   it("should create a user account", () => {
     const userAccount = new UserAccount(
       "id",
       new UserName("username"),
-      new Password("password"),
+      new Password("SecureP@ss123"),
       true
     );
 
@@ -21,30 +21,32 @@ describe("UserAccount", () => {
     const userAccount = new UserAccount(
       "id",
       new UserName("username"),
-      new Password("password"),
+      new Password("SecureP@ss123"),
       true
     );
 
-    expect(userAccount.validate("username", "password")).toBe(true);
+    expect(userAccount.validate("username", "SecureP@ss123")).toBe(true);
     expect(userAccount.validate("username", "password1")).toBe(false);
   });
 
-  it("should return false if active status is false", () => {
+  it("should throw error if active status is false", () => {
     const userAccount = new UserAccount(
       "id",
       new UserName("username"),
-      new Password("password"),
+      new Password("SecureP@ss123"),
       false
     );
 
-    expect(userAccount.validate("username", "password")).toBe(false);
+    expect(() => userAccount.validate("username", "SecureP@ss123")).toThrow(
+      "User account is not active"
+    );
   });
 
   it("should publish new user account created event", () => {
     const userAccount = new UserAccount(
       "id",
       new UserName("username"),
-      new Password("password"),
+      new Password("SecureP@ss123"),
       true
     );
 

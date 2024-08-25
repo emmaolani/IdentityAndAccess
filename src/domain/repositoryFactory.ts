@@ -1,4 +1,4 @@
-import UserAccountRepository from "./model/userAccount/userAccountRepository";
+import UserAccountRepository from "./model/identity/userAccount/userAccountRepository";
 import EventStore from "./eventStore";
 
 interface RepositoryFactory {
