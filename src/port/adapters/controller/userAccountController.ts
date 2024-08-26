@@ -37,6 +37,13 @@ class UserAccountController {
         response.status(409).send({ message: "user account exists" });
         return;
       } else if (
+        (error as Error).message === "Username does not meet requirements"
+      ) {
+        response
+          .status(400)
+          .send({ message: "Username does not meet requirements" });
+        return;
+      } else if (
         (error as Error).message ===
         "password does not meet security requirements"
       ) {

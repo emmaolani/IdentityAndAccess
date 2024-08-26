@@ -93,7 +93,7 @@ describe("UserAccountController", () => {
     });
   });
 
-  it("should send a status code 400 if the user password is invalid", () => {
+  it("should send a status code 400 if the user password does not meet security requirement", () => {
     userAccountRepository.setDoesUserAccountExist(false);
 
     const request: unknown = new RequestMock({
@@ -111,6 +111,26 @@ describe("UserAccountController", () => {
     expect((response as ResponseMock).getStatus()).toBe(400);
     expect((response as ResponseMock).getResponse()).toEqual({
       message: "password does not meet security requirements",
+    });
+  });
+
+  it("should send a status code 400 if the user username does not meet requirements", () => {
+    userAccountRepository.setDoesUserAccountExist(false);
+
+    const request: unknown = new RequestMock({
+      username: "user+name", // this username does not meet requirements
+      password: "SecureP@123",
+    });
+    const response: unknown = new ResponseMock();
+
+    userAccountController.createUserAccount(
+      request as Required<Request>,
+      response as Required<Response>
+    );
+
+    expect((response as ResponseMock).getStatus()).toBe(400);
+    expect((response as ResponseMock).getResponse()).toEqual({
+      message: "Username does not meet requirements",
     });
   });
 });
