@@ -13,27 +13,26 @@ describe("User Account Application Service", () => {
     userAccountRepository,
     eventStore
   );
+  const userAccountApplicationService = new UserAccountApplicationService(
+    repositoryFactory
+  );
 
   beforeEach(() => {
     userAccountRepository.clear();
     eventStore.clear();
   });
 
-  it("should create a new userAccount and NewUserAccountCreatedEvent if there is no username conflict", () => {
+  it("should create a new userAccount and NewUserAccountCreated Event if there is no username conflict", () => {
+    userAccountRepository.setDoesUserAccountExist(false); // Set the user account to not exist
+
     const newUserAccountCommand = new NewUserAccountCommand(
       "123",
       "username",
       "SecureP@ss123"
     );
-    const userAccountApplicationService = new UserAccountApplicationService(
-      repositoryFactory
-    );
-
-    userAccountRepository.setDoesUserAccountExist(false);
 
     userAccountApplicationService.createUserAccount(newUserAccountCommand);
 
-    expect(userAccountRepository.doesUserAccountExist("username")).toBe(false);
     expect(userAccountRepository.getUserAccount("username")).toBeInstanceOf(
       UserAccount
     );
@@ -42,16 +41,33 @@ describe("User Account Application Service", () => {
     );
   });
 
-  it("should throw an error if there is a username conflict", () => {
-    userAccountRepository.setDoesUserAccountExist(true);
+  it("should create a userAccount with an active status of false", () => {
+    userAccountRepository.setDoesUserAccountExist(false);
 
     const newUserAccountCommand = new NewUserAccountCommand(
       "123",
       "username",
       "SecureP@ss123"
     );
-    const userAccountApplicationService = new UserAccountApplicationService(
-      repositoryFactory
+
+    userAccountApplicationService.createUserAccount(newUserAccountCommand);
+
+    const userAccount = userAccountRepository.getUserAccount("username");
+
+    expect(() => {
+      if (userAccount) {
+        userAccount.validate("username", "SecureP@ss123");
+      }
+    }).toThrow("User account is not active");
+  });
+
+  it("should throw an error if there is a username conflict", () => {
+    userAccountRepository.setDoesUserAccountExist(true); // Set to true to simulate a username conflict
+
+    const newUserAccountCommand = new NewUserAccountCommand(
+      "123",
+      "username",
+      "SecureP@ss123"
     );
 
     expect(() =>
@@ -67,9 +83,6 @@ describe("User Account Application Service", () => {
       "invalid+username",
       "SecureP@ss123"
     );
-    const userAccountApplicationService = new UserAccountApplicationService(
-      repositoryFactory
-    );
 
     expect(() =>
       userAccountApplicationService.createUserAccount(newUserAccountCommand)
@@ -83,9 +96,6 @@ describe("User Account Application Service", () => {
       "123",
       "username",
       "invalidPassword"
-    );
-    const userAccountApplicationService = new UserAccountApplicationService(
-      repositoryFactory
     );
 
     expect(() =>

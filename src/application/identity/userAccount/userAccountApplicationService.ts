@@ -7,7 +7,6 @@ import UserAccount from "../../../domain/model/identity/userAccount/userAccount"
 import UserName from "../../../domain/model/identity/userAccount/userName";
 import Password from "../../../domain/model/identity/userAccount/password";
 
-// TODO: create tests for this class
 class UserAccountApplicationService {
   private repositoryFactory: RepositoryFactory;
 
