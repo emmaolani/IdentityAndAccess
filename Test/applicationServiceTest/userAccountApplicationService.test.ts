@@ -76,6 +76,20 @@ describe("User Account Application Service", () => {
     ).toThrow("User account already exists");
   });
 
+  it("should throw an error if the argument is not UUID v4 format", () => {
+    userAccountRepository.setDoesUserAccountExist(false);
+
+    const newUserAccountCommand = new NewUserAccountCommand(
+      "invalidUUID",
+      "invalidUsername",
+      "SecureP@ss123"
+    );
+
+    expect(() => {
+      userAccountApplicationService.createUserAccount(newUserAccountCommand);
+    }).toThrow("Invalid UUID");
+  });
+
   it("should throw an error if the username does not meet the requirements", () => {
     userAccountRepository.setDoesUserAccountExist(false);
 

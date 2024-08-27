@@ -13,11 +13,13 @@ class UserAccountId extends ValueObject {
     this.value = aValue;
   }
 
-  private throwErrorIfUUIDIsValid(aValue: string): boolean {
+  private throwErrorIfUUIDIsValid(aValue: string): void {
     const uuidRegex =
       /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i; // regex for UUID v4
 
-    return uuidRegex.test(aValue);
+    if (!uuidRegex.test(aValue)) {
+      throw new Error("Invalid UUID");
+    }
   }
 
   getValue(): string {

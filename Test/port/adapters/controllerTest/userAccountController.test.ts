@@ -9,6 +9,7 @@ import ResponseMock from "./mock/responseMock";
 import UserAccount from "../../../../src/domain/model/identity/userAccount/userAccount";
 import NewUserAccountCreated from "../../../../src/domain/model/identity/userAccount/newUserAccountCreated";
 
+// TODO: write test for catching error when UUID is not valid
 describe("UserAccountController", () => {
   const userAccountRepository = new UserAccountRepositoryMock();
   const eventStore = new EventStoreMock();
@@ -28,109 +29,111 @@ describe("UserAccountController", () => {
     eventStore.clear();
   });
 
-  it("should create a new user account and send response with status 201", () => {
-    userAccountRepository.setDoesUserAccountExist(false); // user account does not exist
+  describe("createUserAccount", () => {
+    it("should create a new user account and send response with status 201", () => {
+      userAccountRepository.setDoesUserAccountExist(false); // user account does not exist
 
-    const request: unknown = new RequestMock({
-      username: "username",
-      password: "SecureP@ss123",
-    });
-    const response: unknown = new ResponseMock();
+      const request: unknown = new RequestMock({
+        username: "username",
+        password: "SecureP@ss123",
+      });
+      const response: unknown = new ResponseMock();
 
-    userAccountController.createUserAccount(
-      request as Required<Request>,
-      response as Required<Response>
-    );
+      userAccountController.createUserAccount(
+        request as Required<Request>,
+        response as Required<Response>
+      );
 
-    // asserting that the user account was created and the event was stored
-    expect(userAccountRepository.getUserAccount("username")).toBeInstanceOf(
-      UserAccount
-    );
-    expect(eventStore.getAllStoredEvents()).toBeInstanceOf(
-      NewUserAccountCreated
-    );
+      // asserting that the user account was created and the event was stored
+      expect(userAccountRepository.getUserAccount("username")).toBeInstanceOf(
+        UserAccount
+      );
+      expect(eventStore.getAllStoredEvents()).toBeInstanceOf(
+        NewUserAccountCreated
+      );
 
-    // asserting that the response was sent with status 201
-    expect((response as ResponseMock).getStatus()).toBe(201);
-    expect((response as ResponseMock).getResponse()).toEqual({
-      message: "User account created",
-    });
-  });
-
-  it("should send response with status 400 if request body is invalid", () => {
-    const request: unknown = new RequestMock({}); // invalid request body
-    const response: unknown = new ResponseMock();
-
-    userAccountController.createUserAccount(
-      request as Required<Request>,
-      response as Required<Response>
-    );
-
-    expect((response as ResponseMock).getStatus()).toBe(400);
-    expect((response as ResponseMock).getResponse()).toEqual({
-      message: "invalid request body",
-    });
-  });
-
-  it("should send 409 if there is conflict with username", () => {
-    userAccountRepository.setDoesUserAccountExist(true); // user account exists
-
-    const request: unknown = new RequestMock({
-      username: "username",
-      password: "SecureP@ss123",
+      // asserting that the response was sent with status 201
+      expect((response as ResponseMock).getStatus()).toBe(201);
+      expect((response as ResponseMock).getResponse()).toEqual({
+        message: "User account created",
+      });
     });
 
-    const response: unknown = new ResponseMock();
+    it("should send response with status 400 if request body is invalid", () => {
+      const request: unknown = new RequestMock({}); // invalid request body
+      const response: unknown = new ResponseMock();
 
-    userAccountController.createUserAccount(
-      request as Required<Request>,
-      response as Required<Response>
-    );
+      userAccountController.createUserAccount(
+        request as Required<Request>,
+        response as Required<Response>
+      );
 
-    expect((response as ResponseMock).getStatus()).toBe(409);
-    expect((response as ResponseMock).getResponse()).toEqual({
-      message: "user account exists",
-    });
-  });
-
-  it("should send a status code 400 if the user password does not meet security requirement", () => {
-    userAccountRepository.setDoesUserAccountExist(false);
-
-    const request: unknown = new RequestMock({
-      username: "username",
-      password: "password",
+      expect((response as ResponseMock).getStatus()).toBe(400);
+      expect((response as ResponseMock).getResponse()).toEqual({
+        message: "invalid request body",
+      });
     });
 
-    const response: unknown = new ResponseMock();
+    it("should send 409 if there is conflict with username", () => {
+      userAccountRepository.setDoesUserAccountExist(true); // user account exists
 
-    userAccountController.createUserAccount(
-      request as Required<Request>,
-      response as Required<Response>
-    );
+      const request: unknown = new RequestMock({
+        username: "username",
+        password: "SecureP@ss123",
+      });
 
-    expect((response as ResponseMock).getStatus()).toBe(400);
-    expect((response as ResponseMock).getResponse()).toEqual({
-      message: "password does not meet security requirements",
+      const response: unknown = new ResponseMock();
+
+      userAccountController.createUserAccount(
+        request as Required<Request>,
+        response as Required<Response>
+      );
+
+      expect((response as ResponseMock).getStatus()).toBe(409);
+      expect((response as ResponseMock).getResponse()).toEqual({
+        message: "user account exists",
+      });
     });
-  });
 
-  it("should send a status code 400 if the user username does not meet requirements", () => {
-    userAccountRepository.setDoesUserAccountExist(false);
+    it("should send a status code 400 if the user password does not meet security requirement", () => {
+      userAccountRepository.setDoesUserAccountExist(false);
 
-    const request: unknown = new RequestMock({
-      username: "user+name", // this username does not meet requirements
-      password: "SecureP@123",
+      const request: unknown = new RequestMock({
+        username: "username",
+        password: "password",
+      });
+
+      const response: unknown = new ResponseMock();
+
+      userAccountController.createUserAccount(
+        request as Required<Request>,
+        response as Required<Response>
+      );
+
+      expect((response as ResponseMock).getStatus()).toBe(400);
+      expect((response as ResponseMock).getResponse()).toEqual({
+        message: "password does not meet security requirements",
+      });
     });
-    const response: unknown = new ResponseMock();
 
-    userAccountController.createUserAccount(
-      request as Required<Request>,
-      response as Required<Response>
-    );
+    it("should send a status code 400 if the user username does not meet requirements", () => {
+      userAccountRepository.setDoesUserAccountExist(false);
 
-    expect((response as ResponseMock).getStatus()).toBe(400);
-    expect((response as ResponseMock).getResponse()).toEqual({
-      message: "Username does not meet requirements",
+      const request: unknown = new RequestMock({
+        username: "user+name", // this username does not meet requirements
+        password: "SecureP@123",
+      });
+      const response: unknown = new ResponseMock();
+
+      userAccountController.createUserAccount(
+        request as Required<Request>,
+        response as Required<Response>
+      );
+
+      expect((response as ResponseMock).getStatus()).toBe(400);
+      expect((response as ResponseMock).getResponse()).toEqual({
+        message: "Username does not meet requirements",
+      });
     });
   });
 });
