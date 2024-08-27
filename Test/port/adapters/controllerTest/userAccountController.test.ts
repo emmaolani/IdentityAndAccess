@@ -37,7 +37,7 @@ describe("UserAccountController", () => {
     it("should create a new user account and send response with status 201", () => {
       userAccountRepository.setDoesUserAccountExist(false); // user account does not exist
 
-      const username: string = "tester2.0";
+      const username: string = "tester20";
       const password: string = "SecureP@ss1234";
 
       const request: unknown = new RequestMock({
@@ -53,6 +53,7 @@ describe("UserAccountController", () => {
 
       userAccount = userAccountRepository.getUserAccount("username");
       event = eventStore.getAllStoredEvents();
+
       // asserting that the user account was created and the event was stored
       assertThatPropertiesIn_userAccount_match(username, password);
       assertThatPropertiesIn_newUserAccountCreated_match(username);

@@ -11,7 +11,7 @@ class UserAccountRepositoryMock implements UserAccountRepository {
     new Password("secureD@123"),
     false
   );
-  private userAccounts: UserAccount;
+  private userAccount: UserAccount;
   private userAccountExists: boolean;
 
   doesUserAccountExist(username: string): boolean {
@@ -23,15 +23,15 @@ class UserAccountRepositoryMock implements UserAccountRepository {
   }
 
   save(userAccount: UserAccount): void {
-    this.userAccounts = userAccount;
+    this.userAccount = userAccount;
   }
 
   getUserAccount(username: string): UserAccount {
-    return this.userAccounts;
+    return this.userAccount;
   }
 
   clear(): void {
-    this.userAccounts = this.defaultUserAccount;
+    this.userAccount = this.defaultUserAccount;
   }
 
   commit(): void {
