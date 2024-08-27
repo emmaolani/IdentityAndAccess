@@ -5,6 +5,7 @@ import NewUserAccountCreated from "../../src/domain/model/identity/userAccount/n
 import RepositoryFactoryMock from "./mock/repositoryFactoryMock";
 import UserAccountRepositoryMock from "./mock/userAccountRepositoryMock";
 import EventStoreMock from "./mock/eventStoreMock";
+import UUIDGenerator from "../../src/port/adapters/controller/uUIDGenerator";
 
 describe("User Account Application Service", () => {
   const userAccountRepository = new UserAccountRepositoryMock();
@@ -26,7 +27,7 @@ describe("User Account Application Service", () => {
     userAccountRepository.setDoesUserAccountExist(false); // Set the user account to not exist
 
     const newUserAccountCommand = new NewUserAccountCommand(
-      "123",
+      new UUIDGenerator().generate(),
       "username",
       "SecureP@ss123"
     );
@@ -45,7 +46,7 @@ describe("User Account Application Service", () => {
     userAccountRepository.setDoesUserAccountExist(false);
 
     const newUserAccountCommand = new NewUserAccountCommand(
-      "123",
+      new UUIDGenerator().generate(),
       "username",
       "SecureP@ss123"
     );
@@ -65,7 +66,7 @@ describe("User Account Application Service", () => {
     userAccountRepository.setDoesUserAccountExist(true); // Set to true to simulate a username conflict
 
     const newUserAccountCommand = new NewUserAccountCommand(
-      "123",
+      new UUIDGenerator().generate(),
       "username",
       "SecureP@ss123"
     );
@@ -79,7 +80,7 @@ describe("User Account Application Service", () => {
     userAccountRepository.setDoesUserAccountExist(false);
 
     const newUserAccountCommand = new NewUserAccountCommand(
-      "123",
+      new UUIDGenerator().generate(),
       "invalid+username",
       "SecureP@ss123"
     );
@@ -93,7 +94,7 @@ describe("User Account Application Service", () => {
     userAccountRepository.setDoesUserAccountExist(false);
 
     const newUserAccountCommand = new NewUserAccountCommand(
-      "123",
+      new UUIDGenerator().generate(),
       "username",
       "invalidPassword"
     );

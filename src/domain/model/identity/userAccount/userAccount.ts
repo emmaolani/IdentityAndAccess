@@ -1,16 +1,17 @@
+import UserAccountId from "./userAccountId";
 import UserName from "./userName";
 import Password from "./password";
-import DomainEventPublisher from "../../../domainEventPublisher";
 import NewUserAccountCreated from "./newUserAccountCreated";
+import DomainEventPublisher from "../../../domainEventPublisher";
 
 class UserAccount {
-  private id: string;
+  private id: UserAccountId;
   private username: UserName;
   private password: Password;
   private isActive: boolean;
 
   constructor(
-    anId: string,
+    anId: UserAccountId,
     aUsername: UserName,
     aPassword: Password,
     aStatus: boolean
@@ -21,7 +22,7 @@ class UserAccount {
     this.setActive(aStatus);
   }
 
-  private setId(anId: string) {
+  private setId(anId: UserAccountId) {
     this.id = anId;
   }
 
@@ -52,7 +53,7 @@ class UserAccount {
   ) {
     if (aDomainEventPublisher) {
       aDomainEventPublisher.publish(
-        new NewUserAccountCreated(this.id, this.username.getValue())
+        new NewUserAccountCreated(this.id.getValue(), this.username.getValue())
       );
     } else {
       throw new Error("DomainEventPublisher is not given");

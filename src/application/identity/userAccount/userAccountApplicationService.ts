@@ -6,6 +6,7 @@ import NewUserAccountCommand from "./newUserAccountCommand";
 import UserAccount from "../../../domain/model/identity/userAccount/userAccount";
 import UserName from "../../../domain/model/identity/userAccount/userName";
 import Password from "../../../domain/model/identity/userAccount/password";
+import UserAccountId from "../../../domain/model/identity/userAccount/userAccountId";
 
 class UserAccountApplicationService {
   private repositoryFactory: RepositoryFactory;
@@ -27,7 +28,7 @@ class UserAccountApplicationService {
         this.initializeDomainEventPublisher(new EventStoreDelegate(eventStore));
 
       const userAccount: UserAccount = new UserAccount(
-        newUserAccountCommand.getId(),
+        new UserAccountId(newUserAccountCommand.getId()),
         new UserName(newUserAccountCommand.getUsername()),
         new Password(newUserAccountCommand.getPassword()),
         false

@@ -1,6 +1,8 @@
 import UserAccount from "../../../../../src/domain/model/identity/userAccount/userAccount";
 import UserName from "../../../../../src/domain/model/identity/userAccount/userName";
 import Password from "../../../../../src/domain/model/identity/userAccount/password";
+import UserAccountId from "../../../../../src/domain/model/identity/userAccount/userAccountId";
+import UUIDGenerator from "../../../../../src/port/adapters/controller/uUIDGenerator";
 import DomainEventPublisher from "../../../../../src/domain/domainEventPublisher";
 import TestingEventSubscriber from "../../../mock/domainEventSubscriberMock/TestingEventSubscriberMock";
 import NewUserAccountCreated from "../../../../../src/domain/model/identity/userAccount/newUserAccountCreated";
@@ -8,7 +10,7 @@ import NewUserAccountCreated from "../../../../../src/domain/model/identity/user
 describe("UserAccount", () => {
   it("should create a user account", () => {
     const userAccount = new UserAccount(
-      "id",
+      new UserAccountId(new UUIDGenerator().generate()),
       new UserName("username"),
       new Password("SecureP@ss123"),
       true
@@ -19,7 +21,7 @@ describe("UserAccount", () => {
 
   it("should return true if a user's username and password is valid", () => {
     const userAccount = new UserAccount(
-      "id",
+      new UserAccountId(new UUIDGenerator().generate()),
       new UserName("username"),
       new Password("SecureP@ss123"),
       true
@@ -31,7 +33,7 @@ describe("UserAccount", () => {
 
   it("should throw error if active status is false", () => {
     const userAccount = new UserAccount(
-      "id",
+      new UserAccountId(new UUIDGenerator().generate()),
       new UserName("username"),
       new Password("SecureP@ss123"),
       false
@@ -44,7 +46,7 @@ describe("UserAccount", () => {
 
   it("should publish new user account created event", () => {
     const userAccount = new UserAccount(
-      "id",
+      new UserAccountId(new UUIDGenerator().generate()),
       new UserName("username"),
       new Password("SecureP@ss123"),
       true
