@@ -8,6 +8,7 @@ import RequestMock from "./mock/requestMock";
 import ResponseMock from "./mock/responseMock";
 import UserAccount from "../../../../src/domain/model/identity/userAccount/userAccount";
 import NewUserAccountCreated from "../../../../src/domain/model/identity/userAccount/newUserAccountCreated";
+import DomainEvent from "../../../../src/domain/domainEvent";
 
 // TODO: write test for catching error when UUID is not valid
 describe("UserAccountController", () => {
@@ -24,6 +25,9 @@ describe("UserAccountController", () => {
     userAccountApplicationService
   );
 
+  let userAccount: UserAccount;
+  let event: DomainEvent;
+
   beforeEach(() => {
     userAccountRepository.clear();
     eventStore.clear();
@@ -33,9 +37,12 @@ describe("UserAccountController", () => {
     it("should create a new user account and send response with status 201", () => {
       userAccountRepository.setDoesUserAccountExist(false); // user account does not exist
 
+      const username: string = "tester2.0";
+      const password: string = "SecureP@ss1234";
+
       const request: unknown = new RequestMock({
-        username: "username",
-        password: "SecureP@ss123",
+        username: username,
+        password: password,
       });
       const response: unknown = new ResponseMock();
 
@@ -44,13 +51,11 @@ describe("UserAccountController", () => {
         response as Required<Response>
       );
 
+      userAccount = userAccountRepository.getUserAccount("username");
+      event = eventStore.getAllStoredEvents();
       // asserting that the user account was created and the event was stored
-      expect(userAccountRepository.getUserAccount("username")).toBeInstanceOf(
-        UserAccount
-      );
-      expect(eventStore.getAllStoredEvents()).toBeInstanceOf(
-        NewUserAccountCreated
-      );
+      assertThatPropertiesIn_userAccount_match(username, password);
+      assertThatPropertiesIn_newUserAccountCreated_match(username);
 
       // asserting that the response was sent with status 201
       expect((response as ResponseMock).getStatus()).toBe(201);
@@ -58,6 +63,24 @@ describe("UserAccountController", () => {
         message: "User account created",
       });
     });
+
+    function assertThatPropertiesIn_userAccount_match(
+      username: string,
+      password: string
+    ) {
+      expect(userAccount).toBeInstanceOf(UserAccount);
+      expect(userAccount["username"]["value"]).toBe(username);
+      expect(userAccount["password"]["value"]).toBe(password);
+    }
+
+    function assertThatPropertiesIn_newUserAccountCreated_match(
+      username: string
+    ) {
+      expect(event).toBeInstanceOf(NewUserAccountCreated);
+      if (event instanceof NewUserAccountCreated) {
+        expect(event["userName"]).toBe(username);
+      }
+    }
 
     it("should send response with status 400 if request body is invalid", () => {
       const request: unknown = new RequestMock({}); // invalid request body

@@ -1,17 +1,19 @@
 import EventStore from "../../../src/domain/eventStore";
 import DomainEvent from "../../../src/domain/domainEvent";
+import NewUserAccountCreated from "../../../src/domain/model/identity/userAccount/newUserAccountCreated";
 
 class EventStoreMock implements EventStore {
-  private domainEvents: DomainEvent | null = null;
+  private domainEvent: DomainEvent;
 
   append(anEvent: DomainEvent) {
-    this.domainEvents = anEvent;
+    this.domainEvent = anEvent;
   }
-  getAllStoredEvents(): DomainEvent | null {
-    return this.domainEvents;
+  getAllStoredEvents(): DomainEvent {
+    return this.domainEvent;
   }
+
   clear() {
-    this.domainEvents = null;
+    this.domainEvent = new NewUserAccountCreated("id", "default");
   }
 }
 

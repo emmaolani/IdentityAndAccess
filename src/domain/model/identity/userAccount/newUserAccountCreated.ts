@@ -3,8 +3,8 @@ import DomainEvent from "../../../domainEvent";
 class NewUserAccountCreated implements DomainEvent {
   private eventName: string;
   private occurredOn: Date;
-  private UserAccountId: string;
-  private UserName: string;
+  private userAccountId: string;
+  private userName: string;
 
   constructor(aUserAccountId: string, aUserName: string) {
     this.setEventName("NewUserAccountCreated");
@@ -22,11 +22,11 @@ class NewUserAccountCreated implements DomainEvent {
   }
 
   setUserAccountId(aUserAccountId: string) {
-    this.UserAccountId = aUserAccountId;
+    this.userAccountId = aUserAccountId;
   }
 
   setUserName(aUserName: string) {
-    this.UserName = aUserName;
+    this.userName = aUserName;
   }
 
   getEventName(): string {
@@ -38,11 +38,11 @@ class NewUserAccountCreated implements DomainEvent {
   }
 
   getUserAccountId(): string {
-    return this.UserAccountId;
+    return this.userAccountId;
   }
 
   getUserName(): string {
-    return this.UserName;
+    return this.userName;
   }
 }
 

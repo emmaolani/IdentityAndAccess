@@ -7,6 +7,7 @@ import UserAccount from "../../../domain/model/identity/userAccount/userAccount"
 import UserName from "../../../domain/model/identity/userAccount/userName";
 import Password from "../../../domain/model/identity/userAccount/password";
 import UserAccountId from "../../../domain/model/identity/userAccount/userAccountId";
+import UserAccountRepository from "../../../domain/model/identity/userAccount/userAccountRepository";
 
 class UserAccountApplicationService {
   private repositoryFactory: RepositoryFactory;
@@ -15,31 +16,37 @@ class UserAccountApplicationService {
     this.repositoryFactory = aRepositoryFactory;
   }
 
-  createUserAccount(newUserAccountCommand: NewUserAccountCommand) {
+  createUserAccount(aNewUserAccountCommand: NewUserAccountCommand) {
     const { userAccountRepository, eventStore } =
       this.getUserAccountRepositoryAndEventStore();
 
-    const doesUserAccountExist = userAccountRepository.doesUserAccountExist(
-      newUserAccountCommand.getUsername()
+    this.throwErrorIfUserNameExistsInDB(
+      aNewUserAccountCommand.getUsername(),
+      userAccountRepository
     );
 
-    if (!doesUserAccountExist) {
-      const domainEventPublisher: DomainEventPublisher =
-        this.initializeDomainEventPublisher(new EventStoreDelegate(eventStore));
+    const domainEventPublisher: DomainEventPublisher =
+      this.initializeDomainEventPublisher(new EventStoreDelegate(eventStore));
 
-      const userAccount: UserAccount = new UserAccount(
-        new UserAccountId(newUserAccountCommand.getId()),
-        new UserName(newUserAccountCommand.getUsername()),
-        new Password(newUserAccountCommand.getPassword()),
-        false
-      );
+    const userAccount: UserAccount = new UserAccount(
+      new UserAccountId(aNewUserAccountCommand.getId()),
+      new UserName(aNewUserAccountCommand.getUsername()),
+      new Password(aNewUserAccountCommand.getPassword()),
+      false
+    );
 
-      userAccount.publishNewUserAccountCreatedEvent(domainEventPublisher);
+    userAccount.publishNewUserAccountCreatedEvent(domainEventPublisher);
 
-      userAccountRepository.save(userAccount);
+    userAccountRepository.save(userAccount);
 
-      userAccountRepository.commit();
-    } else {
+    userAccountRepository.commit();
+  }
+
+  private throwErrorIfUserNameExistsInDB(
+    aUsername: string,
+    aUserAccountRepository: UserAccountRepository
+  ) {
+    if (aUserAccountRepository.doesUserAccountExist(aUsername)) {
       throw new Error("User account already exists");
     }
   }
