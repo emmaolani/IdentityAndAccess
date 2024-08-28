@@ -29,8 +29,8 @@ describe("UserAccountController", () => {
   let event: DomainEvent;
 
   beforeEach(() => {
-    userAccountRepository.clear();
-    eventStore.clear();
+    userAccountRepository.reset();
+    eventStore.reset();
   });
 
   describe("createUserAccount", () => {
@@ -99,7 +99,7 @@ describe("UserAccountController", () => {
     });
 
     it("should send 409 if there is conflict with username", () => {
-      userAccountRepository.setDoesUserAccountExist(true); // user account exists
+      userAccountRepository.setDoesUserAccountExist(true); // username already exists
 
       const request: unknown = new RequestMock({
         username: "username",
@@ -124,7 +124,7 @@ describe("UserAccountController", () => {
 
       const request: unknown = new RequestMock({
         username: "username",
-        password: "password",
+        password: "password", // this password does not meet requirements
       });
 
       const response: unknown = new ResponseMock();
@@ -144,7 +144,7 @@ describe("UserAccountController", () => {
       userAccountRepository.setDoesUserAccountExist(false);
 
       const request: unknown = new RequestMock({
-        username: "user+name", // this username does not meet requirements
+        username: "user+n-ame", // this username does not meet requirements
         password: "SecureP@123",
       });
       const response: unknown = new ResponseMock();

@@ -12,7 +12,7 @@ class EventStoreMock implements EventStore {
     return this.domainEvent;
   }
 
-  clear() {
+  reset() {
     this.domainEvent = new NewUserAccountCreated("id", "default");
   }
 }

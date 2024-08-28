@@ -7,7 +7,7 @@ describe("UserName", () => {
     expect(userName.getValue()).toBe("username");
   });
 
-  it("should not store empty value as a username", () => {
+  it("should not set username value with value that does not meet username requirements", () => {
     expect(() => new UserName("")).toThrow(
       "Username does not meet requirements"
     );

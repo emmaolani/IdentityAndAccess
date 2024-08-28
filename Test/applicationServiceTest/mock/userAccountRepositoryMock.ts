@@ -30,7 +30,7 @@ class UserAccountRepositoryMock implements UserAccountRepository {
     return this.userAccount;
   }
 
-  clear(): void {
+  reset(): void {
     this.userAccount = this.defaultUserAccount;
   }
 

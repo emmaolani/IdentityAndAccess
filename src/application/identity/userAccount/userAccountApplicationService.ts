@@ -20,11 +20,6 @@ class UserAccountApplicationService {
     const { userAccountRepository, eventStore } =
       this.getUserAccountRepositoryAndEventStore();
 
-    this.throwErrorIfUserNameExistsInDB(
-      aNewUserAccountCommand.getUsername(),
-      userAccountRepository
-    );
-
     const domainEventPublisher: DomainEventPublisher =
       this.initializeDomainEventPublisher(new EventStoreDelegate(eventStore));
 
@@ -33,6 +28,11 @@ class UserAccountApplicationService {
       new UserName(aNewUserAccountCommand.getUsername()),
       new Password(aNewUserAccountCommand.getPassword()),
       false
+    );
+
+    this.throwErrorIfUserNameExistsInDB(
+      aNewUserAccountCommand.getUsername(),
+      userAccountRepository
     );
 
     userAccount.publishNewUserAccountCreatedEvent(domainEventPublisher);

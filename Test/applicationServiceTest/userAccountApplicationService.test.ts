@@ -22,8 +22,8 @@ describe("User Account Application Service", () => {
   let event: DomainEvent;
 
   beforeEach(() => {
-    userAccountRepository.clear();
-    eventStore.clear();
+    userAccountRepository.reset();
+    eventStore.reset();
   });
 
   it("should create a new userAccount and NewUserAccountCreated Event if there is no username conflict", () => {
@@ -120,7 +120,7 @@ describe("User Account Application Service", () => {
   });
 
   it("should throw an error if the username does not meet the requirements", () => {
-    userAccountRepository.setDoesUserAccountExist(false);
+    userAccountRepository.setDoesUserAccountExist(true); // Set to true to simulate a username conflict (should not be reached)
 
     const newUserAccountCommand = new NewUserAccountCommand(
       new UUIDGenerator().generate(),

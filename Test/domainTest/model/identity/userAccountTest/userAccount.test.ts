@@ -8,19 +8,35 @@ import TestingEventSubscriber from "../../../mock/domainEventSubscriberMock/Test
 import NewUserAccountCreated from "../../../../../src/domain/model/identity/userAccount/newUserAccountCreated";
 
 describe("UserAccount", () => {
+  let userAccount: UserAccount;
+
   it("should create a user account", () => {
-    const userAccount = new UserAccount(
-      new UserAccountId(new UUIDGenerator().generate()),
-      new UserName("username"),
-      new Password("SecureP@ss123"),
+    const id = new UUIDGenerator().generate();
+    const username = "username";
+    const password = "SecureP@ss123";
+    userAccount = new UserAccount(
+      new UserAccountId(id),
+      new UserName(username),
+      new Password(password),
       true
     );
 
-    expect(userAccount).toBeInstanceOf(UserAccount);
+    assertThatPropertiesIn_userAccount_match(id, username, password);
   });
 
+  function assertThatPropertiesIn_userAccount_match(
+    anId: string,
+    aUsername: string,
+    aPassword: string
+  ) {
+    expect(userAccount).toBeInstanceOf(UserAccount);
+    expect(userAccount["id"]["value"]).toBe(anId);
+    expect(userAccount["username"]["value"]).toBe(aUsername);
+    expect(userAccount["password"]["value"]).toBe(aPassword);
+  }
+
   it("should return true if a user's username and password is valid", () => {
-    const userAccount = new UserAccount(
+    userAccount = new UserAccount(
       new UserAccountId(new UUIDGenerator().generate()),
       new UserName("username"),
       new Password("SecureP@ss123"),
@@ -28,11 +44,12 @@ describe("UserAccount", () => {
     );
 
     expect(userAccount.validate("username", "SecureP@ss123")).toBe(true);
-    expect(userAccount.validate("username", "password1")).toBe(false);
+    expect(userAccount.validate("username", "password1.0")).toBe(false);
+    expect(userAccount.validate("username1.0", "SecureP@ss123")).toBe(false);
   });
 
-  it("should throw error if active status is false", () => {
-    const userAccount = new UserAccount(
+  it("should not validate user and throw an error if active status is false", () => {
+    userAccount = new UserAccount(
       new UserAccountId(new UUIDGenerator().generate()),
       new UserName("username"),
       new Password("SecureP@ss123"),
@@ -45,7 +62,7 @@ describe("UserAccount", () => {
   });
 
   it("should publish new user account created event", () => {
-    const userAccount = new UserAccount(
+    userAccount = new UserAccount(
       new UserAccountId(new UUIDGenerator().generate()),
       new UserName("username"),
       new Password("SecureP@ss123"),
