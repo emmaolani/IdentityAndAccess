@@ -1,0 +1,7 @@
+All username created, stored or used in this system must meet these requirements.
+
+•  Username can be at least 2 characters long. 
+•  Username can contain any number of letter (this can be either lowercase or uppercase). 
+•  Username can contain any number of digits.
+•  Username can contain any number of the underscore character. 
+•  Username can be at most 20 characters long.
