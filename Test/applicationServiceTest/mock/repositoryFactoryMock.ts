@@ -1,4 +1,8 @@
-import RepositoryFactory from "../../../src/domain/repositoryFactory";
+import {
+  RepositoryName,
+  RepositoryCollection,
+} from "../../../src/domain/repositoryFactory/repositoryFactory.type";
+import RepositoryFactory from "../../../src/domain/repositoryFactory/repositoryFactory";
 import UserAccountRepository from "../../../src/domain/model/identity/userAccount/userAccountRepository";
 import EventStore from "../../../src/domain/eventStore";
 
@@ -13,11 +17,24 @@ class RepositoryFactoryMock implements RepositoryFactory {
     this.userAccountRepository = aUserAccountRepository;
     this.eventStore = anEventStore;
   }
-  getUserAccountRepositoryAndEventStore() {
-    return {
-      userAccountRepository: this.userAccountRepository,
-      eventStore: this.eventStore,
-    };
+
+  getRepositories<T extends RepositoryName[]>(
+    ...repos: T
+  ): RepositoryCollection<T> {
+    const repositories = {} as RepositoryCollection<RepositoryName[]>;
+
+    repos.forEach((repo) => {
+      switch (repo) {
+        case "userAccount":
+          repositories[repo] = this.userAccountRepository;
+          break;
+        case "eventStore":
+          repositories[repo] = this.eventStore;
+          break;
+      }
+    });
+
+    return repositories;
   }
 }
 

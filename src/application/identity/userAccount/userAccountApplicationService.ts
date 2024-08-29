@@ -1,4 +1,4 @@
-import RepositoryFactory from "../../../domain/repositoryFactory";
+import RepositoryFactory from "../../../domain/repositoryFactory/repositoryFactory";
 import DomainEventPublisher from "../../../domain/domainEventPublisher";
 import DomainEventSubscriber from "../../../domain/domainEventSubscriber";
 import EventStoreDelegate from "../../eventStoreDelegate";
@@ -42,17 +42,16 @@ class UserAccountApplicationService {
     userAccountRepository.commit();
   }
 
-  private throwErrorIfUserNameExistsInDB(
-    aUsername: string,
-    aUserAccountRepository: UserAccountRepository
-  ) {
-    if (aUserAccountRepository.doesUserAccountExist(aUsername)) {
-      throw new Error("User account already exists");
-    }
-  }
-
   private getUserAccountRepositoryAndEventStore() {
-    return this.repositoryFactory.getUserAccountRepositoryAndEventStore();
+    const repositories = this.repositoryFactory.getRepositories(
+      "userAccount",
+      "eventStore"
+    );
+
+    return {
+      userAccountRepository: repositories.userAccount,
+      eventStore: repositories.eventStore,
+    };
   }
 
   private initializeDomainEventPublisher(subscriber: DomainEventSubscriber) {
@@ -62,6 +61,15 @@ class UserAccountApplicationService {
     domainEventPublisher.subscribe(subscriber);
 
     return domainEventPublisher;
+  }
+
+  private throwErrorIfUserNameExistsInDB(
+    aUsername: string,
+    aUserAccountRepository: UserAccountRepository
+  ) {
+    if (aUserAccountRepository.doesUserAccountExist(aUsername)) {
+      throw new Error("User account already exists");
+    }
   }
 }
 
