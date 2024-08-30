@@ -19,7 +19,17 @@ class EmailAddress extends ValueObject {
 
   private setValue(aValue: string) {
     const newValue = this.removeWhiteSpace(aValue);
+
+    this.throwErrorIfEmailIsInvalid(newValue);
     this.value = newValue;
+  }
+
+  private throwErrorIfEmailIsInvalid(aValue: string) {
+    const emailRegex = /^(?=.*@)(?=.*\.).{1,254}$/; // this regex defines the requirement for a valid email address
+
+    if (!emailRegex.test(aValue)) {
+      throw new Error("Invalid email address");
+    }
   }
 
   private removeWhiteSpace(aValue: string): string {
@@ -39,10 +49,11 @@ class EmailAddress extends ValueObject {
   }
 
   getValue(): string {
-    if (!this.isActive) {
-      throw new Error("Email is not active");
-    }
     return this.value;
+  }
+
+  getActiveStatus(): boolean {
+    return this.isActive;
   }
 
   activateWith(code: string) {
@@ -54,9 +65,7 @@ class EmailAddress extends ValueObject {
       throw new Error("No verification code found");
     }
 
-    if (this.verificationCode.getValue() !== code) {
-      throw new Error("Invalid code");
-    }
+    this.verificationCode.throwErrorIfCodeIsInvalid(code);
 
     this.isActive = true;
     this.removeVerificationCode();

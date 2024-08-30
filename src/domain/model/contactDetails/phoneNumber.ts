@@ -3,7 +3,7 @@ import VerificationCode from "./verificationCode";
 
 class PhoneNumber extends ValueObject {
   private value: string;
-  private ituAndIsoSpecId: string; // This is the ID of the telecom specification that this phone number belongs to
+  private ituAndIsoSpecId: string;
   private isActive: boolean;
   private verificationCode: VerificationCode | null;
 
@@ -22,7 +22,16 @@ class PhoneNumber extends ValueObject {
 
   private setValue(aValue: string) {
     const newValue = this.removeWhiteSpace(aValue);
+    this.throwErrorIfPhoneNumberIsInvalid(newValue);
     this.value = newValue;
+  }
+
+  private throwErrorIfPhoneNumberIsInvalid(aValue: string) {
+    const phoneNumberRegex = /^\d{4,16}$/; // this regex defines the requirement for a valid phone number
+
+    if (!phoneNumberRegex.test(aValue)) {
+      throw new Error("Invalid phone number");
+    }
   }
 
   private removeWhiteSpace(aValue: string): string {
@@ -46,17 +55,18 @@ class PhoneNumber extends ValueObject {
   }
 
   getValue(): string {
-    if (!this.isActive) {
-      throw new Error("Phone number is not active");
-    }
     return this.value;
+  }
+
+  getActiveStatus(): boolean {
+    return this.isActive;
   }
 
   getItuAndIsoSpecId(): string {
     return this.ituAndIsoSpecId;
   }
 
-  activateWith(code: string) {
+  activateWith(aCode: string) {
     if (this.isActive) {
       throw new Error("Phone number is already activated");
     }
@@ -65,9 +75,7 @@ class PhoneNumber extends ValueObject {
       throw new Error("No verification code found");
     }
 
-    if (this.verificationCode.getValue() !== code) {
-      throw new Error("Invalid code");
-    }
+    this.verificationCode.throwErrorIfCodeIsInvalid(aCode);
 
     this.isActive = true;
     this.removeVerificationCode();

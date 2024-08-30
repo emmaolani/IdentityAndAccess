@@ -20,7 +20,7 @@ class VerificationCode extends ValueObject {
     const sevenDigitRegex = /^\d{7}$/;
 
     if (!sevenDigitRegex.test(aValue)) {
-      throw new Error("invalid code");
+      throw new Error("Invalid code");
     }
   }
 
@@ -37,20 +37,20 @@ class VerificationCode extends ValueObject {
     }
   }
 
-  getValue(): string {
-    // checking if verification code has expired
-    if (this.isValid()) {
-      return this.value;
-    } else {
+  throwErrorIfCodeIsInvalid(code: string) {
+    this.throwErrorIfCodeHasExpired();
+    this.throwErrorIfCodeDoesNotMatch(code);
+  }
+
+  private throwErrorIfCodeHasExpired() {
+    if (Date.now() - this.timeStamp > this.allowedTimeDurationOfCode) {
       throw new Error("This code is expired");
     }
   }
 
-  private isValid(): boolean {
-    if (Date.now() - this.timeStamp > this.allowedTimeDurationOfCode) {
-      return false;
-    } else {
-      return true;
+  private throwErrorIfCodeDoesNotMatch(code: string) {
+    if (this.value !== code) {
+      throw new Error("Invalid code");
     }
   }
 }

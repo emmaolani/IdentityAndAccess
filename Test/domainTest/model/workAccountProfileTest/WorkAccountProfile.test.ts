@@ -7,6 +7,7 @@ import VerificationCode from "../../../../src/domain/model/contactDetails/verifi
 import { option } from "../../../factories/option";
 import PersonalInfoFactory from "../../../factories/personalInfoFactory";
 
+//TODO: remove restriction on retrieving contact detail
 describe("PersonalInfo", () => {
   const workAccountProfileFactory = new PersonalInfoFactory();
 
@@ -79,25 +80,25 @@ describe("PersonalInfo", () => {
     expect(workAccountProfile.getEmailAddress()).toEqual("nonAdmin@coral.com");
   });
 
-  it("should not return email address unless email is activated", () => {
-    const option: option = getSuitableOption(
-      "inActive",
-      "active",
-      "null",
-      "new"
-    );
+  // it("should not return email address unless email is activated", () => {
+  //   const option: option = getSuitableOption(
+  //     "inActive",
+  //     "active",
+  //     "null",
+  //     "new"
+  //   );
 
-    const workAccountProfile: WorkAccountProfile =
-      workAccountProfileFactory.getPersonalInfoWith(option);
+  //   const workAccountProfile: WorkAccountProfile =
+  //     workAccountProfileFactory.getPersonalInfoWith(option);
 
-    expect(() => workAccountProfile.getEmailAddress()).toThrow(
-      "Email is not active"
-    );
+  //   expect(() => workAccountProfile.getEmailAddress()).toThrow(
+  //     "Email is not active"
+  //   );
 
-    workAccountProfile.activateEmailAddressWith("1234567");
+  //   workAccountProfile.activateEmailAddressWith("1234567");
 
-    expect(workAccountProfile.getEmailAddress()).toEqual("admin@coral.com");
-  });
+  //   expect(workAccountProfile.getEmailAddress()).toEqual("admin@coral.com");
+  // });
 
   it("should throw an error if email is being activated with wrong code", () => {
     const option: option = getSuitableOption(
@@ -205,25 +206,25 @@ describe("PersonalInfo", () => {
     expect(workAccountProfile.getPhoneNumber()).toEqual("223456789");
   });
 
-  it("should not return phone number unless phone is activated", () => {
-    const option: option = getSuitableOption(
-      "active",
-      "inActive",
-      "new",
-      "null"
-    );
+  // it("should not return phone number unless phone is activated", () => {
+  //   const option: option = getSuitableOption(
+  //     "active",
+  //     "inActive",
+  //     "new",
+  //     "null"
+  //   );
 
-    const workAccountProfile: WorkAccountProfile =
-      workAccountProfileFactory.getPersonalInfoWith(option);
+  //   const workAccountProfile: WorkAccountProfile =
+  //     workAccountProfileFactory.getPersonalInfoWith(option);
 
-    expect(() => workAccountProfile.getPhoneNumber()).toThrow(
-      "Phone number is not active"
-    );
+  //   expect(() => workAccountProfile.getPhoneNumber()).toThrow(
+  //     "Phone number is not active"
+  //   );
 
-    workAccountProfile.activatePhoneNumberWith("1234567");
+  //   workAccountProfile.activatePhoneNumberWith("1234567");
 
-    expect(workAccountProfile.getPhoneNumber()).toEqual("123456789");
-  });
+  //   expect(workAccountProfile.getPhoneNumber()).toEqual("123456789");
+  // });
 
   it("should throw an error if phone is being activated with wrong code", () => {
     const option: option = getSuitableOption(
