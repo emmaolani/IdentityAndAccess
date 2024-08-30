@@ -1,0 +1,4 @@
+All email address created, stored or used in this system must meet these security requirements.
+
+•  All email address in the system can have a maximum 254 character. 
+•  All email address must contain the "@ and ." symbol.

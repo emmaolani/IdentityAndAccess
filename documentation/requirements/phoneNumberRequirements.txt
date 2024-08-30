@@ -1,0 +1,4 @@
+All phone number created, stored or used in this system must meet these security requirements.
+
+•  All phone number in the system can have a minimum 4 character and a maximum 16 character. 
+•  A phone number can only comprise of integers.

@@ -1,0 +1,4 @@
+All verification code created, stored or used in this system must meet these security requirements.
+
+•  All verification code must be exactly 7 digits long. 
+•  ALL verification code can only be made up of integers.
