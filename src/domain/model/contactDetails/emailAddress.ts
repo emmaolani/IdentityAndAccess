@@ -1,22 +1,19 @@
-import ValueObject from "../../../../../../test/domainTest/model/identity/userAccountTest/userAccountMockObjectuserAccountCreationFormMock.ts/domain/model/identity/valueObject";
 import VerificationCode from "./verificationCode";
+import ValueObject from "../../valueObject";
 
-class PhoneNumber extends ValueObject {
+class EmailAddress extends ValueObject {
   private value: string;
-  private ituAndIsoSpecId: string; // This is the ID of the telcom specification that this phone number belongs to
   private isActive: boolean;
   private verificationCode: VerificationCode | null;
 
   constructor(
     aValue: string,
-    aItuAndIsoSpecId: string,
-    isActive: boolean,
+    aStatus: boolean,
     aVerificationCode: VerificationCode | null
   ) {
     super();
     this.setValue(aValue);
-    this.setItuAndIsoSpecId(aItuAndIsoSpecId);
-    this.setActiveStatus(isActive);
+    this.setActiveStatus(aStatus);
     this.setVerificationCode(aVerificationCode);
   }
 
@@ -27,10 +24,6 @@ class PhoneNumber extends ValueObject {
 
   private removeWhiteSpace(aValue: string): string {
     return aValue.replace(/\s+/g, "");
-  }
-
-  private setItuAndIsoSpecId(aItuAndIsoSpecId: string) {
-    this.ituAndIsoSpecId = aItuAndIsoSpecId;
   }
 
   private setActiveStatus(aStatus: boolean) {
@@ -47,18 +40,14 @@ class PhoneNumber extends ValueObject {
 
   getValue(): string {
     if (!this.isActive) {
-      throw new Error("Phone number is not active");
+      throw new Error("Email is not active");
     }
     return this.value;
   }
 
-  getItuAndIsoSpecId(): string {
-    return this.ituAndIsoSpecId;
-  }
-
   activateWith(code: string) {
     if (this.isActive) {
-      throw new Error("Phone number is already activated");
+      throw new Error("Email is already activated");
     }
 
     if (this.verificationCode === null) {
@@ -78,4 +67,4 @@ class PhoneNumber extends ValueObject {
   }
 }
 
-export default PhoneNumber;
+export default EmailAddress;

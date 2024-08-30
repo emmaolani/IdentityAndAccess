@@ -1,6 +1,6 @@
-import EmailAddress from "./emailAddress";
-import PhoneNumber from "./phoneNumber";
-import VerificationCode from "./verificationCode";
+import EmailAddress from "../../../contactDetails/emailAddress";
+import PhoneNumber from "../../../contactDetails/phoneNumber";
+import VerificationCode from "../../../contactDetails/verificationCode";
 
 class UserAccountProfile {
   private emailAddress: EmailAddress;

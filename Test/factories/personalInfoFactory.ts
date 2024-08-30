@@ -1,9 +1,9 @@
-import WorkAccountProfile from "../../src/domain/model/access/WorkAccountProfile.ts/workAccountProfile";
-import FullName from "../../src/domain/model/access/WorkAccountProfile.ts/fullName";
-import Address from "../../src/domain/model/access/WorkAccountProfile.ts/address";
-import WorkEmailAddress from "../../src/domain/model/access/WorkAccountProfile.ts/WorkEmailAddress";
-import WorkPhoneNumber from "../../src/domain/model/access/WorkAccountProfile.ts/WorkPhoneNumber";
-import VerificationCode from "../../src/domain/model/access/WorkAccountProfile.ts/verificationCode";
+import WorkAccountProfile from "../../src/domain/model/organization/WorkAccountProfile.ts/workAccountProfile";
+import FullName from "../../src/domain/model/organization/WorkAccountProfile.ts/fullName";
+import Address from "../../src/domain/model/organization/WorkAccountProfile.ts/address";
+import EmailAddress from "../../src/domain/model/contactDetails/emailAddress";
+import PhoneNumber from "../../src/domain/model/contactDetails/phoneNumber";
+import VerificationCode from "../../src/domain/model/contactDetails/verificationCode";
 import { option } from "./option";
 
 class PersonalInfoFactory {
@@ -31,34 +31,29 @@ class PersonalInfoFactory {
     return new Address("countryId", "stateId");
   }
 
-  private getEmailWith(anOption: option): WorkEmailAddress {
+  private getEmailWith(anOption: option): EmailAddress {
     const verificationCode = this.getVerificationCode(
       anOption.emailVerificationCodeType
     );
 
     if (anOption.emailType === "active") {
-      return new WorkEmailAddress("admin@coral.com", true, verificationCode);
+      return new EmailAddress("admin@coral.com", true, verificationCode);
     } else if (anOption.emailType === "inActive") {
-      return new WorkEmailAddress("admin@coral.com", false, verificationCode);
+      return new EmailAddress("admin@coral.com", false, verificationCode);
     }
 
     throw new Error("Invalid option type");
   }
 
-  private getPhoneNumber(anOption: option): WorkPhoneNumber {
+  private getPhoneNumber(anOption: option): PhoneNumber {
     const verificationCode = this.getVerificationCode(
       anOption.phoneVerificationCodeType
     );
 
     if (anOption.phoneType === "active") {
-      return new WorkPhoneNumber("123456789", "specId", true, verificationCode);
+      return new PhoneNumber("123456789", "specId", true, verificationCode);
     } else if (anOption.phoneType === "inActive") {
-      return new WorkPhoneNumber(
-        "123456789",
-        "specId",
-        false,
-        verificationCode
-      );
+      return new PhoneNumber("123456789", "specId", false, verificationCode);
     }
 
     throw new Error("Invalid option type");

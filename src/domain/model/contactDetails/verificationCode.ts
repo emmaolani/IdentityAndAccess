@@ -1,9 +1,8 @@
-import ValueObject from "../../../valueObject";
+import ValueObject from "../../valueObject";
 
 class VerificationCode extends ValueObject {
   private value: string;
   private timeStamp: number;
-  private validLengthOfCode: number = 7;
   private allowedTimeDurationOfCode: number = 300000;
 
   constructor(aValue: string, aTimeStamp: number) {
@@ -13,23 +12,15 @@ class VerificationCode extends ValueObject {
   }
 
   private setValue(aValue: string) {
-    this.checkIfValueIsInt(aValue);
-    this.isCodeLengthValid(aValue);
+    this.throwErrorIfCodeIsNotValid(aValue);
     this.value = aValue;
   }
 
-  private checkIfValueIsInt(aValue: string) {
-    if (
-      Number.isNaN(parseInt(aValue)) == true ||
-      aValue.includes(".") == true
-    ) {
-      throw Error("invalid code");
-    }
-  }
+  private throwErrorIfCodeIsNotValid(aValue: string) {
+    const sevenDigitRegex = /^\d{7}$/;
 
-  private isCodeLengthValid(aValue: string) {
-    if (aValue.length != this.validLengthOfCode) {
-      throw Error("invalid code length");
+    if (!sevenDigitRegex.test(aValue)) {
+      throw new Error("invalid code");
     }
   }
 

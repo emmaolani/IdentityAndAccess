@@ -1,9 +1,9 @@
-import ValueObject from "../../../valueObject";
+import ValueObject from "../../valueObject";
 import VerificationCode from "./verificationCode";
 
-class WorkPhoneNumber extends ValueObject {
+class PhoneNumber extends ValueObject {
   private value: string;
-  private ituAndIsoSpecId: string; // This is the ID of the telcom specification that this phone number belongs to
+  private ituAndIsoSpecId: string; // This is the ID of the telecom specification that this phone number belongs to
   private isActive: boolean;
   private verificationCode: VerificationCode | null;
 
@@ -78,4 +78,4 @@ class WorkPhoneNumber extends ValueObject {
   }
 }
 
-export default WorkPhoneNumber;
+export default PhoneNumber;

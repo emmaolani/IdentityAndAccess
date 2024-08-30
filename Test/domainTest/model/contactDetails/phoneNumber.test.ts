@@ -1,5 +1,5 @@
-import WorkPhoneNumber from "../../../../src/domain/model/access/WorkAccountProfile.ts/WorkPhoneNumber";
-import VerificationCode from "../../../../src/domain/model/access/WorkAccountProfile.ts/verificationCode";
+import PhoneNumber from "../../../../src/domain/model/contactDetails/phoneNumber";
+import VerificationCode from "../../../../src/domain/model/contactDetails/verificationCode";
 
 describe("Unit Test for PhoneNumber class", () => {
   let invalidPhoneNumber: string = " 123  456 78  ";
@@ -21,7 +21,7 @@ describe("Unit Test for PhoneNumber class", () => {
   );
 
   it("should remove white spaces from phone number", () => {
-    const phoneNumber = new WorkPhoneNumber(
+    const phoneNumber = new PhoneNumber(
       invalidPhoneNumber,
       ituAndIsoSpecId,
       active,
@@ -32,7 +32,7 @@ describe("Unit Test for PhoneNumber class", () => {
   });
 
   it("should not return phone number unless phoneNumber object is activated", () => {
-    const phoneNumber = new WorkPhoneNumber(
+    const phoneNumber = new PhoneNumber(
       validPhoneNumber,
       ituAndIsoSpecId,
       notActive,
@@ -46,8 +46,8 @@ describe("Unit Test for PhoneNumber class", () => {
     expect(phoneNumber.getValue()).toBe(validPhoneNumber);
   });
 
-  it("should return the phoneNumber object ITU&ISOspec Id", () => {
-    const phoneNumber = new WorkPhoneNumber(
+  it("should return the phoneNumber ITU&ISOspec Id", () => {
+    const phoneNumber = new PhoneNumber(
       validPhoneNumber,
       ituAndIsoSpecId,
       active,
@@ -58,7 +58,7 @@ describe("Unit Test for PhoneNumber class", () => {
   });
 
   it("should not activate phone number with expired verification code", () => {
-    const phoneNumber = new WorkPhoneNumber(
+    const phoneNumber = new PhoneNumber(
       validPhoneNumber,
       ituAndIsoSpecId,
       notActive,
@@ -71,7 +71,7 @@ describe("Unit Test for PhoneNumber class", () => {
   });
 
   it("should not activate phone number with invalid verification code", () => {
-    const phoneNumber = new WorkPhoneNumber(
+    const phoneNumber = new PhoneNumber(
       validPhoneNumber,
       ituAndIsoSpecId,
       notActive,
@@ -82,7 +82,7 @@ describe("Unit Test for PhoneNumber class", () => {
   });
 
   it("should throw an error on phone number activation if phone number is already active", () => {
-    const phoneNumber = new WorkPhoneNumber(
+    const phoneNumber = new PhoneNumber(
       validPhoneNumber,
       ituAndIsoSpecId,
       active,
@@ -95,7 +95,7 @@ describe("Unit Test for PhoneNumber class", () => {
   });
 
   it("should replace the old verification code with a new verification code", () => {
-    const phoneNumber = new WorkPhoneNumber(
+    const phoneNumber = new PhoneNumber(
       validPhoneNumber,
       ituAndIsoSpecId,
       notActive,

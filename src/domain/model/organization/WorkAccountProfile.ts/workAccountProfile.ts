@@ -1,20 +1,20 @@
 import Address from "./address";
 import FullName from "./fullName";
-import WorkEmailAddress from "./WorkEmailAddress";
-import WorkPhoneNumber from "./WorkPhoneNumber";
-import VerificationCode from "./verificationCode";
+import EmailAddress from "../../contactDetails/emailAddress";
+import PhoneNumber from "../../contactDetails/phoneNumber";
+import VerificationCode from "../../contactDetails/verificationCode";
 
 class WorkAccountProfile {
   private fullName: FullName;
   private address: Address;
-  private emailAddress: WorkEmailAddress;
-  private phoneNumber: WorkPhoneNumber;
+  private emailAddress: EmailAddress;
+  private phoneNumber: PhoneNumber;
 
   constructor(
     fullName: FullName,
     address: Address,
-    emailAddress: WorkEmailAddress,
-    phoneNumber: WorkPhoneNumber
+    emailAddress: EmailAddress,
+    phoneNumber: PhoneNumber
   ) {
     this.setFullName(fullName);
     this.setAddress(address);
@@ -30,11 +30,11 @@ class WorkAccountProfile {
     this.address = address;
   }
 
-  private setEmailAddress(emailAddress: WorkEmailAddress) {
+  private setEmailAddress(emailAddress: EmailAddress) {
     this.emailAddress = emailAddress;
   }
 
-  private setPhoneNumber(phoneNumber: WorkPhoneNumber) {
+  private setPhoneNumber(phoneNumber: PhoneNumber) {
     this.phoneNumber = phoneNumber;
   }
 
@@ -46,11 +46,11 @@ class WorkAccountProfile {
     this.setAddress(address);
   }
 
-  changeEmailAddress(emailAddress: WorkEmailAddress) {
+  changeEmailAddress(emailAddress: EmailAddress) {
     this.setEmailAddress(emailAddress);
   }
 
-  changePhoneNumber(phoneNumber: WorkPhoneNumber) {
+  changePhoneNumber(phoneNumber: PhoneNumber) {
     this.setPhoneNumber(phoneNumber);
   }
 

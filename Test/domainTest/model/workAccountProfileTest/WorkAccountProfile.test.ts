@@ -1,9 +1,9 @@
-import WorkAccountProfile from "../../../../src/domain/model/access/WorkAccountProfile.ts/workAccountProfile";
-import FullName from "../../../../src/domain/model/access/WorkAccountProfile.ts/fullName";
-import Address from "../../../../src/domain/model/access/WorkAccountProfile.ts/address";
-import WorkEmailAddress from "../../../../src/domain/model/access/WorkAccountProfile.ts/WorkEmailAddress";
-import WorkPhoneNumber from "../../../../src/domain/model/access/WorkAccountProfile.ts/WorkPhoneNumber";
-import VerificationCode from "../../../../src/domain/model/access/WorkAccountProfile.ts/verificationCode";
+import WorkAccountProfile from "../../../../src/domain/model/organization/WorkAccountProfile.ts/workAccountProfile";
+import FullName from "../../../../src/domain/model/organization/WorkAccountProfile.ts/fullName";
+import Address from "../../../../src/domain/model/organization/WorkAccountProfile.ts/address";
+import EmailAddress from "../../../../src/domain/model/contactDetails/emailAddress";
+import PhoneNumber from "../../../../src/domain/model/contactDetails/phoneNumber";
+import VerificationCode from "../../../../src/domain/model/contactDetails/verificationCode";
 import { option } from "../../../factories/option";
 import PersonalInfoFactory from "../../../factories/personalInfoFactory";
 
@@ -68,7 +68,7 @@ describe("PersonalInfo", () => {
     const workAccountProfile: WorkAccountProfile =
       workAccountProfileFactory.getPersonalInfoWith(option);
 
-    let newEmailAddress: WorkEmailAddress = new WorkEmailAddress(
+    let newEmailAddress: EmailAddress = new EmailAddress(
       "nonAdmin@coral.com",
       true,
       null
@@ -199,7 +199,7 @@ describe("PersonalInfo", () => {
       workAccountProfileFactory.getPersonalInfoWith(option);
 
     workAccountProfile.changePhoneNumber(
-      new WorkPhoneNumber("223456789", "Id", true, null)
+      new PhoneNumber("223456789", "Id", true, null)
     );
 
     expect(workAccountProfile.getPhoneNumber()).toEqual("223456789");
