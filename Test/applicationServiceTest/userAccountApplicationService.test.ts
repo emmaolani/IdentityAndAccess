@@ -7,6 +7,12 @@ import UserAccountRepositoryMock from "./mock/userAccountRepositoryMock";
 import EventStoreMock from "./mock/eventStoreMock";
 import UUIDGenerator from "../../src/port/adapters/controller/uUIDGenerator";
 import DomainEvent from "../../src/domain/domainEvent";
+import {
+  passwordError,
+  userAccountError,
+  userAccountIdError,
+  userNamesError,
+} from "../../src/domain/enum/errors/errorMsg";
 
 describe("User Account Application Service", () => {
   const userAccountRepository = new UserAccountRepositoryMock();
@@ -86,9 +92,7 @@ describe("User Account Application Service", () => {
 
     userAccount = userAccountRepository.getUserAccount("username");
 
-    expect(() => {
-      userAccount.validate("username", "SecureP@ss123");
-    }).toThrow("User account is not active");
+    expect(userAccount.getActiveStatus()).toBe(false);
   });
 
   it("should throw an error if there is a username conflict", () => {
@@ -110,13 +114,13 @@ describe("User Account Application Service", () => {
 
     const newUserAccountCommand = new NewUserAccountCommand(
       "invalidUUID",
-      "invalidUsername",
+      "username",
       "SecureP@ss123"
     );
 
     expect(() => {
       userAccountApplicationService.createUserAccount(newUserAccountCommand);
-    }).toThrow("Invalid UUID");
+    }).toThrow(userAccountIdError.invalidUUID);
   });
 
   it("should throw an error if the username does not meet the requirements", () => {
@@ -130,7 +134,7 @@ describe("User Account Application Service", () => {
 
     expect(() =>
       userAccountApplicationService.createUserAccount(newUserAccountCommand)
-    ).toThrow("Username does not meet requirements");
+    ).toThrow(userNamesError.userNameNotMeetingRequirements);
   });
 
   it("should throw an error if the password does not meet the requirements", () => {
@@ -144,6 +148,6 @@ describe("User Account Application Service", () => {
 
     expect(() =>
       userAccountApplicationService.createUserAccount(newUserAccountCommand)
-    ).toThrow("password does not meet security requirements");
+    ).toThrow(passwordError.passwordNotMeetingRequirements);
   });
 });

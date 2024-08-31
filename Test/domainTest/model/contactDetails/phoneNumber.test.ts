@@ -1,5 +1,9 @@
 import PhoneNumber from "../../../../src/domain/model/contactDetails/phoneNumber";
 import VerificationCode from "../../../../src/domain/model/contactDetails/verificationCode";
+import {
+  phoneNumberError,
+  verificationCodeError,
+} from "../../../../src/domain/enum/errors/errorMsg";
 
 describe("Unit Test for PhoneNumber class", () => {
   let invalidPhoneNumber: string = " 123  456 78  ";
@@ -24,21 +28,21 @@ describe("Unit Test for PhoneNumber class", () => {
   it("should throw an error if phoneNumber is instantiated with a number that does not meet requirement", () => {
     expect(
       () => new PhoneNumber("invalidPhoneNumber", ituAndIsoSpecId, active, null)
-    ).toThrow("Invalid phone number");
+    ).toThrow(phoneNumberError.invalidPhoneNumber);
     expect(() => new PhoneNumber("123", ituAndIsoSpecId, active, null)).toThrow(
-      "Invalid phone number"
+      phoneNumberError.invalidPhoneNumber
     );
     expect(
       () => new PhoneNumber("1".repeat(17), ituAndIsoSpecId, active, null)
-    ).toThrow("Invalid phone number"); // phone number should not exceed 16 characters
+    ).toThrow(phoneNumberError.invalidPhoneNumber); // phone number should not exceed 16 characters
     expect(
       () => new PhoneNumber("123456abc", ituAndIsoSpecId, active, null)
-    ).toThrow("Invalid phone number");
+    ).toThrow(phoneNumberError.invalidPhoneNumber);
     expect(() => new PhoneNumber("", ituAndIsoSpecId, active, null)).toThrow(
-      "Invalid phone number"
+      phoneNumberError.invalidPhoneNumber
     );
     expect(() => new PhoneNumber("   ", ituAndIsoSpecId, active, null)).toThrow(
-      "Invalid phone number"
+      phoneNumberError.invalidPhoneNumber
     );
   });
 
@@ -81,7 +85,7 @@ describe("Unit Test for PhoneNumber class", () => {
     );
 
     expect(() => phoneNumber.activateWith("1234567")).toThrow(
-      "This code is expired"
+      verificationCodeError.expiredCode
     );
   });
 
@@ -93,7 +97,9 @@ describe("Unit Test for PhoneNumber class", () => {
       createVerificationCode("1234567", Date.now())
     );
 
-    expect(() => phoneNumber.activateWith("123456")).toThrow("Invalid code");
+    expect(() => phoneNumber.activateWith("123456")).toThrow(
+      verificationCodeError.invalidCode
+    );
   });
 
   it("should throw an error on phone number activation if phone number is already active", () => {
@@ -105,8 +111,8 @@ describe("Unit Test for PhoneNumber class", () => {
     );
 
     expect(() => phoneNumber.activateWith("123456")).toThrow(
-      "Phone number is already activated"
-    ); // invalid code used (invalid code should not be checked because phone number is already active)
+      phoneNumberError.phoneAlreadyActivated
+    ); // invalid code used (invalid code should not be checked before 'is phone number active')
   });
 
   it("should throw an error if no verification code is found in phone number", () => {
@@ -118,9 +124,9 @@ describe("Unit Test for PhoneNumber class", () => {
     );
 
     expect(() => phoneNumber.activateWith("123456")).toThrow(
-      "No verification code found"
-    );
-  }); // invalid code used (invalid code should not be checked because no verification code is found)
+      phoneNumberError.noVerificationCode
+    ); // invalid code used (invalid code should not be checked before no verification code is found)
+  });
 
   it("should replace the old verification code with a new verification code", () => {
     const phoneNumber = new PhoneNumber(
@@ -131,7 +137,7 @@ describe("Unit Test for PhoneNumber class", () => {
     );
 
     expect(() => phoneNumber.activateWith("1234567")).toThrow(
-      "This code is expired"
+      verificationCodeError.expiredCode
     );
 
     const newVerificationCode: VerificationCode = new VerificationCode(

@@ -3,7 +3,9 @@ import UserName from "./userName";
 import Password from "./password";
 import NewUserAccountCreated from "./newUserAccountCreated";
 import DomainEventPublisher from "../../../domainEventPublisher";
+import { userAccountError } from "../../../enum/errors/errorMsg";
 
+// TODO: implement status
 class UserAccount {
   private id: UserAccountId;
   private username: UserName;
@@ -38,26 +40,34 @@ class UserAccount {
     this.isActive = isActive;
   }
 
-  validate(username: string, password: string): boolean {
-    if (!this.isActive) {
-      throw new Error("User account is not active");
-    }
+  getActiveStatus(): boolean {
+    return this.isActive;
+  }
 
+  throwErrorIfUserNameAndPasswordIsNotValid(
+    username: string,
+    password: string
+  ): void {
+    if (!this.isActive) {
+      throw new Error(userAccountError.userAccountNotActive);
+    }
+    if (!this.isUsernameAndPasswordValid(username, password)) {
+      throw new Error(userAccountError.InvalidUsernameOrPassword);
+    }
+  }
+
+  private isUsernameAndPasswordValid(username: string, password: string) {
     return (
-      this.username.compareTo(username) && this.password.compareTo(password)
+      this.username.isEqualTo(username) && this.password.isEqualTo(password)
     );
   }
 
   publishNewUserAccountCreatedEvent(
     aDomainEventPublisher: DomainEventPublisher
   ) {
-    if (aDomainEventPublisher) {
-      aDomainEventPublisher.publish(
-        new NewUserAccountCreated(this.id.getValue(), this.username.getValue())
-      );
-    } else {
-      throw new Error("DomainEventPublisher is not given");
-    }
+    aDomainEventPublisher.publish(
+      new NewUserAccountCreated(this.id.getValue(), this.username.getValue())
+    );
   }
 }
 

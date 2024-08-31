@@ -1,5 +1,6 @@
 import ValueObject from "../../valueObject";
 import VerificationCode from "./verificationCode";
+import { phoneNumberError } from "../../enum/errors/errorMsg";
 
 class PhoneNumber extends ValueObject {
   private value: string;
@@ -30,7 +31,7 @@ class PhoneNumber extends ValueObject {
     const phoneNumberRegex = /^\d{4,16}$/; // this regex defines the requirement for a valid phone number
 
     if (!phoneNumberRegex.test(aValue)) {
-      throw new Error("Invalid phone number");
+      throw new Error(phoneNumberError.invalidPhoneNumber);
     }
   }
 
@@ -68,11 +69,11 @@ class PhoneNumber extends ValueObject {
 
   activateWith(aCode: string) {
     if (this.isActive) {
-      throw new Error("Phone number is already activated");
+      throw new Error(phoneNumberError.phoneAlreadyActivated);
     }
 
     if (this.verificationCode === null) {
-      throw new Error("No verification code found");
+      throw new Error(phoneNumberError.noVerificationCode);
     }
 
     this.verificationCode.throwErrorIfCodeIsInvalid(aCode);

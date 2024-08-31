@@ -1,9 +1,10 @@
 import ValueObject from "../../valueObject";
+import { verificationCodeError } from "../../enum/errors/errorMsg";
 
 class VerificationCode extends ValueObject {
   private value: string;
   private timeStamp: number;
-  private allowedTimeDurationOfCode: number = 300000;
+  private allowedTimeDurationOfCode: number = 300000; // 5 minutes
 
   constructor(aValue: string, aTimeStamp: number) {
     super();
@@ -20,7 +21,7 @@ class VerificationCode extends ValueObject {
     const sevenDigitRegex = /^\d{7}$/;
 
     if (!sevenDigitRegex.test(aValue)) {
-      throw new Error("Invalid code");
+      throw new Error(verificationCodeError.invalidCode);
     }
   }
 
@@ -31,7 +32,7 @@ class VerificationCode extends ValueObject {
 
   private checkIfTimeStampIsInvalid(aTimeStamp: number) {
     if (aTimeStamp > Date.now() || aTimeStamp < 0) {
-      throw Error("TimeStamp is invalid");
+      throw Error(verificationCodeError.invalidTimeStamp);
     } else {
       return;
     }
@@ -44,13 +45,13 @@ class VerificationCode extends ValueObject {
 
   private throwErrorIfCodeHasExpired() {
     if (Date.now() - this.timeStamp > this.allowedTimeDurationOfCode) {
-      throw new Error("This code is expired");
+      throw new Error(verificationCodeError.expiredCode);
     }
   }
 
   private throwErrorIfCodeDoesNotMatch(code: string) {
     if (this.value !== code) {
-      throw new Error("Invalid code");
+      throw new Error(verificationCodeError.invalidCode);
     }
   }
 }

@@ -1,5 +1,9 @@
 import EmailAddress from "../../../../src/domain/model/contactDetails/emailAddress";
 import VerificationCode from "../../../../src/domain/model/contactDetails/verificationCode";
+import {
+  emailAddressError,
+  verificationCodeError,
+} from "../../../../src/domain/enum/errors/errorMsg";
 
 describe("Unit Test for EmailAddress class", () => {
   let whiteSpacedEmail: string = " tes t@coral.com ";
@@ -20,22 +24,22 @@ describe("Unit Test for EmailAddress class", () => {
 
   it("should throw an error if emailAddress is instantiated with an address that does not meet requirement", () => {
     expect(() => new EmailAddress("invalidEmail@Coral", active, null)).toThrow(
-      "Invalid email address"
+      emailAddressError.invalidEmail
     );
     expect(() => new EmailAddress("invalidEmail.Coral", active, null)).toThrow(
-      "Invalid email address"
+      emailAddressError.invalidEmail
     );
     expect(() => new EmailAddress("invalidEmailCoral", active, null)).toThrow(
-      "Invalid email address"
+      emailAddressError.invalidEmail
     );
     expect(() => new EmailAddress("a".repeat(255), active, null)).toThrow(
-      "Invalid email address"
+      emailAddressError.invalidEmail
     ); // email address should not exceed 254 characters
     expect(() => new EmailAddress("", active, null)).toThrow(
-      "Invalid email address"
+      emailAddressError.invalidEmail
     );
     expect(() => new EmailAddress("   ", active, null)).toThrow(
-      "Invalid email address"
+      emailAddressError.invalidEmail
     );
   });
 
@@ -68,7 +72,7 @@ describe("Unit Test for EmailAddress class", () => {
     const verificationCode = createVerificationCode(
       "1234567",
       Date.now() - 500000
-    );
+    ); // expired code
     const emailAddress = new EmailAddress(
       validEmail,
       notActive,
@@ -76,7 +80,7 @@ describe("Unit Test for EmailAddress class", () => {
     );
 
     expect(() => emailAddress.activateWith("1234567")).toThrow(
-      "This code is expired"
+      verificationCodeError.expiredCode
     );
   });
 
@@ -87,23 +91,25 @@ describe("Unit Test for EmailAddress class", () => {
       createVerificationCode("1234567", Date.now())
     );
 
-    expect(() => emailAddress.activateWith("2234567")).toThrow("Invalid code");
+    expect(() => emailAddress.activateWith("2234567")).toThrow(
+      verificationCodeError.invalidCode
+    );
   });
 
   it("should throw an error on email activation if email is already active", () => {
     const emailAddress = new EmailAddress(validEmail, active, null);
 
     expect(() => emailAddress.activateWith("123456")).toThrow(
-      "Email is already activated"
-    ); // invalid code is used (invalid code should not be checked because email is already active)
+      emailAddressError.emailAlreadyActivated
+    ); // invalid code is used (invalid code should not be checked before 'is email active')
   });
 
   it("should throw an error if no verification code is found in email address", () => {
     const emailAddress = new EmailAddress(validEmail, notActive, null);
 
     expect(() => emailAddress.activateWith("123456")).toThrow(
-      "No verification code found"
-    ); // invalid code is used (invalid code should not be checked because no verification code is found)
+      emailAddressError.noVerificationCode
+    ); // invalid code is used (invalid code should not be checked before no verification code is found)
   });
 
   it("should replace verification code with a new verification code", () => {
@@ -114,7 +120,7 @@ describe("Unit Test for EmailAddress class", () => {
     );
 
     expect(() => emailAddress.activateWith("1234567")).toThrow(
-      "This code is expired"
+      verificationCodeError.expiredCode
     );
 
     const newVerificationCode: VerificationCode = createVerificationCode(

@@ -3,6 +3,11 @@ import UUIDGenerator from "./uUIDGenerator";
 import UserAccountApplicationService from "../../../application/identity/userAccount/userAccountApplicationService";
 import NewUserAccountCommand from "../../../application/identity/userAccount/newUserAccountCommand";
 import ReqObjForCreatingUserAccount from "../../types/requestBody.types";
+import {
+  userNamesError,
+  passwordError,
+  userAccountIdError,
+} from "../../../domain/enum/errors/errorMsg";
 
 class UserAccountController {
   private userAccountApplicationService: UserAccountApplicationService;
@@ -54,17 +59,17 @@ class UserAccountController {
     } else if (error.message === "User account already exists") {
       response.status(409).send({ message: "user account exists" });
       return;
-    } else if (error.message === "Username does not meet requirements") {
-      response
-        .status(400)
-        .send({ message: "Username does not meet requirements" });
-      return;
     } else if (
-      error.message === "password does not meet security requirements"
+      error.message === userNamesError.userNameNotMeetingRequirements
     ) {
       response
         .status(400)
-        .send({ message: "password does not meet security requirements" });
+        .send({ message: userNamesError.userNameNotMeetingRequirements });
+      return;
+    } else if (error.message === passwordError.passwordNotMeetingRequirements) {
+      response
+        .status(400)
+        .send({ message: passwordError.passwordNotMeetingRequirements });
       return;
     }
   }

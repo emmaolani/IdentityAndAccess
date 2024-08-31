@@ -1,40 +1,31 @@
 import ValueObject from "../../../valueObject";
+import { fullNameError } from "../../../enum/errors/errorMsg";
 
 class FullName extends ValueObject {
-  private firstName: string;
-  private lastName: string;
+  private name: string;
 
-  constructor(aFirstName: string, aLastName: string) {
+  constructor(aName: string) {
     super();
-    this.setFirstName(aFirstName);
-    this.setLastName(aLastName);
+    this.setName(aName);
   }
 
   getFullName(): string {
-    return `${this.firstName} ${this.lastName}`;
+    return this.name;
   }
 
-  private setFirstName(aFirstName: string): void {
-    if (this.IsAnEmpty(aFirstName)) {
-      throw new Error("first name is empty");
+  private setName(aName: string): void {
+    if (this.IsAnEmpty(aName)) {
+      throw new Error(fullNameError.emptyFullName);
     }
 
-    this.firstName = this.getValid(aFirstName);
-  }
-
-  private setLastName(aLastName: string): void {
-    if (this.IsAnEmpty(aLastName)) {
-      throw new Error("last name is empty");
-    }
-
-    this.lastName = this.getValid(aLastName);
+    this.name = this.returnValidatedName(aName);
   }
 
   private IsAnEmpty(aName: string): boolean {
-    return aName.trim().length === 0; // checking if the string is empty // checking if the string is empty
+    return aName.trim().length === 0; // checking if the string is empty
   }
 
-  private getValid(aName: string): string {
+  private returnValidatedName(aName: string): string {
     let validName: string = aName;
 
     validName = validName.replace(/\s{2,}/gi, " "); // replacing multiple white space between words with single white space

@@ -1,4 +1,5 @@
 import ValueObject from "../../../valueObject";
+import { passwordError } from "../../../enum/errors/errorMsg";
 
 class Password extends ValueObject {
   private value: string;
@@ -16,26 +17,26 @@ class Password extends ValueObject {
     this.value = value;
   }
 
+  private removeWhiteSpace(aValue: string): string {
+    return aValue.replace(/\s+/g, "");
+  }
+
   private ThrowErrorIfPasswordDontMeetMinRequirements(aValue: string) {
     const regex =
-      /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.,])[A-Za-z\d@$!%*?&.,]{8,20}$/; // regex for password
+      /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.,])[A-Za-z\d@$!%*?&.,]{8,20}$/; // this regex defines the requirement for a valid password
 
     if (aValue.match(regex)) {
       return;
     } else {
-      throw new Error("password does not meet security requirements");
+      throw new Error(passwordError.passwordNotMeetingRequirements);
     }
-  }
-
-  private removeWhiteSpace(aValue: string): string {
-    return aValue.replace(/\s+/g, "");
   }
 
   getValue(): string {
     return this.value;
   }
 
-  compareTo(password: string): boolean {
+  isEqualTo(password: string): boolean {
     return this.value === password;
   }
 }

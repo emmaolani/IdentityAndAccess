@@ -9,6 +9,10 @@ import ResponseMock from "./mock/responseMock";
 import UserAccount from "../../../../src/domain/model/identity/userAccount/userAccount";
 import NewUserAccountCreated from "../../../../src/domain/model/identity/userAccount/newUserAccountCreated";
 import DomainEvent from "../../../../src/domain/domainEvent";
+import {
+  passwordError,
+  userNamesError,
+} from "../../../../src/domain/enum/errors/errorMsg";
 
 // TODO: write test for catching error when UUID is not valid
 describe("UserAccountController", () => {
@@ -136,7 +140,7 @@ describe("UserAccountController", () => {
 
       expect((response as ResponseMock).getStatus()).toBe(400);
       expect((response as ResponseMock).getResponse()).toEqual({
-        message: "password does not meet security requirements",
+        message: passwordError.passwordNotMeetingRequirements,
       });
     });
 
@@ -156,7 +160,7 @@ describe("UserAccountController", () => {
 
       expect((response as ResponseMock).getStatus()).toBe(400);
       expect((response as ResponseMock).getResponse()).toEqual({
-        message: "Username does not meet requirements",
+        message: userNamesError.userNameNotMeetingRequirements,
       });
     });
   });

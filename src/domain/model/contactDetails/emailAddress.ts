@@ -1,5 +1,6 @@
 import VerificationCode from "./verificationCode";
 import ValueObject from "../../valueObject";
+import { emailAddressError } from "../../enum/errors/errorMsg";
 
 class EmailAddress extends ValueObject {
   private value: string;
@@ -28,7 +29,7 @@ class EmailAddress extends ValueObject {
     const emailRegex = /^(?=.*@)(?=.*\.).{1,254}$/; // this regex defines the requirement for a valid email address
 
     if (!emailRegex.test(aValue)) {
-      throw new Error("Invalid email address");
+      throw new Error(emailAddressError.invalidEmail);
     }
   }
 
@@ -58,11 +59,11 @@ class EmailAddress extends ValueObject {
 
   activateWith(code: string) {
     if (this.isActive) {
-      throw new Error("Email is already activated");
+      throw new Error(emailAddressError.emailAlreadyActivated);
     }
 
     if (this.verificationCode === null) {
-      throw new Error("No verification code found");
+      throw new Error(emailAddressError.noVerificationCode);
     }
 
     this.verificationCode.throwErrorIfCodeIsInvalid(code);

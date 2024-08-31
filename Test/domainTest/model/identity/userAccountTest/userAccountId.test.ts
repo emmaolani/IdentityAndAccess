@@ -1,5 +1,6 @@
 import UserAccountId from "../../../../../src/domain/model/identity/userAccount/userAccountId";
 import UUIDGenerator from "../../../../../src/port/adapters/controller/uUIDGenerator";
+import { userAccountIdError } from "../../../../../src/domain/enum/errors/errorMsg";
 
 describe("UserAccountId", () => {
   it("should create a userAccountId only if the argument is of UUID v4 format", () => {
@@ -11,6 +12,6 @@ describe("UserAccountId", () => {
   it("should throw an error if the argument is not UUID v4 format", () => {
     expect(() => {
       new UserAccountId("not a UUID");
-    }).toThrow("Invalid UUID");
+    }).toThrow(userAccountIdError.invalidUUID);
   });
 });

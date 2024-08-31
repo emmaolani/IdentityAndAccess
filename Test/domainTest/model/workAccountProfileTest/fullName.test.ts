@@ -1,38 +1,20 @@
 import FullName from "../../../../src/domain/model/organization/WorkAccountProfile.ts/fullName";
+import { fullNameError } from "../../../../src/domain/enum/errors/errorMsg";
 
 describe("Unit Test fullName class", () => {
-  const validFirstName = "Dr James";
-  const emptyFirstName = "";
-  const whiteSpaceFirstName = " Dr  James   ";
-
-  const validLastName = "M Thomas";
-  const emptyLastName = "";
-  const whiteSpacedLastName = "  M  Thomas ";
-
   it("should throw error if firstName is not provided", () => {
-    expect(() => new FullName(emptyFirstName, validLastName)).toThrow(
-      "first name is empty"
-    );
+    expect(() => new FullName(" ")).toThrow(fullNameError.emptyFullName);
+    expect(() => new FullName("")).toThrow(fullNameError.emptyFullName);
   });
 
-  it("should throw error if lastName is not provided", () => {
-    expect(() => new FullName(validFirstName, emptyLastName)).toThrow(
-      "last name is empty"
-    );
+  it("should store valid name", () => {
+    const fullName: FullName = new FullName("  Dr    test    jones ");
+    expect(fullName.getFullName()).toBe("Dr test jones");
   });
 
   it("should correct invalid white spaces in firstName", () => {
-    const fullName: FullName = new FullName(whiteSpaceFirstName, validLastName);
+    const fullName: FullName = new FullName("  Dr    test    jones ");
 
-    expect(fullName.getFullName()).toBe(`${validFirstName} ${validLastName}`);
-  });
-
-  it("should correct invalid white spaces in lastName", () => {
-    const fullName: FullName = new FullName(
-      validFirstName,
-      whiteSpacedLastName
-    );
-
-    expect(fullName.getFullName()).toBe(`${validFirstName} ${validLastName}`);
+    expect(fullName.getFullName()).toBe("Dr test jones");
   });
 });

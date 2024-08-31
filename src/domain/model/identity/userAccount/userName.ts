@@ -1,4 +1,5 @@
 import ValueObject from "../../../valueObject";
+import { userNamesError } from "../../../enum/errors/errorMsg";
 
 class UserName extends ValueObject {
   private value: string;
@@ -16,25 +17,25 @@ class UserName extends ValueObject {
     this.value = value;
   }
 
+  private removeWhiteSpace(aValue: string): string {
+    return aValue.replace(/\s+/g, "");
+  }
+
   private throwErrorIfUsernameDoesNotMeetMinRequirements(aValue: string) {
-    const regex = /^[a-zA-Z0-9_]{2,15}$/; // regex for username
+    const regex = /^[a-zA-Z0-9_]{2,15}$/; // this regex defines the requirement for a valid username
 
     if (aValue.match(regex)) {
       return;
     } else {
-      throw new Error("Username does not meet requirements");
+      throw new Error(userNamesError.userNameNotMeetingRequirements);
     }
-  }
-
-  private removeWhiteSpace(aValue: string): string {
-    return aValue.replace(/\s+/g, "");
   }
 
   getValue(): string {
     return this.value;
   }
 
-  compareTo(username: string): boolean {
+  isEqualTo(username: string): boolean {
     return this.value === username;
   }
 }

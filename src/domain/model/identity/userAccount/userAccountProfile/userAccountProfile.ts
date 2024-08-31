@@ -1,26 +1,37 @@
 import EmailAddress from "../../../contactDetails/emailAddress";
 import PhoneNumber from "../../../contactDetails/phoneNumber";
 import VerificationCode from "../../../contactDetails/verificationCode";
+import UserAccountId from "../userAccountId";
 
 class UserAccountProfile {
+  private userAccountId: UserAccountId;
   private emailAddress: EmailAddress;
   private phoneNumber: PhoneNumber;
 
-  constructor(emailAddress: EmailAddress, phoneNumber: PhoneNumber) {
-    this.setEmailAddress(emailAddress);
-    this.setPhoneNumber(phoneNumber);
+  constructor(
+    aUserAccountId: UserAccountId,
+    aEmailAddress: EmailAddress,
+    aPhoneNumber: PhoneNumber
+  ) {
+    this.setUserAccountId(aUserAccountId);
+    this.setEmailAddress(aEmailAddress);
+    this.setPhoneNumber(aPhoneNumber);
   }
 
-  private setEmailAddress(emailAddress: EmailAddress) {
-    this.emailAddress = emailAddress;
+  private setUserAccountId(aUserAccountId: UserAccountId) {
+    this.userAccountId = aUserAccountId;
   }
 
-  private setPhoneNumber(phoneNumber: PhoneNumber) {
-    this.phoneNumber = phoneNumber;
+  private setEmailAddress(aEmailAddress: EmailAddress) {
+    this.emailAddress = aEmailAddress;
   }
 
-  changeEmailAddress(emailAddress: EmailAddress) {
-    this.setEmailAddress(emailAddress);
+  private setPhoneNumber(aPhoneNumber: PhoneNumber) {
+    this.phoneNumber = aPhoneNumber;
+  }
+
+  changeEmailAddress(aEmailAddress: EmailAddress) {
+    this.setEmailAddress(aEmailAddress);
   }
 
   changePhoneNumber(phoneNumber: PhoneNumber) {
