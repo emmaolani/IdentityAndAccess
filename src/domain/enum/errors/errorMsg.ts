@@ -1,4 +1,4 @@
-// this file contains all the error messages that can be returned by domain objects
+// this file contains all the error messages that can be thrown by domain objects
 
 enum verificationCodeError {
   invalidTimeStamp = "TimeStamp for verificationCode is invalid",
