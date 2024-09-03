@@ -8,8 +8,7 @@ class UserAccountRepositoryMock implements UserAccountRepository {
   private defaultUserAccount = new UserAccount(
     new UserAccountId("0f8fa965-5079-48e1-8743-a82e75829560"),
     new UserName("username"),
-    new Password("secureD@123"),
-    false
+    new Password("secureD@123")
   );
   private userAccount: UserAccount;
   private userAccountExists: boolean;

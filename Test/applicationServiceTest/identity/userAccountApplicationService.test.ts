@@ -1,18 +1,18 @@
-import UserAccountApplicationService from "../../src/application/identity/userAccount/userAccountApplicationService";
-import NewUserAccountCommand from "../../src/application/identity/userAccount/newUserAccountCommand";
-import UserAccount from "../../src/domain/model/identity/userAccount/userAccount";
-import NewUserAccountCreated from "../../src/domain/model/identity/userAccount/newUserAccountCreated";
-import RepositoryFactoryMock from "./mock/repositoryFactoryMock";
-import UserAccountRepositoryMock from "./mock/userAccountRepositoryMock";
-import EventStoreMock from "./mock/eventStoreMock";
-import UUIDGenerator from "../../src/port/adapters/controller/uUIDGenerator";
-import DomainEvent from "../../src/domain/domainEvent";
+import UserAccountApplicationService from "../../../src/application/identity/userAccountApplicationService";
+import NewUserAccountCommand from "../../../src/application/identity/newUserAccountCommand";
+import UserAccount from "../../../src/domain/model/identity/userAccount/userAccount";
+import NewUserAccountCreated from "../../../src/domain/model/identity/userAccount/newUserAccountCreated";
+import RepositoryFactoryMock from "../mock/repositoryFactoryMock";
+import UserAccountRepositoryMock from "../mock/userAccountRepositoryMock";
+import EventStoreMock from "../mock/eventStoreMock";
+import UUIDGenerator from "../../../src/port/adapters/controller/uUIDGenerator";
+import DomainEvent from "../../../src/domain/domainEvent";
 import {
   passwordError,
   userAccountError,
   userAccountIdError,
   userNamesError,
-} from "../../src/domain/enum/errors/errorMsg";
+} from "../../../src/domain/enum/errors/errorMsg";
 
 describe("User Account Application Service", () => {
   const userAccountRepository = new UserAccountRepositoryMock();
@@ -74,26 +74,6 @@ describe("User Account Application Service", () => {
       expect(event["userName"]).toBe(username);
     }
   }
-
-  it("should create a userAccount with an active status of false", () => {
-    userAccountRepository.setDoesUserAccountExist(false);
-
-    const id: string = new UUIDGenerator().generate();
-    const username: string = "tester";
-    const password: string = "SecureP@ss1233";
-
-    const newUserAccountCommand = new NewUserAccountCommand(
-      id,
-      username,
-      password
-    );
-
-    userAccountApplicationService.createUserAccount(newUserAccountCommand);
-
-    userAccount = userAccountRepository.getUserAccount("username");
-
-    expect(userAccount.getActiveStatus()).toBe(false);
-  });
 
   it("should throw an error if there is a username conflict", () => {
     userAccountRepository.setDoesUserAccountExist(true); // Set to true to simulate a username conflict

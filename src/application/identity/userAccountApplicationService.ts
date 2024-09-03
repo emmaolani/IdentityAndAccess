@@ -1,13 +1,13 @@
-import RepositoryFactory from "../../../domain/repositoryFactory/repositoryFactory";
-import DomainEventPublisher from "../../../domain/domainEventPublisher";
-import DomainEventSubscriber from "../../../domain/domainEventSubscriber";
-import EventStoreDelegate from "../../eventStoreDelegate";
+import RepositoryFactory from "../../domain/repositoryFactory/repositoryFactory";
+import DomainEventPublisher from "../../domain/domainEventPublisher";
+import DomainEventSubscriber from "../../domain/domainEventSubscriber";
+import EventStoreDelegate from "../eventStoreDelegate";
 import NewUserAccountCommand from "./newUserAccountCommand";
-import UserAccount from "../../../domain/model/identity/userAccount/userAccount";
-import UserName from "../../../domain/model/identity/userAccount/userName";
-import Password from "../../../domain/model/identity/userAccount/password";
-import UserAccountId from "../../../domain/model/identity/userAccount/userAccountId";
-import UserAccountRepository from "../../../domain/model/identity/userAccount/userAccountRepository";
+import UserAccount from "../../domain/model/identity/userAccount/userAccount";
+import UserName from "../../domain/model/identity/userAccount/userName";
+import Password from "../../domain/model/identity/userAccount/password";
+import UserAccountId from "../../domain/model/identity/userAccount/userAccountId";
+import UserAccountRepository from "../../domain/model/identity/userAccount/userAccountRepository";
 
 class UserAccountApplicationService {
   private repositoryFactory: RepositoryFactory;
@@ -26,8 +26,7 @@ class UserAccountApplicationService {
     const userAccount: UserAccount = new UserAccount(
       new UserAccountId(aNewUserAccountCommand.getId()),
       new UserName(aNewUserAccountCommand.getUsername()),
-      new Password(aNewUserAccountCommand.getPassword()),
-      false
+      new Password(aNewUserAccountCommand.getPassword())
     );
 
     this.throwErrorIfUserNameExistsInDB(

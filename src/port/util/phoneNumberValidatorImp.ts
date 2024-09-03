@@ -4,6 +4,7 @@ import { phoneNumberError } from "../../domain/enum/errors/errorMsg";
 
 class PhoneNumberValidatorImp implements PhoneNumberValidator {
   private phoneUtil = libphonenumber.PhoneNumberUtil.getInstance();
+
   getValidNationalNumberForRegion(
     phoneNumber: string,
     countryCode: string

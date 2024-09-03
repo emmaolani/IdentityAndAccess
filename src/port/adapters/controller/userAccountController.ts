@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
-import UUIDGenerator from "./uUIDGenerator";
-import UserAccountApplicationService from "../../../application/identity/userAccount/userAccountApplicationService";
-import NewUserAccountCommand from "../../../application/identity/userAccount/newUserAccountCommand";
+import UserAccountApplicationService from "../../../application/identity/userAccountApplicationService";
+import NewUserAccountCommand from "../../../application/identity/newUserAccountCommand";
 import ReqObjForCreatingUserAccount from "../../types/requestBody.types";
 import {
   userNamesError,
@@ -25,7 +24,7 @@ class UserAccountController {
       const data: ReqObjForCreatingUserAccount = request.body;
 
       const newUserAccountCommand = new NewUserAccountCommand(
-        new UUIDGenerator().generate(),
+        data.userAccountId,
         data.username,
         data.password
       );
@@ -34,7 +33,10 @@ class UserAccountController {
         newUserAccountCommand
       );
 
-      response.status(201).send({ message: "User account created" });
+      response.status(201).send({
+        userAccountId: data.userAccountId,
+        message: "User account created",
+      });
     } catch (error) {
       this.errorResponse(response, error as Error);
     }
@@ -46,6 +48,8 @@ class UserAccountController {
     return (
       typeof obj === "object" &&
       obj !== null &&
+      "userAccountId" in obj &&
+      typeof obj.userAccountId === "string" &&
       "username" in obj &&
       typeof obj.username === "string" &&
       "password" in obj &&

@@ -12,16 +12,10 @@ class UserAccount {
   private password: Password;
   private isActive: boolean;
 
-  constructor(
-    anId: UserAccountId,
-    aUsername: UserName,
-    aPassword: Password,
-    aStatus: boolean
-  ) {
+  constructor(anId: UserAccountId, aUsername: UserName, aPassword: Password) {
     this.setId(anId);
     this.setUsername(aUsername);
     this.setPassword(aPassword);
-    this.setActive(aStatus);
   }
 
   private setId(anId: UserAccountId) {
@@ -34,32 +28,6 @@ class UserAccount {
 
   private setPassword(aPassword: Password) {
     this.password = aPassword;
-  }
-
-  private setActive(isActive: boolean) {
-    this.isActive = isActive;
-  }
-
-  getActiveStatus(): boolean {
-    return this.isActive;
-  }
-
-  throwErrorIfUserNameAndPasswordIsNotValid(
-    username: string,
-    password: string
-  ): void {
-    if (!this.isActive) {
-      throw new Error(userAccountError.userAccountNotActive);
-    }
-    if (!this.isUsernameAndPasswordValid(username, password)) {
-      throw new Error(userAccountError.InvalidUsernameOrPassword);
-    }
-  }
-
-  private isUsernameAndPasswordValid(username: string, password: string) {
-    return (
-      this.username.isEqualTo(username) && this.password.isEqualTo(password)
-    );
   }
 
   publishNewUserAccountCreatedEvent(

@@ -1,16 +1,16 @@
 import PhoneNumber from "../../../../src/domain/model/contactDetails/phoneNumber";
+import ITUAndISOSpecId from "../../../../src/domain/model/geographicEntities/ITUAndISOSpecId";
 import VerificationCode from "../../../../src/domain/model/contactDetails/verificationCode";
 import {
   phoneNumberError,
   verificationCodeError,
 } from "../../../../src/domain/enum/errors/errorMsg";
+import UUIDGenerator from "../../../../src/port/adapters/controller/uUIDGenerator";
 
 describe("Unit Test for PhoneNumber class", () => {
   let invalidPhoneNumber: string = " 123  456 78  ";
   let validPhoneNumber: string = "12345678";
-
-  let ituAndIsoSpecId: string = "id";
-
+  let ituAndIsoSpecId = new ITUAndISOSpecId(new UUIDGenerator().generate());
   let active: boolean = true;
   let notActive: boolean = false;
 

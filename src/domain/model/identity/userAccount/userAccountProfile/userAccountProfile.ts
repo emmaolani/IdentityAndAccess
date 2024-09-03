@@ -1,21 +1,29 @@
+import UserAccountId from "../userAccountId";
+import UserAccountProfileId from "./userAccountProfileId";
 import EmailAddress from "../../../contactDetails/emailAddress";
 import PhoneNumber from "../../../contactDetails/phoneNumber";
 import VerificationCode from "../../../contactDetails/verificationCode";
-import UserAccountId from "../userAccountId";
 
 class UserAccountProfile {
+  private userAccountProfileId: UserAccountProfileId;
   private userAccountId: UserAccountId;
   private emailAddress: EmailAddress;
   private phoneNumber: PhoneNumber;
 
   constructor(
+    aUserAccountProfileId: UserAccountProfileId,
     aUserAccountId: UserAccountId,
     aEmailAddress: EmailAddress,
     aPhoneNumber: PhoneNumber
   ) {
+    this.setUserAccountProfileId(aUserAccountProfileId);
     this.setUserAccountId(aUserAccountId);
     this.setEmailAddress(aEmailAddress);
     this.setPhoneNumber(aPhoneNumber);
+  }
+
+  private setUserAccountProfileId(aUserAccountProfileId: UserAccountProfileId) {
+    this.userAccountProfileId = aUserAccountProfileId;
   }
 
   private setUserAccountId(aUserAccountId: UserAccountId) {
@@ -30,36 +38,12 @@ class UserAccountProfile {
     this.phoneNumber = aPhoneNumber;
   }
 
-  changeEmailAddress(aEmailAddress: EmailAddress) {
-    this.setEmailAddress(aEmailAddress);
-  }
-
-  changePhoneNumber(phoneNumber: PhoneNumber) {
-    this.setPhoneNumber(phoneNumber);
-  }
-
-  replaceEmailVerificationCodeWith(aVerificationCode: VerificationCode) {
-    this.emailAddress.replaceVerificationCodeWith(aVerificationCode);
-  }
-
-  replacePhoneVerificationCodeWith(aVerificationCode: VerificationCode) {
-    this.phoneNumber.replaceVerificationCodeWith(aVerificationCode);
-  }
-
   getEmailAddress(): string {
     return this.emailAddress.getValue();
   }
 
   getPhoneNumber(): string {
     return this.phoneNumber.getValue();
-  }
-
-  activatePhoneNumberWith(code: string) {
-    this.phoneNumber.activateWith(code);
-  }
-
-  activateEmailAddressWith(code: string) {
-    this.emailAddress.activateWith(code);
   }
 }
 

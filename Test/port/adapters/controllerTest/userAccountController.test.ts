@@ -1,5 +1,5 @@
 import UserAccountController from "../../../../src/port/adapters/controller/userAccountController";
-import UserAccountApplicationService from "../../../../src/application/identity/userAccount/userAccountApplicationService";
+import UserAccountApplicationService from "../../../../src/application/identity/userAccountApplicationService";
 import RepositoryFactoryMock from "../../../applicationServiceTest/mock/repositoryFactoryMock";
 import UserAccountRepositoryMock from "../../../applicationServiceTest/mock/userAccountRepositoryMock";
 import EventStoreMock from "../../../applicationServiceTest/mock/eventStoreMock";
@@ -45,6 +45,7 @@ describe("UserAccountController", () => {
       const password: string = "SecureP@ss1234";
 
       const request: unknown = new RequestMock({
+        userAccountId: "54b8a43c-a882-42ac-b60b-087f079a8710",
         username: username,
         password: password,
       });
@@ -65,6 +66,7 @@ describe("UserAccountController", () => {
       // asserting that the response was sent with status 201
       expect((response as ResponseMock).getStatus()).toBe(201);
       expect((response as ResponseMock).getResponse()).toEqual({
+        userAccountId: "54b8a43c-a882-42ac-b60b-087f079a8710",
         message: "User account created",
       });
     });
@@ -106,6 +108,7 @@ describe("UserAccountController", () => {
       userAccountRepository.setDoesUserAccountExist(true); // username already exists
 
       const request: unknown = new RequestMock({
+        userAccountId: "54b8a43c-a882-42ac-b60b-087f079a8710",
         username: "username",
         password: "SecureP@ss123",
       });
@@ -127,6 +130,7 @@ describe("UserAccountController", () => {
       userAccountRepository.setDoesUserAccountExist(false);
 
       const request: unknown = new RequestMock({
+        userAccountId: "54b8a43c-a882-42ac-b60b-087f079a8710",
         username: "username",
         password: "password", // this password does not meet requirements
       });
@@ -148,6 +152,7 @@ describe("UserAccountController", () => {
       userAccountRepository.setDoesUserAccountExist(false);
 
       const request: unknown = new RequestMock({
+        userAccountId: "54b8a43c-a882-42ac-b60b-087f079a8710",
         username: "user+n-ame", // this username does not meet requirements
         password: "SecureP@123",
       });

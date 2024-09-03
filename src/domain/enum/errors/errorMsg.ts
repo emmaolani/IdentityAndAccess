@@ -39,6 +39,14 @@ enum fullNameError {
   emptyFullName = "fullName is empty",
 }
 
+enum ITUAndISOSpecIdIdError {
+  invalidUUID = "Invalid ITUAndISOSpec UUID",
+}
+
+enum UserAccountProfileIdError {
+  invalidUUID = "Invalid UserAccountProfile UUID",
+}
+
 export {
   verificationCodeError,
   phoneNumberError,
@@ -48,4 +56,6 @@ export {
   userAccountIdError,
   userAccountError,
   fullNameError,
+  ITUAndISOSpecIdIdError,
+  UserAccountProfileIdError,
 };

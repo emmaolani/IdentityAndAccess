@@ -1,16 +1,17 @@
 import ValueObject from "../../valueObject";
+import ITUAndISOSpecId from "../geographicEntities/ITUAndISOSpecId";
 import VerificationCode from "./verificationCode";
 import { phoneNumberError } from "../../enum/errors/errorMsg";
 
 class PhoneNumber extends ValueObject {
   private value: string;
-  private ituAndIsoSpecId: string;
+  private iTUAndISOSpecId: ITUAndISOSpecId;
   private isActive: boolean;
   private verificationCode: VerificationCode | null;
 
   constructor(
     aValue: string,
-    aItuAndIsoSpecId: string,
+    aItuAndIsoSpecId: ITUAndISOSpecId,
     isActive: boolean,
     aVerificationCode: VerificationCode | null
   ) {
@@ -39,8 +40,8 @@ class PhoneNumber extends ValueObject {
     return aValue.replace(/\s+/g, "");
   }
 
-  private setItuAndIsoSpecId(aItuAndIsoSpecId: string) {
-    this.ituAndIsoSpecId = aItuAndIsoSpecId;
+  private setItuAndIsoSpecId(aItuAndIsoSpecId: ITUAndISOSpecId) {
+    this.iTUAndISOSpecId = aItuAndIsoSpecId;
   }
 
   private setActiveStatus(aStatus: boolean) {
@@ -63,8 +64,8 @@ class PhoneNumber extends ValueObject {
     return this.isActive;
   }
 
-  getItuAndIsoSpecId(): string {
-    return this.ituAndIsoSpecId;
+  getItuAndIsoSpecId(): ITUAndISOSpecId {
+    return this.iTUAndISOSpecId;
   }
 
   activateWith(aCode: string) {
