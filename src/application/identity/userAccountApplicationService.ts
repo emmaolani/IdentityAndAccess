@@ -16,7 +16,7 @@ class UserAccountApplicationService {
     this.repositoryFactory = aRepositoryFactory;
   }
 
-  createUserAccount(aNewUserAccountCommand: NewUserAccountCommand) {
+  createUserAccount(aCommand: NewUserAccountCommand) {
     const { userAccountRepository, eventStore } =
       this.getUserAccountRepositoryAndEventStore();
 
@@ -24,13 +24,13 @@ class UserAccountApplicationService {
       this.initializeDomainEventPublisher(new EventStoreDelegate(eventStore));
 
     const userAccount: UserAccount = new UserAccount(
-      new UserAccountId(aNewUserAccountCommand.getId()),
-      new UserName(aNewUserAccountCommand.getUsername()),
-      new Password(aNewUserAccountCommand.getPassword())
+      new UserAccountId(aCommand.getId()),
+      new UserName(aCommand.getUsername()),
+      new Password(aCommand.getPassword())
     );
 
     this.throwErrorIfUserNameExistsInDB(
-      aNewUserAccountCommand.getUsername(),
+      aCommand.getUsername(),
       userAccountRepository
     );
 
@@ -42,7 +42,7 @@ class UserAccountApplicationService {
   }
 
   private getUserAccountRepositoryAndEventStore() {
-    const repositories = this.repositoryFactory.getRepositories(
+    const repositories = this.repositoryFactory.getRepositoriesFor(
       "userAccount",
       "eventStore"
     );

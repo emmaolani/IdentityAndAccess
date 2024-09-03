@@ -6,7 +6,7 @@ import UserAccountProfileRepository from "../model/identity/userAccount/userAcco
 type RepositoryName =
   | "userAccount"
   | "eventStore"
-  | "ITUAndISO"
+  | "ITUAndISOSpec"
   | "userAccountProfile";
 
 // Define the return type for the factory method
@@ -15,7 +15,7 @@ type RepositoryCollection<T extends RepositoryName[]> = {
     ? UserAccountRepository
     : K extends "eventStore"
     ? EventStore
-    : K extends "ITUAndISO"
+    : K extends "ITUAndISOSpec"
     ? ITUAndISOSpecRepository
     : K extends "userAccountProfile"
     ? UserAccountProfileRepository

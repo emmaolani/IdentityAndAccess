@@ -18,7 +18,7 @@ class RepositoryFactoryMock implements RepositoryFactory {
     this.eventStore = anEventStore;
   }
 
-  getRepositories<T extends RepositoryName[]>(
+  getRepositoriesFor<T extends RepositoryName[]>(
     ...repos: T
   ): RepositoryCollection<T> {
     const repositories = {} as RepositoryCollection<RepositoryName[]>;

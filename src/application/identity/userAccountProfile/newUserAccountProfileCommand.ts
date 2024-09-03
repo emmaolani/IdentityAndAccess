@@ -1,4 +1,4 @@
-class NewUerAccountProfileCommand {
+class NewUserAccountProfileCommand {
   private userAccountId: string;
   private userProfileId: string;
   private emailAddress: string;
@@ -42,3 +42,4 @@ class NewUerAccountProfileCommand {
     return this.phoneNumber;
   }
 }
+export default NewUserAccountProfileCommand;

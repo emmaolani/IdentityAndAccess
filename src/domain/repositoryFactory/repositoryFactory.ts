@@ -3,7 +3,7 @@ import UserAccountRepository from "../model/identity/userAccount/userAccountRepo
 import EventStore from "../eventStore";
 
 interface RepositoryFactory {
-  getRepositories<T extends RepositoryName[]>(
+  getRepositoriesFor<T extends RepositoryName[]>(
     ...repos: T
   ): RepositoryCollection<T>;
 }
