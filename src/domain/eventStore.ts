@@ -1,7 +1,7 @@
 import DomainEvent from "./domainEvent";
 
 interface EventStore {
-  append<T>(event: DomainEvent): void;
+  append(event: DomainEvent): Promise<void>;
 }
 
 export default EventStore;

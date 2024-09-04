@@ -12,29 +12,29 @@ class DomainEventPublisher {
     this.subscribers.push(subscriber);
   }
 
-  publish(domainEvent: DomainEvent) {
-    this.subscribers.forEach((subscriber) => {
+  async publish(domainEvent: DomainEvent) {
+    this.subscribers.forEach(async (subscriber) => {
       const subscribedTo = subscriber.getSubscribedEventNames();
 
       if (
-        this.subscribedToIsStringAndEqualToEventName(
+        this.subscribedTo_IsStringAndEqualToEventName(
           subscribedTo,
           domainEvent.getEventName()
         )
       ) {
-        subscriber.handleEvent(domainEvent);
+        await subscriber.handleEvent(domainEvent);
       } else if (
-        this.subscribedToIsArrayAndContainsEventName(
+        this.subscribedTo_IsArrayAndContainsEventName(
           subscribedTo,
           domainEvent.getEventName()
         )
       ) {
-        subscriber.handleEvent(domainEvent);
+        await subscriber.handleEvent(domainEvent);
       }
     });
   }
 
-  private subscribedToIsStringAndEqualToEventName(
+  private subscribedTo_IsStringAndEqualToEventName(
     subscribedTo: string | string[],
     anEventName: string
   ) {
@@ -44,7 +44,7 @@ class DomainEventPublisher {
     );
   }
 
-  private subscribedToIsArrayAndContainsEventName(
+  private subscribedTo_IsArrayAndContainsEventName(
     subscribedToEvent: string | string[],
     anEventName: string
   ) {

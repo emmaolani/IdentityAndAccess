@@ -9,18 +9,12 @@ import UUIDGenerator from "../../../src/port/adapters/controller/uUIDGenerator";
 import DomainEvent from "../../../src/domain/domainEvent";
 import {
   passwordError,
-  userAccountError,
   userAccountIdError,
   userNamesError,
 } from "../../../src/domain/enum/errors/errorMsg";
 
 describe("User Account Application Service", () => {
-  const userAccountRepository = new UserAccountRepositoryMock();
-  const eventStore = new EventStoreMock();
-  const repositoryFactory = new RepositoryFactoryMock(
-    userAccountRepository,
-    eventStore
-  );
+  const repositoryFactory = new RepositoryFactoryMock();
   const userAccountApplicationService = new UserAccountApplicationService(
     repositoryFactory
   );
@@ -28,12 +22,10 @@ describe("User Account Application Service", () => {
   let event: DomainEvent;
 
   beforeEach(() => {
-    userAccountRepository.reset();
-    eventStore.reset();
+    repositoryFactory.reset();
   });
 
-  it("should create a new userAccount and NewUserAccountCreated Event if there is no username conflict", () => {
-    userAccountRepository.setDoesUserAccountExist(false); // Set the user account to not exist
+  it("should create a new userAccount and NewUserAccountCreated Event if there is no username conflict", async () => {
     const id: string = new UUIDGenerator().generate();
     const username: string = "tester";
     const password: string = "SecureP@ss1233";
@@ -44,9 +36,18 @@ describe("User Account Application Service", () => {
       password
     );
 
-    userAccountApplicationService.createUserAccount(newUserAccountCommand);
+    await userAccountApplicationService.createUserAccount(
+      newUserAccountCommand
+    );
 
-    userAccount = userAccountRepository.getUserAccount("username");
+    // retrieving all repos used by UserAccountApplicationService
+    const repositories = repositoryFactory.getRepositoriesUsed();
+
+    const userAccountRepository =
+      repositories?.UserAccountRepository as UserAccountRepositoryMock;
+    const eventStore = repositories?.EventStore as EventStoreMock;
+
+    userAccount = userAccountRepository.getNewlyCreatedUserAccount();
     event = eventStore.getAllStoredEvents();
 
     assertThatPropertiesIn_userAccount_match(id, username, password);
@@ -75,8 +76,8 @@ describe("User Account Application Service", () => {
     }
   }
 
-  it("should throw an error if there is a username conflict", () => {
-    userAccountRepository.setDoesUserAccountExist(true); // Set to true to simulate a username conflict
+  it("should throw an error if there is a username conflict", async () => {
+    repositoryFactory.set_doesUserAccountExist_InUserAccountRepoTo(true); // Set to true to simulate a username conflict in userAccountRepository
 
     const newUserAccountCommand = new NewUserAccountCommand(
       new UUIDGenerator().generate(),
@@ -84,27 +85,25 @@ describe("User Account Application Service", () => {
       "SecureP@ss123"
     );
 
-    expect(() =>
+    await expect(
       userAccountApplicationService.createUserAccount(newUserAccountCommand)
-    ).toThrow("User account already exists");
+    ).rejects.toThrow("User account already exists");
   });
 
-  it("should throw an error if the argument is not UUID v4 format", () => {
-    userAccountRepository.setDoesUserAccountExist(false);
-
+  it("should throw an error if the argument is not UUID v4 format", async () => {
     const newUserAccountCommand = new NewUserAccountCommand(
       "invalidUUID",
       "username",
       "SecureP@ss123"
     );
 
-    expect(() => {
-      userAccountApplicationService.createUserAccount(newUserAccountCommand);
-    }).toThrow(userAccountIdError.invalidUUID);
+    await expect(
+      userAccountApplicationService.createUserAccount(newUserAccountCommand)
+    ).rejects.toThrow(userAccountIdError.invalidUUID);
   });
 
-  it("should throw an error if the username does not meet the requirements", () => {
-    userAccountRepository.setDoesUserAccountExist(true); // Set to true to simulate a username conflict (should not be reached)
+  it("should throw an error if the username does not meet the requirements", async () => {
+    repositoryFactory.set_doesUserAccountExist_InUserAccountRepoTo(true); // Set to true to simulate a username conflict (should not be reached)
 
     const newUserAccountCommand = new NewUserAccountCommand(
       new UUIDGenerator().generate(),
@@ -112,22 +111,20 @@ describe("User Account Application Service", () => {
       "SecureP@ss123"
     );
 
-    expect(() =>
+    await expect(
       userAccountApplicationService.createUserAccount(newUserAccountCommand)
-    ).toThrow(userNamesError.userNameNotMeetingRequirements);
+    ).rejects.toThrow(userNamesError.userNameNotMeetingRequirements);
   });
 
-  it("should throw an error if the password does not meet the requirements", () => {
-    userAccountRepository.setDoesUserAccountExist(false);
-
+  it("should throw an error if the password does not meet the requirements", async () => {
     const newUserAccountCommand = new NewUserAccountCommand(
       new UUIDGenerator().generate(),
       "username",
       "invalidPassword"
     );
 
-    expect(() =>
+    await expect(
       userAccountApplicationService.createUserAccount(newUserAccountCommand)
-    ).toThrow(passwordError.passwordNotMeetingRequirements);
+    ).rejects.toThrow(passwordError.passwordNotMeetingRequirements);
   });
 });

@@ -13,7 +13,7 @@ class UserAccountRepositoryMock implements UserAccountRepository {
   private userAccount: UserAccount;
   private userAccountExists: boolean;
 
-  doesUserAccountExist(username: string): boolean {
+  async doesUserAccountExist(username: string): Promise<boolean> {
     return this.userAccountExists;
   }
 
@@ -21,20 +21,21 @@ class UserAccountRepositoryMock implements UserAccountRepository {
     this.userAccountExists = userAccountExists;
   }
 
-  save(userAccount: UserAccount): void {
-    this.userAccount = userAccount;
-  }
-
-  getUserAccount(username: string): UserAccount {
-    return this.userAccount;
-  }
-
-  reset(): void {
-    this.userAccount = this.defaultUserAccount;
-  }
-
-  commit(): void {
+  async lockUserAccount(UserAccountId: string): Promise<void> {
     return;
+  }
+
+  async save(userAccount: UserAccount): Promise<void> {
+    this.userAccount = userAccount;
+    return;
+  }
+
+  async commit(): Promise<void> {
+    return;
+  }
+
+  getNewlyCreatedUserAccount(): UserAccount {
+    return this.userAccount;
   }
 }
 

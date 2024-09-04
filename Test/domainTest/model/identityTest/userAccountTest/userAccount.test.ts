@@ -36,7 +36,7 @@ describe("UserAccount", () => {
     expect(userAccount["password"]["value"]).toBe(aPassword);
   }
 
-  it("should publish new user account created event", () => {
+  it("should publish new user account created event", async () => {
     userAccount = new UserAccount(
       new UserAccountId(new UUIDGenerator().generate()),
       new UserName("username"),
@@ -52,7 +52,7 @@ describe("UserAccount", () => {
 
     domainEventPublisher.subscribe(subscriber);
 
-    userAccount.publishNewUserAccountCreatedEvent(domainEventPublisher);
+    await userAccount.publishNewUserAccountCreatedEvent(domainEventPublisher);
 
     expect(subscriber.getEvent()).toBeInstanceOf(NewUserAccountCreated);
   });

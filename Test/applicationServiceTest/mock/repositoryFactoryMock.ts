@@ -3,38 +3,53 @@ import {
   RepositoryCollection,
 } from "../../../src/domain/repositoryFactory/repositoryFactory.type";
 import RepositoryFactory from "../../../src/domain/repositoryFactory/repositoryFactory";
-import UserAccountRepository from "../../../src/domain/model/identity/userAccount/userAccountRepository";
-import EventStore from "../../../src/domain/eventStore";
+import UserAccountRepositoryMock from "./userAccountRepositoryMock";
+import EventStoreMock from "./eventStoreMock";
 
 class RepositoryFactoryMock implements RepositoryFactory {
-  private userAccountRepository: UserAccountRepository;
-  private eventStore: EventStore;
+  private repositories: RepositoryCollection<RepositoryName[]> | null;
+  private presetOptionForUserAccountRepo = {
+    doesUserAccountExist: false,
+  };
 
-  constructor(
-    aUserAccountRepository: UserAccountRepository,
-    anEventStore: EventStore
-  ) {
-    this.userAccountRepository = aUserAccountRepository;
-    this.eventStore = anEventStore;
-  }
-
-  getRepositoriesFor<T extends RepositoryName[]>(
+  getRepositories<T extends RepositoryName[]>(
     ...repos: T
   ): RepositoryCollection<T> {
     const repositories = {} as RepositoryCollection<RepositoryName[]>;
 
     repos.forEach((repo) => {
       switch (repo) {
-        case "userAccount":
-          repositories[repo] = this.userAccountRepository;
+        case "UserAccountRepository":
+          const repository = new UserAccountRepositoryMock();
+          repository.setDoesUserAccountExist(
+            this.presetOptionForUserAccountRepo.doesUserAccountExist
+          );
+          repositories[repo] = repository;
           break;
-        case "eventStore":
-          repositories[repo] = this.eventStore;
+        case "EventStore":
+          repositories[repo] = new EventStoreMock();
           break;
       }
     });
 
+    this.repositories = repositories;
     return repositories;
+  }
+
+  getRepositoriesUsed() {
+    return this.repositories;
+  }
+
+  set_doesUserAccountExist_InUserAccountRepoTo(
+    doesUserAccountExist: boolean
+  ): void {
+    this.presetOptionForUserAccountRepo.doesUserAccountExist =
+      doesUserAccountExist;
+  }
+
+  reset(): void {
+    this.repositories = null;
+    this.presetOptionForUserAccountRepo.doesUserAccountExist = false;
   }
 }
 

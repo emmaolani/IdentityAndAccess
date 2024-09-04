@@ -4,20 +4,20 @@ import ITUAndISOSpecRepository from "../model/geographicEntities/ITUAndISOSpecRe
 import UserAccountProfileRepository from "../model/identity/userAccount/userAccountProfile/userAccountProfileRepository";
 
 type RepositoryName =
-  | "userAccount"
-  | "eventStore"
-  | "ITUAndISOSpec"
-  | "userAccountProfile";
+  | "UserAccountRepository"
+  | "EventStore"
+  | "ITUAndISOSpecRepository"
+  | "UserAccountProfileRepository";
 
 // Define the return type for the factory method
 type RepositoryCollection<T extends RepositoryName[]> = {
-  [K in T[number]]: K extends "userAccount"
+  [K in T[number]]: K extends "UserAccountRepository"
     ? UserAccountRepository
-    : K extends "eventStore"
+    : K extends "EventStore"
     ? EventStore
-    : K extends "ITUAndISOSpec"
+    : K extends "ITUAndISOSpecRepository"
     ? ITUAndISOSpecRepository
-    : K extends "userAccountProfile"
+    : K extends "UserAccountProfileRepository"
     ? UserAccountProfileRepository
     : never;
 };

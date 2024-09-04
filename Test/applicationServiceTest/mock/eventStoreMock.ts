@@ -5,15 +5,12 @@ import NewUserAccountCreated from "../../../src/domain/model/identity/userAccoun
 class EventStoreMock implements EventStore {
   private domainEvent: DomainEvent;
 
-  append(anEvent: DomainEvent) {
+  async append(anEvent: DomainEvent): Promise<void> {
     this.domainEvent = anEvent;
   }
+
   getAllStoredEvents(): DomainEvent {
     return this.domainEvent;
-  }
-
-  reset() {
-    this.domainEvent = new NewUserAccountCreated("id", "default");
   }
 }
 

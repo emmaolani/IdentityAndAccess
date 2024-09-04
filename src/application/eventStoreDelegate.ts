@@ -14,8 +14,8 @@ class EventStoreDelegate implements DomainEventSubscriber {
     return this.subscribedEventNames;
   }
 
-  handleEvent(anEvent: DomainEvent) {
-    this.eventStore.append(anEvent);
+  async handleEvent(anEvent: DomainEvent) {
+    await this.eventStore.append(anEvent);
   }
 }
 

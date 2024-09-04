@@ -17,7 +17,7 @@ class TestingEventSubscriber implements DomainEventSubscriber {
     return this.expectedEventsType;
   }
 
-  handleEvent(domainEvent: DomainEvent) {
+  async handleEvent(domainEvent: DomainEvent) {
     this.event = domainEvent;
   }
 

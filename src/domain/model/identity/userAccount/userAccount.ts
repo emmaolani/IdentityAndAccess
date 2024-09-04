@@ -30,10 +30,10 @@ class UserAccount {
     this.password = aPassword;
   }
 
-  publishNewUserAccountCreatedEvent(
+  async publishNewUserAccountCreatedEvent(
     aDomainEventPublisher: DomainEventPublisher
   ) {
-    aDomainEventPublisher.publish(
+    await aDomainEventPublisher.publish(
       new NewUserAccountCreated(this.id.getValue(), this.username.getValue())
     );
   }

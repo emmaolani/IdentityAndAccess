@@ -16,12 +16,16 @@ class UserAccountApplicationService {
     this.repositoryFactory = aRepositoryFactory;
   }
 
-  createUserAccount(aCommand: NewUserAccountCommand) {
-    const { userAccountRepository, eventStore } =
-      this.getUserAccountRepositoryAndEventStore();
+  async createUserAccount(aCommand: NewUserAccountCommand) {
+    const repositories = this.repositoryFactory.getRepositories(
+      "UserAccountRepository",
+      "EventStore"
+    );
 
     const domainEventPublisher: DomainEventPublisher =
-      this.initializeDomainEventPublisher(new EventStoreDelegate(eventStore));
+      this.initializeDomainEventPublisher(
+        new EventStoreDelegate(repositories.EventStore)
+      );
 
     const userAccount: UserAccount = new UserAccount(
       new UserAccountId(aCommand.getId()),
@@ -29,44 +33,32 @@ class UserAccountApplicationService {
       new Password(aCommand.getPassword())
     );
 
-    this.throwErrorIfUserNameExistsInDB(
+    await this.throwErrorIfUserNameExistsInDB(
       aCommand.getUsername(),
-      userAccountRepository
+      repositories.UserAccountRepository
     );
 
-    userAccount.publishNewUserAccountCreatedEvent(domainEventPublisher);
+    await userAccount.publishNewUserAccountCreatedEvent(domainEventPublisher);
 
-    userAccountRepository.save(userAccount);
+    await repositories.UserAccountRepository.save(userAccount);
 
-    userAccountRepository.commit();
-  }
-
-  private getUserAccountRepositoryAndEventStore() {
-    const repositories = this.repositoryFactory.getRepositoriesFor(
-      "userAccount",
-      "eventStore"
-    );
-
-    return {
-      userAccountRepository: repositories.userAccount,
-      eventStore: repositories.eventStore,
-    };
+    await repositories.UserAccountRepository.commit();
   }
 
   private initializeDomainEventPublisher(subscriber: DomainEventSubscriber) {
-    const domainEventPublisher: DomainEventPublisher =
-      new DomainEventPublisher();
+    const publisher: DomainEventPublisher = new DomainEventPublisher();
 
-    domainEventPublisher.subscribe(subscriber);
+    publisher.subscribe(subscriber);
 
-    return domainEventPublisher;
+    return publisher;
   }
 
-  private throwErrorIfUserNameExistsInDB(
+  private async throwErrorIfUserNameExistsInDB(
     aUsername: string,
     aUserAccountRepository: UserAccountRepository
   ) {
-    if (aUserAccountRepository.doesUserAccountExist(aUsername)) {
+    const result = await aUserAccountRepository.doesUserAccountExist(aUsername);
+    if (result) {
       throw new Error("User account already exists");
     }
   }

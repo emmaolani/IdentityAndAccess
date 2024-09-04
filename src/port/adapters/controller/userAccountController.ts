@@ -5,7 +5,6 @@ import ReqObjForCreatingUserAccount from "../../types/requestBody.types";
 import {
   userNamesError,
   passwordError,
-  userAccountIdError,
 } from "../../../domain/enum/errors/errorMsg";
 
 class UserAccountController {
@@ -15,7 +14,7 @@ class UserAccountController {
     this.userAccountApplicationService = aUserAccountApplicationService;
   }
 
-  createUserAccount(request: Request, response: Response) {
+  async createUserAccount(request: Request, response: Response) {
     try {
       if (!this.resObjIsOf_type_ReqObjForCreatingUserAccount(request.body)) {
         throw new Error("invalid request body");
@@ -29,7 +28,7 @@ class UserAccountController {
         data.password
       );
 
-      this.userAccountApplicationService.createUserAccount(
+      await this.userAccountApplicationService.createUserAccount(
         newUserAccountCommand
       );
 

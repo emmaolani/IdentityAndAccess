@@ -1,9 +1,7 @@
 import { RepositoryName, RepositoryCollection } from "./repositoryFactory.type";
-import UserAccountRepository from "../model/identity/userAccount/userAccountRepository";
-import EventStore from "../eventStore";
 
 interface RepositoryFactory {
-  getRepositoriesFor<T extends RepositoryName[]>(
+  getRepositories<T extends RepositoryName[]>(
     ...repos: T
   ): RepositoryCollection<T>;
 }

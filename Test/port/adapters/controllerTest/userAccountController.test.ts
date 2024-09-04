@@ -16,12 +16,7 @@ import {
 
 // TODO: write test for catching error when UUID is not valid
 describe("UserAccountController", () => {
-  const userAccountRepository = new UserAccountRepositoryMock();
-  const eventStore = new EventStoreMock();
-  const repositoryFactory = new RepositoryFactoryMock(
-    userAccountRepository,
-    eventStore
-  );
+  const repositoryFactory = new RepositoryFactoryMock();
   const userAccountApplicationService = new UserAccountApplicationService(
     repositoryFactory
   );
@@ -33,14 +28,11 @@ describe("UserAccountController", () => {
   let event: DomainEvent;
 
   beforeEach(() => {
-    userAccountRepository.reset();
-    eventStore.reset();
+    repositoryFactory.reset();
   });
 
   describe("createUserAccount", () => {
-    it("should create a new user account and send response with status 201", () => {
-      userAccountRepository.setDoesUserAccountExist(false); // user account does not exist
-
+    it("should create a new user account and send response with status 201", async () => {
       const username: string = "tester20";
       const password: string = "SecureP@ss1234";
 
@@ -51,12 +43,19 @@ describe("UserAccountController", () => {
       });
       const response: unknown = new ResponseMock();
 
-      userAccountController.createUserAccount(
+      await userAccountController.createUserAccount(
         request as Required<Request>,
         response as Required<Response>
       );
 
-      userAccount = userAccountRepository.getUserAccount("username");
+      // retrieving all repos used after calling userAccountController.createUserAccount()
+      const repositories = repositoryFactory.getRepositoriesUsed();
+
+      const userAccountRepository =
+        repositories?.UserAccountRepository as UserAccountRepositoryMock;
+      const eventStore = repositories?.EventStore as EventStoreMock;
+
+      userAccount = userAccountRepository.getNewlyCreatedUserAccount();
       event = eventStore.getAllStoredEvents();
 
       // asserting that the user account was created and the event was stored
@@ -89,11 +88,11 @@ describe("UserAccountController", () => {
       }
     }
 
-    it("should send response with status 400 if request body is invalid", () => {
+    it("should send response with status 400 if request body is invalid", async () => {
       const request: unknown = new RequestMock({}); // invalid request body
       const response: unknown = new ResponseMock();
 
-      userAccountController.createUserAccount(
+      await userAccountController.createUserAccount(
         request as Required<Request>,
         response as Required<Response>
       );
@@ -104,8 +103,8 @@ describe("UserAccountController", () => {
       });
     });
 
-    it("should send 409 if there is conflict with username", () => {
-      userAccountRepository.setDoesUserAccountExist(true); // username already exists
+    it("should send 409 if there is conflict with username", async () => {
+      repositoryFactory.set_doesUserAccountExist_InUserAccountRepoTo(true); // username already exists
 
       const request: unknown = new RequestMock({
         userAccountId: "54b8a43c-a882-42ac-b60b-087f079a8710",
@@ -115,7 +114,7 @@ describe("UserAccountController", () => {
 
       const response: unknown = new ResponseMock();
 
-      userAccountController.createUserAccount(
+      await userAccountController.createUserAccount(
         request as Required<Request>,
         response as Required<Response>
       );
@@ -126,9 +125,7 @@ describe("UserAccountController", () => {
       });
     });
 
-    it("should send a status code 400 if the user password does not meet security requirement", () => {
-      userAccountRepository.setDoesUserAccountExist(false);
-
+    it("should send a status code 400 if the user password does not meet security requirement", async () => {
       const request: unknown = new RequestMock({
         userAccountId: "54b8a43c-a882-42ac-b60b-087f079a8710",
         username: "username",
@@ -137,7 +134,7 @@ describe("UserAccountController", () => {
 
       const response: unknown = new ResponseMock();
 
-      userAccountController.createUserAccount(
+      await userAccountController.createUserAccount(
         request as Required<Request>,
         response as Required<Response>
       );
@@ -148,9 +145,7 @@ describe("UserAccountController", () => {
       });
     });
 
-    it("should send a status code 400 if the user username does not meet requirements", () => {
-      userAccountRepository.setDoesUserAccountExist(false);
-
+    it("should send a status code 400 if the user username does not meet requirements", async () => {
       const request: unknown = new RequestMock({
         userAccountId: "54b8a43c-a882-42ac-b60b-087f079a8710",
         username: "user+n-ame", // this username does not meet requirements
@@ -158,7 +153,7 @@ describe("UserAccountController", () => {
       });
       const response: unknown = new ResponseMock();
 
-      userAccountController.createUserAccount(
+      await userAccountController.createUserAccount(
         request as Required<Request>,
         response as Required<Response>
       );

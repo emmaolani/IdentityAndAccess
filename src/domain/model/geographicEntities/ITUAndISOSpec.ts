@@ -42,6 +42,10 @@ class ITUAndISOSpec {
     const completeNumber = "+" + this.callingCode + aNumber;
     return completeNumber;
   }
+
+  getId() {
+    return this.id;
+  }
 }
 
 export default ITUAndISOSpec;
