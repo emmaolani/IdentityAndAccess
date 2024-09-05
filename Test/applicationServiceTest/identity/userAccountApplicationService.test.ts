@@ -60,7 +60,7 @@ describe("User Account Application Service", () => {
     password: string
   ) {
     expect(userAccount).toBeInstanceOf(UserAccount);
-    expect(userAccount["id"]["value"]).toBe(id);
+    expect(userAccount["id"]["id"]).toBe(id);
     expect(userAccount["username"]["value"]).toBe(username);
     expect(userAccount["password"]["value"]).toBe(password);
   }
@@ -77,7 +77,7 @@ describe("User Account Application Service", () => {
   }
 
   it("should throw an error if there is a username conflict", async () => {
-    repositoryFactory.set_doesUserAccountExist_InUserAccountRepoTo(true); // Set to true to simulate a username conflict in userAccountRepository
+    repositoryFactory.setPresetOptionForUserAccountRepo(true); // Set to true to simulate a username conflict in userAccountRepository
 
     const newUserAccountCommand = new NewUserAccountCommand(
       new UUIDGenerator().generate(),
@@ -103,7 +103,7 @@ describe("User Account Application Service", () => {
   });
 
   it("should throw an error if the username does not meet the requirements", async () => {
-    repositoryFactory.set_doesUserAccountExist_InUserAccountRepoTo(true); // Set to true to simulate a username conflict (should not be reached)
+    repositoryFactory.setPresetOptionForUserAccountRepo(true); // Set to true to simulate a username conflict (should not be reached)
 
     const newUserAccountCommand = new NewUserAccountCommand(
       new UUIDGenerator().generate(),

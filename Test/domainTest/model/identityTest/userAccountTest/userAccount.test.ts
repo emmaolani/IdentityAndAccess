@@ -31,7 +31,7 @@ describe("UserAccount", () => {
     aPassword: string
   ) {
     expect(userAccount).toBeInstanceOf(UserAccount);
-    expect(userAccount["id"]["value"]).toBe(anId);
+    expect(userAccount["id"]["id"]).toBe(anId);
     expect(userAccount["username"]["value"]).toBe(aUsername);
     expect(userAccount["password"]["value"]).toBe(aPassword);
   }

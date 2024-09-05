@@ -34,16 +34,17 @@ class UserAccountProfileApplicationService {
       "ITUAndISOSpecRepository"
     );
 
-    this.phoneNumberValidator.getValidNationalNumberForRegion(
-      aCommand.getPhoneNumber().countryCode,
-      aCommand.getPhoneNumber().countryCode
-    );
+    const mobileNumber =
+      this.phoneNumberValidator.getValidNationalNumberForRegion(
+        aCommand.getPhoneNumber().number,
+        aCommand.getPhoneNumber().countryCode
+      ); // This returns a valid ITU E.164 formatted phone number
 
     await repositories.UserAccountRepository.lockUserAccount(
       aCommand.getUserAccountId()
     );
 
-    await this.throwErrorIfUserAccountProfileWithUserAccountIdAlreadyExists(
+    await this.throwErrorIf_userAccountProfile_With_userAccountId_AlreadyExists(
       aCommand.getUserAccountId(),
       repositories.UserAccountProfileRepository
     );
@@ -63,15 +64,22 @@ class UserAccountProfileApplicationService {
       new UserAccountId(aCommand.getUserAccountId()),
       new EmailAddress(aCommand.getEmailAddress(), false, null),
       new PhoneNumber(
-        aCommand.getPhoneNumber().number,
-        iTUAndISOSpec.getId(),
+        mobileNumber,
+        new ITUAndISOSpecId(iTUAndISOSpec.getId()),
         false,
         null
       )
     );
+
+    await userAccountProfile.publishNewUserAccountProfileCreatedEvent(
+      domainEventPublisher
+    );
+
+    repositories.UserAccountProfileRepository.save(userAccountProfile);
+    repositories.UserAccountProfileRepository.commit();
   }
 
-  private async throwErrorIfUserAccountProfileWithUserAccountIdAlreadyExists(
+  private async throwErrorIf_userAccountProfile_With_userAccountId_AlreadyExists(
     aUserAccountId: string,
     aRepository: UserAccountProfileRepository
   ): Promise<void> {

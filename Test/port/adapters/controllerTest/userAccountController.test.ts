@@ -104,7 +104,7 @@ describe("UserAccountController", () => {
     });
 
     it("should send 409 if there is conflict with username", async () => {
-      repositoryFactory.set_doesUserAccountExist_InUserAccountRepoTo(true); // username already exists
+      repositoryFactory.setPresetOptionForUserAccountRepo(true); // username already exists
 
       const request: unknown = new RequestMock({
         userAccountId: "54b8a43c-a882-42ac-b60b-087f079a8710",

@@ -2,7 +2,7 @@ import ValueObject from "../../../valueObject";
 import { userAccountIdError } from "../../../enum/errors/errorMsg";
 
 class UserAccountId extends ValueObject {
-  private value: string;
+  private id: string;
 
   constructor(aValue: string) {
     super();
@@ -11,7 +11,7 @@ class UserAccountId extends ValueObject {
 
   private setValue(aValue: string) {
     this.throwErrorIfUUIDIsValid(aValue);
-    this.value = aValue;
+    this.id = aValue;
   }
 
   private throwErrorIfUUIDIsValid(aValue: string): void {
@@ -23,8 +23,8 @@ class UserAccountId extends ValueObject {
     }
   }
 
-  getValue(): string {
-    return this.value;
+  getId(): string {
+    return this.id;
   }
 }
 

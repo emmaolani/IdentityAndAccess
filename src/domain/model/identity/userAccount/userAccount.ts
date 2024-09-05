@@ -34,7 +34,7 @@ class UserAccount {
     aDomainEventPublisher: DomainEventPublisher
   ) {
     await aDomainEventPublisher.publish(
-      new NewUserAccountCreated(this.id.getValue(), this.username.getValue())
+      new NewUserAccountCreated(this.id.getId(), this.username.getValue())
     );
   }
 }

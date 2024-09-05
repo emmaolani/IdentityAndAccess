@@ -2,10 +2,11 @@ import UserAccountId from "../userAccountId";
 import UserAccountProfileId from "./userAccountProfileId";
 import EmailAddress from "../../../contactDetails/emailAddress";
 import PhoneNumber from "../../../contactDetails/phoneNumber";
-import VerificationCode from "../../../contactDetails/verificationCode";
+import DomainEventPublisher from "../../../../domainEventPublisher";
+import NewUserAccountProfileCreated from "./newUserAccountProfileCreated";
 
 class UserAccountProfile {
-  private userAccountProfileId: UserAccountProfileId;
+  private id: UserAccountProfileId;
   private userAccountId: UserAccountId;
   private emailAddress: EmailAddress;
   private phoneNumber: PhoneNumber;
@@ -23,7 +24,7 @@ class UserAccountProfile {
   }
 
   private setUserAccountProfileId(aUserAccountProfileId: UserAccountProfileId) {
-    this.userAccountProfileId = aUserAccountProfileId;
+    this.id = aUserAccountProfileId;
   }
 
   private setUserAccountId(aUserAccountId: UserAccountId) {
@@ -38,12 +39,26 @@ class UserAccountProfile {
     this.phoneNumber = aPhoneNumber;
   }
 
+  getId(): string {
+    return this.id.getId();
+  }
   getEmailAddress(): string {
     return this.emailAddress.getValue();
   }
 
   getPhoneNumber(): string {
     return this.phoneNumber.getValue();
+  }
+
+  async publishNewUserAccountProfileCreatedEvent(
+    aDomainEventPublisher: DomainEventPublisher
+  ): Promise<void> {
+    await aDomainEventPublisher.publish(
+      new NewUserAccountProfileCreated(
+        this.id.getId(),
+        this.userAccountId.getId()
+      )
+    );
   }
 }
 

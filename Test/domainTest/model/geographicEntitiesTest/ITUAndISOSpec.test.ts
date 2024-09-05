@@ -39,6 +39,18 @@ describe("ITUandISOSpecs", () => {
     expect(anITUAndISOSpec["callingCode"]).toBe(aCallingCode);
   }
 
+  it("should get id", () => {
+    const id = new UUIDGenerator().generate();
+    const ituAndIsoSpec: ITUAndISOSpec = new ITUAndISOSpec(
+      new ITUAndISOSpecId(id),
+      "countryID",
+      "countryCode",
+      "234"
+    );
+
+    expect(ituAndIsoSpec.getId()).toBe(id);
+  });
+
   it("should get complete phone number", () => {
     const ituAndIsoSpec: ITUAndISOSpec = new ITUAndISOSpec(
       new ITUAndISOSpecId(new UUIDGenerator().generate()),

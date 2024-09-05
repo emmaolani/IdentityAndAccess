@@ -5,11 +5,19 @@ import {
 import RepositoryFactory from "../../../src/domain/repositoryFactory/repositoryFactory";
 import UserAccountRepositoryMock from "./userAccountRepositoryMock";
 import EventStoreMock from "./eventStoreMock";
+import UserAccountProfileRepositoryMock from "./userAccountProfileRepositoryMock";
+import ITUAndISOSpecRepositoryMock from "./iTUAndISOSpecRepositoryMock";
 
 class RepositoryFactoryMock implements RepositoryFactory {
   private repositories: RepositoryCollection<RepositoryName[]> | null;
   private presetOptionForUserAccountRepo = {
     doesUserAccountExist: false,
+  };
+  private presetOptionForUserAccountProfileRepo = {
+    shouldUserAccountProfileWithUserAccountIdExist: false,
+  };
+  private presetOptionForITUAndISOSpecRepo = {
+    initializeWithITUAndISOSpec: true,
   };
 
   getRepositories<T extends RepositoryName[]>(
@@ -29,6 +37,16 @@ class RepositoryFactoryMock implements RepositoryFactory {
         case "EventStore":
           repositories[repo] = new EventStoreMock();
           break;
+        case "UserAccountProfileRepository":
+          repositories[repo] = new UserAccountProfileRepositoryMock(
+            this.presetOptionForUserAccountProfileRepo.shouldUserAccountProfileWithUserAccountIdExist
+          );
+          break;
+        case "ITUAndISOSpecRepository":
+          repositories[repo] = new ITUAndISOSpecRepositoryMock(
+            this.presetOptionForITUAndISOSpecRepo.initializeWithITUAndISOSpec
+          );
+          break;
       }
     });
 
@@ -40,16 +58,36 @@ class RepositoryFactoryMock implements RepositoryFactory {
     return this.repositories;
   }
 
-  set_doesUserAccountExist_InUserAccountRepoTo(
-    doesUserAccountExist: boolean
-  ): void {
+  setPresetOptionForUserAccountRepo(doesUserAccountExist: boolean): void {
     this.presetOptionForUserAccountRepo.doesUserAccountExist =
       doesUserAccountExist;
   }
 
+  setPresetOptionForUserAccountProfileRepo(
+    shouldUserAccountProfileWithUserAccountIdExist: boolean
+  ): void {
+    this.presetOptionForUserAccountProfileRepo.shouldUserAccountProfileWithUserAccountIdExist =
+      shouldUserAccountProfileWithUserAccountIdExist;
+  }
+
+  setPresetOptionForITUAndISOSpecRepo(
+    initializeWithITUAndISOSpec: boolean
+  ): void {
+    this.presetOptionForITUAndISOSpecRepo.initializeWithITUAndISOSpec =
+      initializeWithITUAndISOSpec;
+  }
+
   reset(): void {
     this.repositories = null;
-    this.presetOptionForUserAccountRepo.doesUserAccountExist = false;
+    this.presetOptionForUserAccountRepo = {
+      doesUserAccountExist: false,
+    };
+    this.presetOptionForUserAccountProfileRepo = {
+      shouldUserAccountProfileWithUserAccountIdExist: false,
+    };
+    this.presetOptionForITUAndISOSpecRepo = {
+      initializeWithITUAndISOSpec: true,
+    };
   }
 }
 
