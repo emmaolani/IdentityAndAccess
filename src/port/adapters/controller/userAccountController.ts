@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import UserAccountApplicationService from "../../../application/identity/userAccountApplicationService";
 import NewUserAccountCommand from "../../../application/identity/newUserAccountCommand";
-import ReqObjForCreatingUserAccount from "../../types/requestBody.types";
+import NewUserAccountReqObj from "./requestBodyTypes/newUserAccountReqObj.types";
 import {
   userNamesError,
   passwordError,
-} from "../../../domain/enum/errors/errorMsg";
+} from "../../../domain/enum/errorMsg/userAccountErrorMsg";
 
 class UserAccountController {
   private userAccountApplicationService: UserAccountApplicationService;
@@ -20,7 +20,7 @@ class UserAccountController {
         throw new Error("invalid request body");
       } // check if request body is of type ReqObjForCreatingUserAccount
 
-      const data: ReqObjForCreatingUserAccount = request.body;
+      const data: NewUserAccountReqObj = request.body;
 
       const newUserAccountCommand = new NewUserAccountCommand(
         data.userAccountId,
@@ -43,7 +43,7 @@ class UserAccountController {
 
   private resObjIsOf_type_ReqObjForCreatingUserAccount(
     obj: any
-  ): obj is ReqObjForCreatingUserAccount {
+  ): obj is NewUserAccountReqObj {
     return (
       typeof obj === "object" &&
       obj !== null &&

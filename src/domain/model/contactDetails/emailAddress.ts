@@ -1,6 +1,6 @@
 import VerificationCode from "./verificationCode";
 import ValueObject from "../../valueObject";
-import { emailAddressError } from "../../enum/errors/errorMsg";
+import { emailAddressError } from "../../enum/errorMsg/contactDetailErrorMsg";
 
 class EmailAddress extends ValueObject {
   private value: string;

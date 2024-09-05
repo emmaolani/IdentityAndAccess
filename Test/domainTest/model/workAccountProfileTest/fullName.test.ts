@@ -1,5 +1,5 @@
 import FullName from "../../../../src/domain/model/organization/WorkAccountProfile.ts/fullName";
-import { fullNameError } from "../../../../src/domain/enum/errors/errorMsg";
+import { fullNameError } from "../../../../src/domain/enum/errorMsg/workAccountProfileErrorMsg";
 
 describe("Unit Test fullName class", () => {
   it("should throw error if firstName is not provided", () => {

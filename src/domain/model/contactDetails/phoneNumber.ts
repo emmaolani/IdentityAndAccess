@@ -1,7 +1,7 @@
 import ValueObject from "../../valueObject";
 import ITUAndISOSpecId from "../geographicEntities/ITUAndISOSpecId";
 import VerificationCode from "./verificationCode";
-import { phoneNumberError } from "../../enum/errors/errorMsg";
+import { phoneNumberError } from "../../enum/errorMsg/contactDetailErrorMsg";
 
 class PhoneNumber extends ValueObject {
   private value: string;

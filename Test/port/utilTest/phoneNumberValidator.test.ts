@@ -1,5 +1,5 @@
 import PhoneNumberValidatorImp from "../../../src/port/util/phoneNumberValidatorImp";
-import { phoneNumberError } from "../../../src/domain/enum/errors/errorMsg";
+import { phoneNumberError } from "../../../src/domain/enum/errorMsg/contactDetailErrorMsg";
 
 describe("PhoneNumberValidator", () => {
   const phoneNumberValidator = new PhoneNumberValidatorImp();

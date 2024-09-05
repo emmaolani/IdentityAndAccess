@@ -1,5 +1,5 @@
 import ValueObject from "../../valueObject";
-import { ITUAndISOSpecIdIdError } from "../../enum/errors/errorMsg";
+import { ITUAndISOSpecIdIdError } from "../../enum/errorMsg/iTUAndISOErrorMsg";
 
 class ITUAndISOSpecId extends ValueObject {
   private value: string;

@@ -11,6 +11,7 @@ import UserAccountProfileId from "../../../domain/model/identity/userAccount/use
 import EmailAddress from "../../../domain/model/contactDetails/emailAddress";
 import PhoneNumber from "../../../domain/model/contactDetails/phoneNumber";
 import ITUAndISOSpecId from "../../../domain/model/geographicEntities/ITUAndISOSpecId";
+import UserAccountProfileApplicationServiceError from "../../errorMsg/userAccountProfileApplicationServiceerrorMsg";
 
 class UserAccountProfileApplicationService {
   private repositoryFactory: RepositoryFactory;
@@ -38,13 +39,13 @@ class UserAccountProfileApplicationService {
       this.phoneNumberValidator.getValidNationalNumberForRegion(
         aCommand.getPhoneNumber().number,
         aCommand.getPhoneNumber().countryCode
-      ); // This returns a valid ITU E.164 formatted phone number
+      ); // This returns a valid ITU E.164 formatted phone number for a region
 
     await repositories.UserAccountRepository.lockUserAccount(
       aCommand.getUserAccountId()
     );
 
-    await this.throwErrorIf_userAccountProfile_With_userAccountId_AlreadyExists(
+    await this.throwErrorIfUserAccountAlreadyHaveProfile(
       aCommand.getUserAccountId(),
       repositories.UserAccountProfileRepository
     );
@@ -79,7 +80,7 @@ class UserAccountProfileApplicationService {
     repositories.UserAccountProfileRepository.commit();
   }
 
-  private async throwErrorIf_userAccountProfile_With_userAccountId_AlreadyExists(
+  private async throwErrorIfUserAccountAlreadyHaveProfile(
     aUserAccountId: string,
     aRepository: UserAccountProfileRepository
   ): Promise<void> {
@@ -89,7 +90,7 @@ class UserAccountProfileApplicationService {
       )
     ) {
       throw new Error(
-        "User account profile with user account id already exists."
+        UserAccountProfileApplicationServiceError.userAccountAlreadyHasProfile
       );
     }
     return;

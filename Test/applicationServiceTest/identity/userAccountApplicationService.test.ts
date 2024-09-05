@@ -11,7 +11,7 @@ import {
   passwordError,
   userAccountIdError,
   userNamesError,
-} from "../../../src/domain/enum/errors/errorMsg";
+} from "../../../src/domain/enum/errorMsg/userAccountErrorMsg";
 
 describe("User Account Application Service", () => {
   const repositoryFactory = new RepositoryFactoryMock();

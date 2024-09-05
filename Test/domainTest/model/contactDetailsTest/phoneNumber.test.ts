@@ -4,7 +4,7 @@ import VerificationCode from "../../../../src/domain/model/contactDetails/verifi
 import {
   phoneNumberError,
   verificationCodeError,
-} from "../../../../src/domain/enum/errors/errorMsg";
+} from "../../../../src/domain/enum/errorMsg/contactDetailErrorMsg";
 import UUIDGenerator from "../../../../src/port/adapters/controller/uUIDGenerator";
 
 describe("Unit Test for PhoneNumber class", () => {

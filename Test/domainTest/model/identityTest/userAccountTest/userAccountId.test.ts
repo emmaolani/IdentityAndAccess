@@ -1,6 +1,6 @@
 import UserAccountId from "../../../../../src/domain/model/identity/userAccount/userAccountId";
 import UUIDGenerator from "../../../../../src/port/adapters/controller/uUIDGenerator";
-import { userAccountIdError } from "../../../../../src/domain/enum/errors/errorMsg";
+import { userAccountIdError } from "../../../../../src/domain/enum/errorMsg/userAccountErrorMsg";
 
 describe("UserAccountId", () => {
   it("should create a userAccountId only if the argument is of UUID v4 format", () => {

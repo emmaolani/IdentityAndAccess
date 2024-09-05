@@ -1,5 +1,5 @@
 import ValueObject from "../../valueObject";
-import { verificationCodeError } from "../../enum/errors/errorMsg";
+import { verificationCodeError } from "../../enum/errorMsg/contactDetailErrorMsg";
 
 class VerificationCode extends ValueObject {
   private value: string;

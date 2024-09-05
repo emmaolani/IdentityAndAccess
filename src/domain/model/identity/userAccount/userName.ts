@@ -1,5 +1,5 @@
 import ValueObject from "../../../valueObject";
-import { userNamesError } from "../../../enum/errors/errorMsg";
+import { userNamesError } from "../../../enum/errorMsg/userAccountErrorMsg";
 
 class UserName extends ValueObject {
   private value: string;

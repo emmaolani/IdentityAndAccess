@@ -3,21 +3,20 @@ import UserAccountProfile from "../../../src/domain/model/identity/userAccount/u
 
 class UserAccountProfileRepositoryMock implements UserAccountProfileRepository {
   private userAccountProfileMap: Map<string, UserAccountProfile> = new Map();
-  private shouldUserAccountProfileWithUserAccountIdExist: boolean;
+  private userAccountHasProfile: boolean;
 
-  constructor(aShouldUserAccountProfileWithUserAccountIdExist: boolean) {
-    this.shouldUserAccountProfileWithUserAccountIdExist =
-      aShouldUserAccountProfileWithUserAccountIdExist;
+  constructor(doesUserAccountHaveProfile: boolean) {
+    this.userAccountHasProfile = doesUserAccountHaveProfile;
   }
 
   async doesUserAccountProfileWithUserAccountIdExist(
     userAccountId: string
   ): Promise<boolean> {
-    return this.shouldUserAccountProfileWithUserAccountIdExist;
+    return this.userAccountHasProfile;
   }
 
   setShouldUserAccountProfileWithUserAccountIdExist(anOption: boolean): void {
-    this.shouldUserAccountProfileWithUserAccountIdExist = anOption;
+    this.userAccountHasProfile = anOption;
   }
 
   async save(userAccountProfile: UserAccountProfile): Promise<void> {

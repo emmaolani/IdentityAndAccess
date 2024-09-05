@@ -6,7 +6,6 @@ import UUIDGenerator from "../../../../../src/port/adapters/controller/uUIDGener
 import DomainEventPublisher from "../../../../../src/domain/domainEventPublisher";
 import TestingEventSubscriber from "../../../mock/domainEventSubscriberMock/TestingEventSubscriberMock";
 import NewUserAccountCreated from "../../../../../src/domain/model/identity/userAccount/newUserAccountCreated";
-import { userAccountError } from "../../../../../src/domain/enum/errors/errorMsg";
 
 // TODO: implement AccessRuleId and RestrictionId Properties
 describe("UserAccount", () => {

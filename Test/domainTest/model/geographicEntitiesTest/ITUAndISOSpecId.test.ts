@@ -1,6 +1,6 @@
 import ITUAndISOSpecId from "../../../../src/domain/model/geographicEntities/ITUAndISOSpecId";
 import UUIDGenerator from "../../../../src/port/adapters/controller/uUIDGenerator";
-import { ITUAndISOSpecIdIdError } from "../../../../src/domain/enum/errors/errorMsg";
+import { ITUAndISOSpecIdIdError } from "../../../../src/domain/enum/errorMsg/iTUAndISOErrorMsg";
 
 describe("ITUAndISOSpecId", () => {
   it("should create a ITUAndISOSpecId only if the argument is of UUID v4 format", () => {

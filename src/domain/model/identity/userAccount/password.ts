@@ -1,5 +1,5 @@
 import ValueObject from "../../../valueObject";
-import { passwordError } from "../../../enum/errors/errorMsg";
+import { passwordError } from "../../../enum/errorMsg/userAccountErrorMsg";
 
 class Password extends ValueObject {
   private value: string;

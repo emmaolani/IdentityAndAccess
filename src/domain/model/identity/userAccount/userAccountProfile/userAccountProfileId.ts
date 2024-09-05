@@ -1,5 +1,5 @@
 import ValueObject from "../../../../valueObject";
-import { UserAccountProfileIdError } from "../../../../enum/errors/errorMsg";
+import { UserAccountProfileIdError } from "../../../../enum/errorMsg/userAccountProfileErrorMsg";
 
 class UserAccountProfileId extends ValueObject {
   private id: string;

@@ -3,7 +3,6 @@ import UserName from "./userName";
 import Password from "./password";
 import NewUserAccountCreated from "./newUserAccountCreated";
 import DomainEventPublisher from "../../../domainEventPublisher";
-import { userAccountError } from "../../../enum/errors/errorMsg";
 
 // TODO: implement status
 class UserAccount {

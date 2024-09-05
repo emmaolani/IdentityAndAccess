@@ -1,6 +1,6 @@
 import PhoneNumberValidator from "../../application/phoneNumberValidator";
 import libphonenumber from "google-libphonenumber";
-import { phoneNumberError } from "../../domain/enum/errors/errorMsg";
+import { phoneNumberError } from "../../domain/enum/errorMsg/contactDetailErrorMsg";
 
 class PhoneNumberValidatorImp implements PhoneNumberValidator {
   private phoneUtil = libphonenumber.PhoneNumberUtil.getInstance();

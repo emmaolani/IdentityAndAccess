@@ -3,7 +3,7 @@ import VerificationCode from "../../../../src/domain/model/contactDetails/verifi
 import {
   emailAddressError,
   verificationCodeError,
-} from "../../../../src/domain/enum/errors/errorMsg";
+} from "../../../../src/domain/enum/errorMsg/contactDetailErrorMsg";
 
 describe("Unit Test for EmailAddress class", () => {
   let whiteSpacedEmail: string = " tes t@coral.com ";

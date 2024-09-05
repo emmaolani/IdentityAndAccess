@@ -12,7 +12,7 @@ import DomainEvent from "../../../../src/domain/domainEvent";
 import {
   passwordError,
   userNamesError,
-} from "../../../../src/domain/enum/errors/errorMsg";
+} from "../../../../src/domain/enum/errorMsg/userAccountErrorMsg";
 
 // TODO: write test for catching error when UUID is not valid
 describe("UserAccountController", () => {

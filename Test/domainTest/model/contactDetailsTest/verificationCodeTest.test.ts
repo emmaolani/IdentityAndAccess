@@ -1,5 +1,5 @@
 import VerificationCode from "../../../../src/domain/model/contactDetails/verificationCode";
-import { verificationCodeError } from "../../../../src/domain/enum/errors/errorMsg";
+import { verificationCodeError } from "../../../../src/domain/enum/errorMsg/contactDetailErrorMsg";
 
 describe("Unit test for verificationCode class", () => {
   it("should throw error if verificationCode is initialized with codes that does not meet specification", () => {

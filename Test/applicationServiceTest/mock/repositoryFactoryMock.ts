@@ -14,7 +14,7 @@ class RepositoryFactoryMock implements RepositoryFactory {
     doesUserAccountExist: false,
   };
   private presetOptionForUserAccountProfileRepo = {
-    shouldUserAccountProfileWithUserAccountIdExist: false,
+    doesUserAccountHaveProfile: false, // simulate userAccount already having a userAccountProfile
   };
   private presetOptionForITUAndISOSpecRepo = {
     initializeWithITUAndISOSpec: true,
@@ -39,7 +39,7 @@ class RepositoryFactoryMock implements RepositoryFactory {
           break;
         case "UserAccountProfileRepository":
           repositories[repo] = new UserAccountProfileRepositoryMock(
-            this.presetOptionForUserAccountProfileRepo.shouldUserAccountProfileWithUserAccountIdExist
+            this.presetOptionForUserAccountProfileRepo.doesUserAccountHaveProfile
           );
           break;
         case "ITUAndISOSpecRepository":
@@ -66,7 +66,7 @@ class RepositoryFactoryMock implements RepositoryFactory {
   setPresetOptionForUserAccountProfileRepo(
     shouldUserAccountProfileWithUserAccountIdExist: boolean
   ): void {
-    this.presetOptionForUserAccountProfileRepo.shouldUserAccountProfileWithUserAccountIdExist =
+    this.presetOptionForUserAccountProfileRepo.doesUserAccountHaveProfile =
       shouldUserAccountProfileWithUserAccountIdExist;
   }
 
@@ -83,7 +83,7 @@ class RepositoryFactoryMock implements RepositoryFactory {
       doesUserAccountExist: false,
     };
     this.presetOptionForUserAccountProfileRepo = {
-      shouldUserAccountProfileWithUserAccountIdExist: false,
+      doesUserAccountHaveProfile: false,
     };
     this.presetOptionForITUAndISOSpecRepo = {
       initializeWithITUAndISOSpec: true,
