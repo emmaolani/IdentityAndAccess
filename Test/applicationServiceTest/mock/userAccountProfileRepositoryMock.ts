@@ -1,37 +1,29 @@
 import UserAccountProfileRepository from "../../../src/domain/model/identity/userAccount/userAccountProfile/userAccountProfileRepository";
 import UserAccountProfile from "../../../src/domain/model/identity/userAccount/userAccountProfile/userAccountProfile";
+import FakeDb from "./fakeDb";
 
 class UserAccountProfileRepositoryMock implements UserAccountProfileRepository {
-  private userAccountProfileMap: Map<string, UserAccountProfile> = new Map();
-  private userAccountHasProfile: boolean;
+  private DB: FakeDb;
 
-  constructor(doesUserAccountHaveProfile: boolean) {
-    this.userAccountHasProfile = doesUserAccountHaveProfile;
+  constructor(db: FakeDb) {
+    this.DB = db;
   }
 
   async doesUserAccountProfileWithUserAccountIdExist(
     userAccountId: string
   ): Promise<boolean> {
-    return this.userAccountHasProfile;
-  }
-
-  setShouldUserAccountProfileWithUserAccountIdExist(anOption: boolean): void {
-    this.userAccountHasProfile = anOption;
+    return this.DB.checkIfKeyExists(userAccountId);
   }
 
   async save(userAccountProfile: UserAccountProfile): Promise<void> {
-    this.userAccountProfileMap.set(
-      userAccountProfile.getId(),
-      userAccountProfile
-    );
+    this.DB.save(userAccountProfile.getId(), userAccountProfile);
   }
 
-  getProfile(userAccountProfileId: string): UserAccountProfile {
-    const userAccountProfile =
-      this.userAccountProfileMap.get(userAccountProfileId);
-
-    if (userAccountProfile !== undefined) {
-      return userAccountProfile;
+  async getProfileById(
+    userAccountProfileId: string
+  ): Promise<UserAccountProfile> {
+    if (this.DB.checkIfKeyExists(userAccountProfileId)) {
+      return this.DB.getById(userAccountProfileId);
     }
     throw new Error("User account profile not found");
   }

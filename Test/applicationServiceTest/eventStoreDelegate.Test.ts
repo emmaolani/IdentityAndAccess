@@ -17,8 +17,6 @@ describe("EventStoreDelegate", () => {
       new NewUserAccountCreated("userId", "userName")
     );
 
-    expect(eventStore.getAllStoredEvents()).toBeInstanceOf(
-      NewUserAccountCreated
-    );
+    expect(eventStore.getEvent()).toBeInstanceOf(NewUserAccountCreated);
   });
 });

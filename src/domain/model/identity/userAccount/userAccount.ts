@@ -4,7 +4,6 @@ import Password from "./password";
 import NewUserAccountCreated from "./newUserAccountCreated";
 import DomainEventPublisher from "../../../domainEventPublisher";
 
-// TODO: implement status
 class UserAccount {
   private id: UserAccountId;
   private username: UserName;

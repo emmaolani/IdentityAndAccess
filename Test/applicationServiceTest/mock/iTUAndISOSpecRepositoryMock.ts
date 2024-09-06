@@ -2,23 +2,18 @@ import ITUAndISOSpecRepository from "../../../src/domain/model/geographicEntitie
 import ITUAndISOSpec from "../../../src/domain/model/geographicEntities/ITUAndISOSpec";
 import ITUAndISOSpecId from "../../../src/domain/model/geographicEntities/ITUAndISOSpecId";
 import UUIDGenerator from "../../../src/port/adapters/controller/uUIDGenerator";
-import ITUAndISOSpecRepoErrorMsg from "../../../src/port/_enums/errorMsg/repositoriesErrorMsg";
+import { ITUAndISOSpecRepoErrorMsg } from "../../../src/port/_enums/errorMsg/repositories/repositoryErrorMsg/iTuAndISOSpecRepoErrorMsg";
+import FakeDb from "./fakeDb";
 
 class ITUAndISOSpecRepositoryMock implements ITUAndISOSpecRepository {
-  private ituAndISOSpecMap: Map<string, ITUAndISOSpec> = new Map();
+  private DB: FakeDb;
 
-  constructor(initializeWithITUAndISOSpec: boolean) {
-    if (initializeWithITUAndISOSpec) {
-      this.ituAndISOSpecMap.set(
-        "NG",
-        new ITUAndISOSpec(
-          new ITUAndISOSpecId(new UUIDGenerator().generate()),
-          "countryId",
-          "NG",
-          "+234"
-        )
-      );
-    }
+  constructor(aDB: FakeDb) {
+    this.DB = aDB;
+  }
+
+  async save(aITUAndISOSpec: ITUAndISOSpec): Promise<void> {
+    this.DB.save(aITUAndISOSpec.getId(), aITUAndISOSpec);
   }
 
   async getSpecByCountryCode(aCountryCode: string): Promise<ITUAndISOSpec> {

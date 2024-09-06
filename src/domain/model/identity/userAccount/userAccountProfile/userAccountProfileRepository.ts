@@ -1,6 +1,7 @@
 import UserAccountProfile from "./userAccountProfile";
 
 interface UserAccountProfileRepository {
+  getProfileById(userAccountProfileId: string): Promise<UserAccountProfile>;
   doesUserAccountProfileWithUserAccountIdExist(
     userAccountId: string
   ): Promise<boolean>;

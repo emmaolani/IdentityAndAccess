@@ -56,7 +56,7 @@ describe("UserAccountController", () => {
       const eventStore = repositories?.EventStore as EventStoreMock;
 
       userAccount = userAccountRepository.getNewlyCreatedUserAccount();
-      event = eventStore.getAllStoredEvents();
+      event = eventStore.getEvent();
 
       // asserting that the user account was created and the event was stored
       assertThatPropertiesIn_userAccount_match(username, password);

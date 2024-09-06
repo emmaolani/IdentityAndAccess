@@ -48,7 +48,7 @@ describe("User Account Application Service", () => {
     const eventStore = repositories?.EventStore as EventStoreMock;
 
     userAccount = userAccountRepository.getNewlyCreatedUserAccount();
-    event = eventStore.getAllStoredEvents();
+    event = eventStore.getEvent();
 
     assertThatPropertiesIn_userAccount_match(id, username, password);
     assertThatPropertiesIn_newUserAccountCreated_match(id, username);
