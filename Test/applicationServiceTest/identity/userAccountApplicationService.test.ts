@@ -3,8 +3,6 @@ import NewUserAccountCommand from "../../../src/application/identity/newUserAcco
 import UserAccount from "../../../src/domain/model/identity/userAccount/userAccount";
 import NewUserAccountCreated from "../../../src/domain/model/identity/userAccount/newUserAccountCreated";
 import RepositoryFactoryMock from "../mock/repositoryFactoryMock";
-import UserAccountRepositoryMock from "../mock/userAccountRepositoryMock";
-import EventStoreMock from "../mock/eventStoreMock";
 import UUIDGenerator from "../../../src/port/adapters/controller/uUIDGenerator";
 import DomainEvent from "../../../src/domain/domainEvent";
 import {
@@ -12,82 +10,96 @@ import {
   userAccountIdError,
   userNamesError,
 } from "../../../src/domain/enum/errorMsg/userAccountErrorMsg";
+import UserAccountId from "../../../src/domain/model/identity/userAccount/userAccountId";
+import UserName from "../../../src/domain/model/identity/userAccount/userName";
+import Password from "../../../src/domain/model/identity/userAccount/password";
+import EventName from "../../../src/domain/enum/event/eventName";
 
 describe("User Account Application Service", () => {
   const repositoryFactory = new RepositoryFactoryMock();
   const userAccountApplicationService = new UserAccountApplicationService(
     repositoryFactory
   );
-  let userAccount: UserAccount;
-  let event: DomainEvent;
-
-  beforeEach(() => {
-    repositoryFactory.reset();
-  });
 
   it("should create a new userAccount and NewUserAccountCreated Event if there is no username conflict", async () => {
-    const id: string = new UUIDGenerator().generate();
-    const username: string = "tester";
-    const password: string = "SecureP@ss1233";
-
     const newUserAccountCommand = new NewUserAccountCommand(
-      id,
-      username,
-      password
+      new UUIDGenerator().generate(),
+      "tester",
+      "SecureP@ss1233"
     );
 
     await userAccountApplicationService.createUserAccount(
       newUserAccountCommand
     );
 
-    // retrieving all repos used by UserAccountApplicationService
-    const repositories = repositoryFactory.getRepositoriesUsed();
+    const { userAccount, event } = await retrieveUserAccountAndEventStored(
+      newUserAccountCommand
+    );
 
-    const userAccountRepository =
-      repositories?.UserAccountRepository as UserAccountRepositoryMock;
-    const eventStore = repositories?.EventStore as EventStoreMock;
-
-    userAccount = userAccountRepository.getNewlyCreatedUserAccount();
-    event = eventStore.getEvent();
-
-    assertThatPropertiesIn_userAccount_match(id, username, password);
-    assertThatPropertiesIn_newUserAccountCreated_match(id, username);
+    assertThatPropertiesIn_userAccount_match(
+      userAccount,
+      newUserAccountCommand
+    );
+    assertThatPropertiesIn_newUserAccountCreated_match(
+      event[0],
+      newUserAccountCommand
+    );
   });
 
+  async function retrieveUserAccountAndEventStored(
+    command: NewUserAccountCommand
+  ) {
+    const repositories = repositoryFactory.getRepositories(
+      "UserAccountRepository",
+      "EventStore"
+    );
+
+    const userAccount = await repositories.UserAccountRepository.getById(
+      command.getId()
+    );
+    const event = (await repositories.EventStore.getAllEventWithName(
+      EventName.NewUserAccountCreated
+    )) as NewUserAccountCreated[];
+
+    return { userAccount, event };
+  }
+
   function assertThatPropertiesIn_userAccount_match(
-    id: string,
-    username: string,
-    password: string
+    userAccount: UserAccount,
+    aCommand: NewUserAccountCommand
   ) {
     expect(userAccount).toBeInstanceOf(UserAccount);
-    expect(userAccount["id"]["id"]).toBe(id);
-    expect(userAccount["username"]["value"]).toBe(username);
-    expect(userAccount["password"]["value"]).toBe(password);
+    expect(userAccount["id"]["id"]).toBe(aCommand.getId());
+    expect(userAccount["username"]["value"]).toBe(aCommand.getUsername());
+    expect(userAccount["password"]["value"]).toBe(aCommand.getPassword());
   }
 
   function assertThatPropertiesIn_newUserAccountCreated_match(
-    id: string,
-    username: string
+    event: DomainEvent,
+    aCommand: NewUserAccountCommand
   ) {
     expect(event).toBeInstanceOf(NewUserAccountCreated);
+
     if (event instanceof NewUserAccountCreated) {
-      expect(event["userAccountId"]).toBe(id);
-      expect(event["userName"]).toBe(username);
+      expect(event["userAccountId"]).toBe(aCommand.getId());
+      expect(event["userName"]).toBe(aCommand.getUsername());
     }
   }
 
   it("should throw an error if there is a username conflict", async () => {
-    repositoryFactory.setPresetOptionForUserAccountRepo(true); // Set to true to simulate a username conflict in userAccountRepository
-
     const newUserAccountCommand = new NewUserAccountCommand(
       new UUIDGenerator().generate(),
       "username",
       "SecureP@ss123"
     );
 
+    await storeUserAccountInDB(newUserAccountCommand); // store the user account in the database to simulate a conflict
+
     await expect(
       userAccountApplicationService.createUserAccount(newUserAccountCommand)
     ).rejects.toThrow("User account already exists");
+
+    await removeUserAccountInDB(newUserAccountCommand);
   });
 
   it("should throw an error if the argument is not UUID v4 format", async () => {
@@ -103,16 +115,14 @@ describe("User Account Application Service", () => {
   });
 
   it("should throw an error if the username does not meet the requirements", async () => {
-    repositoryFactory.setPresetOptionForUserAccountRepo(true); // Set to true to simulate a username conflict (should not be reached)
-
-    const newUserAccountCommand = new NewUserAccountCommand(
+    const command = new NewUserAccountCommand(
       new UUIDGenerator().generate(),
       "invalid+username",
       "SecureP@ss123"
     );
 
     await expect(
-      userAccountApplicationService.createUserAccount(newUserAccountCommand)
+      userAccountApplicationService.createUserAccount(command)
     ).rejects.toThrow(userNamesError.userNameNotMeetingRequirements);
   });
 
@@ -127,4 +137,26 @@ describe("User Account Application Service", () => {
       userAccountApplicationService.createUserAccount(newUserAccountCommand)
     ).rejects.toThrow(passwordError.passwordNotMeetingRequirements);
   });
+
+  async function storeUserAccountInDB(aCommand: NewUserAccountCommand) {
+    const repositories = repositoryFactory.getRepositories(
+      "UserAccountRepository"
+    );
+
+    await repositories.UserAccountRepository.save(
+      new UserAccount(
+        new UserAccountId(aCommand.getId()),
+        new UserName(aCommand.getUsername()),
+        new Password(aCommand.getPassword())
+      )
+    );
+  }
+
+  async function removeUserAccountInDB(aCommand: NewUserAccountCommand) {
+    const repositories = repositoryFactory.getRepositories(
+      "UserAccountRepository"
+    );
+
+    await repositories.UserAccountRepository.remove(aCommand.getUsername());
+  }
 });

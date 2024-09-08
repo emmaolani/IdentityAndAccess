@@ -1,22 +1,29 @@
 import EventStoreDelegate from "../../src/application/eventStoreDelegate";
-import EventStoreMock from "./mock/eventStoreMock";
 import NewUserAccountCreated from "../../src/domain/model/identity/userAccount/newUserAccountCreated";
+import RepositoryFactoryMock from "./mock/repositoryFactoryMock";
+import EventName from "../../src/domain/enum/event/eventName";
 
 describe("EventStoreDelegate", () => {
+  const repositoryFactory = new RepositoryFactoryMock();
+  const eventStore = repositoryFactory.getRepositories("EventStore");
+
   it("should be subscribed to All domain events", () => {
-    const eventStoreSubscriber = new EventStoreDelegate(new EventStoreMock());
+    const eventStoreSubscriber = new EventStoreDelegate(eventStore.EventStore);
 
     expect(eventStoreSubscriber.getSubscribedEventNames()).toEqual("ALL");
   });
 
-  it("should delegate domain event to the event store", () => {
-    const eventStore: EventStoreMock = new EventStoreMock();
-    const eventStoreSubscriber = new EventStoreDelegate(eventStore);
+  it("should delegate domain event to the event store", async () => {
+    const eventStoreSubscriber = new EventStoreDelegate(eventStore.EventStore);
 
-    eventStoreSubscriber.handleEvent(
+    await eventStoreSubscriber.handleEvent(
       new NewUserAccountCreated("userId", "userName")
     );
 
-    expect(eventStore.getEvent()).toBeInstanceOf(NewUserAccountCreated);
+    const events = await eventStore.EventStore.getAllEventWithName(
+      EventName.NewUserAccountCreated
+    );
+
+    expect(events[0]).toBeInstanceOf(NewUserAccountCreated);
   });
 });

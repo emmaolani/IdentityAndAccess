@@ -7,7 +7,7 @@ import UserAccountRepositoryMock from "./userAccountRepositoryMock";
 import EventStoreMock from "./eventStoreMock";
 import UserAccountProfileRepositoryMock from "./userAccountProfileRepositoryMock";
 import ITUAndISOSpecRepositoryMock from "./iTUAndISOSpecRepositoryMock";
-import FakeDb from "./fakeDb";
+import FakeDb from "./fakeDb/fakeDb";
 
 class RepositoryFactoryMock implements RepositoryFactory {
   private DB = new FakeDb();
@@ -20,7 +20,7 @@ class RepositoryFactoryMock implements RepositoryFactory {
     repos.forEach((repo) => {
       switch (repo) {
         case "UserAccountRepository":
-          const repository = new UserAccountRepositoryMock();
+          const repository = new UserAccountRepositoryMock(this.DB);
           repositories[repo] = repository;
           break;
         case "EventStore":

@@ -1,8 +1,6 @@
 import UserAccountController from "../../../../src/port/adapters/controller/userAccountController";
 import UserAccountApplicationService from "../../../../src/application/identity/userAccountApplicationService";
 import RepositoryFactoryMock from "../../../applicationServiceTest/mock/repositoryFactoryMock";
-import UserAccountRepositoryMock from "../../../applicationServiceTest/mock/userAccountRepositoryMock";
-import EventStoreMock from "../../../applicationServiceTest/mock/eventStoreMock";
 import { Request, Response } from "express";
 import RequestMock from "./mock/requestMock";
 import ResponseMock from "./mock/responseMock";
@@ -13,6 +11,10 @@ import {
   passwordError,
   userNamesError,
 } from "../../../../src/domain/enum/errorMsg/userAccountErrorMsg";
+import EventName from "../../../../src/domain/enum/event/eventName";
+import UserAccountId from "../../../../src/domain/model/identity/userAccount/userAccountId";
+import UserName from "../../../../src/domain/model/identity/userAccount/userName";
+import Password from "../../../../src/domain/model/identity/userAccount/password";
 
 // TODO: write test for catching error when UUID is not valid
 describe("UserAccountController", () => {
@@ -24,22 +26,12 @@ describe("UserAccountController", () => {
     userAccountApplicationService
   );
 
-  let userAccount: UserAccount;
-  let event: DomainEvent;
-
-  beforeEach(() => {
-    repositoryFactory.reset();
-  });
-
   describe("createUserAccount", () => {
     it("should create a new user account and send response with status 201", async () => {
-      const username: string = "tester20";
-      const password: string = "SecureP@ss1234";
-
       const request: unknown = new RequestMock({
         userAccountId: "54b8a43c-a882-42ac-b60b-087f079a8710",
-        username: username,
-        password: password,
+        username: "username",
+        password: "SecureP@ss1234",
       });
       const response: unknown = new ResponseMock();
 
@@ -48,19 +40,18 @@ describe("UserAccountController", () => {
         response as Required<Response>
       );
 
-      // retrieving all repos used after calling userAccountController.createUserAccount()
-      const repositories = repositoryFactory.getRepositoriesUsed();
+      const { userAccount, event } = await retrieveUserAccountAndEventStored(
+        request as Required<Request>
+      );
 
-      const userAccountRepository =
-        repositories?.UserAccountRepository as UserAccountRepositoryMock;
-      const eventStore = repositories?.EventStore as EventStoreMock;
-
-      userAccount = userAccountRepository.getNewlyCreatedUserAccount();
-      event = eventStore.getEvent();
-
-      // asserting that the user account was created and the event was stored
-      assertThatPropertiesIn_userAccount_match(username, password);
-      assertThatPropertiesIn_newUserAccountCreated_match(username);
+      assertThatPropertiesIn_userAccount_match(
+        userAccount,
+        request as Required<Request>
+      );
+      assertThatPropertiesIn_newUserAccountCreated_match(
+        event[0],
+        request as Required<Request>
+      );
 
       // asserting that the response was sent with status 201
       expect((response as ResponseMock).getStatus()).toBe(201);
@@ -70,21 +61,41 @@ describe("UserAccountController", () => {
       });
     });
 
+    async function retrieveUserAccountAndEventStored(aRequest: Request) {
+      const repositories = repositoryFactory.getRepositories(
+        "UserAccountRepository",
+        "EventStore"
+      );
+
+      const userAccount = await repositories.UserAccountRepository.getById(
+        aRequest.body.userAccountId
+      );
+      const event = (await repositories.EventStore.getAllEventWithName(
+        EventName.NewUserAccountCreated
+      )) as NewUserAccountCreated[];
+
+      return { userAccount, event };
+    }
+
     function assertThatPropertiesIn_userAccount_match(
-      username: string,
-      password: string
+      userAccount: UserAccount,
+      aRequest: Request
     ) {
       expect(userAccount).toBeInstanceOf(UserAccount);
-      expect(userAccount["username"]["value"]).toBe(username);
-      expect(userAccount["password"]["value"]).toBe(password);
+      expect(userAccount["id"]["id"]).toBe(aRequest.body.userAccountId);
+      expect(userAccount["username"]["value"]).toBe(aRequest.body.username);
+      expect(userAccount["password"]["value"]).toBe(aRequest.body.password);
     }
 
     function assertThatPropertiesIn_newUserAccountCreated_match(
-      username: string
+      event: DomainEvent,
+      aRequest: Request
     ) {
       expect(event).toBeInstanceOf(NewUserAccountCreated);
+
       if (event instanceof NewUserAccountCreated) {
-        expect(event["userName"]).toBe(username);
+        expect(event["userAccountId"]).toBe(aRequest.body.userAccountId);
+        expect(event["userName"]).toBe(aRequest.body.username);
       }
     }
 
@@ -104,8 +115,6 @@ describe("UserAccountController", () => {
     });
 
     it("should send 409 if there is conflict with username", async () => {
-      repositoryFactory.setPresetOptionForUserAccountRepo(true); // username already exists
-
       const request: unknown = new RequestMock({
         userAccountId: "54b8a43c-a882-42ac-b60b-087f079a8710",
         username: "username",
@@ -113,6 +122,8 @@ describe("UserAccountController", () => {
       });
 
       const response: unknown = new ResponseMock();
+
+      await storeUserAccountInDB(request as Required<Request>);
 
       await userAccountController.createUserAccount(
         request as Required<Request>,
@@ -123,6 +134,8 @@ describe("UserAccountController", () => {
       expect((response as ResponseMock).getResponse()).toEqual({
         message: "user account exists",
       });
+
+      await removeUserAccountInDB(request as Required<Request>);
     });
 
     it("should send a status code 400 if the user password does not meet security requirement", async () => {
@@ -163,5 +176,27 @@ describe("UserAccountController", () => {
         message: userNamesError.userNameNotMeetingRequirements,
       });
     });
+
+    async function storeUserAccountInDB(aRequest: Request) {
+      const repositories = repositoryFactory.getRepositories(
+        "UserAccountRepository"
+      );
+
+      await repositories.UserAccountRepository.save(
+        new UserAccount(
+          new UserAccountId(aRequest.body.userAccountId as string),
+          new UserName(aRequest.body.username as string),
+          new Password(aRequest.body.password as string)
+        )
+      );
+    }
+
+    async function removeUserAccountInDB(aRequest: Request) {
+      const repositories = repositoryFactory.getRepositories(
+        "UserAccountRepository"
+      );
+
+      await repositories.UserAccountRepository.remove(aRequest.body.username);
+    }
   });
 });

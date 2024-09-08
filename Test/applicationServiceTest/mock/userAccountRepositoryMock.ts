@@ -1,24 +1,19 @@
 import UserAccountRepository from "../../../src/domain/model/identity/userAccount/userAccountRepository";
 import UserAccount from "../../../src/domain/model/identity/userAccount/userAccount";
-import UserAccountId from "../../../src/domain/model/identity/userAccount/userAccountId";
-import UserName from "../../../src/domain/model/identity/userAccount/userName";
-import Password from "../../../src/domain/model/identity/userAccount/password";
+import FakeDb from "./fakeDb/fakeDb";
 
 class UserAccountRepositoryMock implements UserAccountRepository {
-  private defaultUserAccount = new UserAccount(
-    new UserAccountId("0f8fa965-5079-48e1-8743-a82e75829560"),
-    new UserName("username"),
-    new Password("secureD@123")
-  );
-  private userAccount: UserAccount;
-  private userAccountExists: boolean;
+  private db: FakeDb;
 
-  async doesUserAccountExist(username: string): Promise<boolean> {
-    return this.userAccountExists;
+  constructor(aDb: FakeDb) {
+    this.db = aDb;
   }
 
-  setDoesUserAccountExist(userAccountExists: boolean): void {
-    this.userAccountExists = userAccountExists;
+  async doesUserAccountExist(anId: string): Promise<boolean> {
+    if (this.db.find(UserAccount, anId) !== undefined) {
+      return true;
+    }
+    return false;
   }
 
   async lockUserAccount(UserAccountId: string): Promise<void> {
@@ -26,16 +21,26 @@ class UserAccountRepositoryMock implements UserAccountRepository {
   }
 
   async save(userAccount: UserAccount): Promise<void> {
-    this.userAccount = userAccount;
+    this.db.save(userAccount);
     return;
+  }
+
+  async remove(id: string): Promise<void> {
+    this.db.remove(UserAccount, id);
+    return;
+  }
+
+  async getById(id: string): Promise<UserAccount> {
+    const userAccount = this.db.find(UserAccount, id);
+    if (userAccount instanceof UserAccount) {
+      return userAccount;
+    }
+
+    throw new Error("UserAccount not found");
   }
 
   async commit(): Promise<void> {
     return;
-  }
-
-  getNewlyCreatedUserAccount(): UserAccount {
-    return this.userAccount;
   }
 }
 

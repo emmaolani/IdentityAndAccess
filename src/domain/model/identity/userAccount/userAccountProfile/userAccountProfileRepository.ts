@@ -6,6 +6,7 @@ interface UserAccountProfileRepository {
     userAccountId: string
   ): Promise<boolean>;
   save(userAccountProfile: UserAccountProfile): Promise<void>;
+  remove(id: string): Promise<void>;
   commit(): Promise<void>;
 }
 

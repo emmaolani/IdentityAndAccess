@@ -19,6 +19,7 @@ import EmailAddress from "../../../src/domain/model/contactDetails/emailAddress"
 import PhoneNumber from "../../../src/domain/model/contactDetails/phoneNumber";
 import ITUAndISOSpec from "../../../src/domain/model/geographicEntities/ITUAndISOSpec";
 import ITUAndISOSpecId from "../../../src/domain/model/geographicEntities/ITUAndISOSpecId";
+import EventName from "../../../src/domain/enum/event/eventName";
 
 describe("UserAccountProfileApplicationService", () => {
   const repositoryFactory = new RepositoryFactoryMock();
@@ -29,11 +30,11 @@ describe("UserAccountProfileApplicationService", () => {
       phoneNumberValidator
     );
 
-  beforeEach(() => {
-    repositoryFactory.reset();
-  });
-
   describe("createUserAccountProfile", () => {
+    beforeAll(async () => {
+      await addDefaultITUAndISOSpecToDb();
+    });
+
     it("should create a userAccountProfile and publish NewUserAccountProfileCreated event", async () => {
       const command = createNewUserAccountProfileCommand(
         new UUIDGenerator().generate(),
@@ -77,10 +78,37 @@ describe("UserAccountProfileApplicationService", () => {
           command.getUserProfileId()
         );
       const event = (await repositories.EventStore.getAllEventWithName(
-        "NewUserAccountProfileCreated"
+        EventName.NewUserAccountProfileCreated
       )) as NewUserAccountProfileCreated[];
 
       return { userAccountProfile, event };
+    }
+
+    function assertThatPropertiesIn_userAccountProfile_match(
+      aUserAccountProfile: UserAccountProfile,
+      anId: string,
+      aUserAccountId: string,
+      anEmail: string,
+      aPhoneNumber: string
+    ) {
+      expect(aUserAccountProfile).toBeInstanceOf(UserAccountProfile);
+      expect(aUserAccountProfile.getId()).toBe(anId);
+      expect(aUserAccountProfile["userAccountId"]["id"]).toBe(aUserAccountId);
+      expect(aUserAccountProfile["emailAddress"].getValue()).toBe(anEmail);
+      expect(aUserAccountProfile["phoneNumber"].getValue()).toBe(
+        aPhoneNumber.slice(1) // phoneNumber is stored without the calling code or national prefix
+      );
+    }
+
+    function assertThatEventIsPublishedWithCorrectProperties(
+      aEvent: NewUserAccountProfileCreated,
+      aUserAccountProfile: UserAccountProfile
+    ) {
+      expect(aEvent).toBeInstanceOf(NewUserAccountProfileCreated);
+      expect(aEvent["userAccountProfileId"]).toBe(aUserAccountProfile.getId());
+      expect(aEvent["userAccountId"]).toBe(
+        aUserAccountProfile["userAccountId"].getId()
+      );
     }
 
     it("should throw error if userAccountProfile with userAccountId already exists", async () => {
@@ -92,13 +120,15 @@ describe("UserAccountProfileApplicationService", () => {
         "NG"
       );
 
-      storeUserAccountProfileInDb(command);
+      await storeUserAccountProfileInDb(command); // store userAccountProfile in db to create conflict
 
       await expect(
         userAccountProfileApplicationService.createUserAccountProfile(command)
       ).rejects.toThrow(
         UserAccountProfileApplicationServiceError.userAccountAlreadyHasProfile
       );
+
+      await removeUserAccountProfileFromDb(command);
     });
 
     async function storeUserAccountProfileInDb(
@@ -120,6 +150,18 @@ describe("UserAccountProfileApplicationService", () => {
             null
           )
         )
+      );
+    }
+
+    async function removeUserAccountProfileFromDb(
+      command: NewUserAccountProfileCommand
+    ) {
+      const repositories = repositoryFactory.getRepositories(
+        "UserAccountProfileRepository"
+      );
+
+      await repositories.UserAccountProfileRepository.remove(
+        command.getUserProfileId()
       );
     }
 
@@ -196,6 +238,21 @@ describe("UserAccountProfileApplicationService", () => {
       ).rejects.toThrow(UserAccountProfileIdError.invalidUUID);
     });
 
+    async function addDefaultITUAndISOSpecToDb() {
+      const repositories = repositoryFactory.getRepositories(
+        "ITUAndISOSpecRepository"
+      );
+
+      await repositories.ITUAndISOSpecRepository.save(
+        new ITUAndISOSpec(
+          new ITUAndISOSpecId(new UUIDGenerator().generate()),
+          "countryId",
+          "NG",
+          "234"
+        )
+      );
+    }
+
     function createNewUserAccountProfileCommand(
       aUserAccountId: string,
       aUserProfileId: string,
@@ -209,33 +266,6 @@ describe("UserAccountProfileApplicationService", () => {
         anEmail,
         aPhoneNumber,
         aCountryCode
-      );
-    }
-
-    function assertThatPropertiesIn_userAccountProfile_match(
-      aUserAccountProfile: UserAccountProfile,
-      anId: string,
-      aUserAccountId: string,
-      anEmail: string,
-      aPhoneNumber: string
-    ) {
-      expect(aUserAccountProfile).toBeInstanceOf(UserAccountProfile);
-      expect(aUserAccountProfile.getId()).toBe(anId);
-      expect(aUserAccountProfile["userAccountId"]["id"]).toBe(aUserAccountId);
-      expect(aUserAccountProfile["emailAddress"].getValue()).toBe(anEmail);
-      expect(aUserAccountProfile["phoneNumber"].getValue()).toBe(
-        aPhoneNumber.slice(1) // phoneNumber is stored without the calling code or national prefix
-      );
-    }
-
-    function assertThatEventIsPublishedWithCorrectProperties(
-      aEvent: NewUserAccountProfileCreated,
-      aUserAccountProfile: UserAccountProfile
-    ) {
-      expect(aEvent).toBeInstanceOf(NewUserAccountProfileCreated);
-      expect(aEvent["userAccountProfileId"]).toBe(aUserAccountProfile.getId());
-      expect(aEvent["userAccountId"]).toBe(
-        aUserAccountProfile["userAccountId"].getId()
       );
     }
   });
