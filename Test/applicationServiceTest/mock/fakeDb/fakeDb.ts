@@ -1,63 +1,59 @@
 import ITUAndISOSpec from "../../../../src/domain/model/geographicEntities/ITUAndISOSpec";
 import UserAccount from "../../../../src/domain/model/identity/userAccount/userAccount";
 import UserAccountProfile from "../../../../src/domain/model/identity/userAccount/userAccountProfile/userAccountProfile";
-import { Schema, ClassSchema } from "./schema";
-import NewUserAccountCreated from "../../../../src/domain/model/identity/userAccount/newUserAccountCreated";
-import NewUserAccountProfileCreated from "../../../../src/domain/model/identity/userAccount/userAccountProfile/newUserAccountProfileCreated";
-import StoredEvent from "../storedEvents";
+import { Instance, Class } from "./schema";
+import StoredEventMock from "../storedEventMock";
 
 class FakeDb {
-  private db: Map<string, Map<string, Schema>>;
+  private db: Map<string, Map<string, Instance>>;
 
   constructor() {
     this.db = new Map();
   }
 
-  save(data: Schema): void {
-    const tableName = this.getSchemaName(data);
-    let table: Map<string, Schema> | undefined;
+  save(data: Instance): void {
+    let table: Map<string, Instance> | undefined;
+    const tableName = this.getTableNameFromInstance(data);
+
+    if (!this.doesTableExist(tableName)) this.createTableFor(tableName);
 
     if (data instanceof ITUAndISOSpec) {
-      if (!this.doesTableExist(tableName)) this.createTable(tableName);
       table = this.db.get(tableName);
       table?.set(data["countryCode"], data);
       table?.set(data["id"]["iD"], data);
     } else if (data instanceof UserAccountProfile) {
-      if (!this.doesTableExist(tableName)) this.createTable(tableName);
       table = this.db.get(tableName);
       table?.set(data["id"]["id"], data);
       table?.set(data["userAccountId"]["id"], data);
     } else if (data instanceof UserAccount) {
-      if (!this.doesTableExist(tableName)) this.createTable(tableName);
       table = this.db.get(tableName);
       table?.set(data["id"]["id"], data);
       table?.set(data["username"]["value"], data);
-    } else if (data instanceof StoredEvent) {
-      if (!this.doesTableExist(tableName)) this.createTable(tableName);
+    } else if (data instanceof StoredEventMock) {
       table = this.db.get(tableName);
       table?.set(data.getEventName(), data);
     }
   }
 
-  remove(data: ClassSchema, aKey: string): void {
-    const tableName = this.getClassSchemaName(data);
-    let table: Map<string, Schema> | undefined;
+  private getTableNameFromInstance(obj: Instance): string {
+    return new Object(obj).constructor.name;
+  }
+
+  private createTableFor(aTableName: string) {
+    this.db.set(aTableName, new Map());
+  }
+
+  remove(data: Class, aKey: string): void {
+    let table: Map<string, Instance> | undefined;
+    const tableName = this.getTableNameFromClass(data);
 
     if (!this.doesTableExist(tableName)) return;
     table = this.db.get(tableName);
     table?.delete(aKey);
   }
 
-  private createTable(aTableName: string) {
-    this.db.set(aTableName, new Map());
-  }
-
-  private getSchemaName(obj: Schema): string {
-    return new Object(obj).constructor.name;
-  }
-
-  find(data: ClassSchema, aKey: string): Schema | undefined {
-    const tableName = this.getClassSchemaName(data);
+  find(data: Class, aKey: string): Instance | undefined {
+    const tableName = this.getTableNameFromClass(data);
 
     if (this.doesTableExist(tableName)) {
       const table = this.db.get(tableName);
@@ -66,7 +62,7 @@ class FakeDb {
     return undefined;
   }
 
-  private getClassSchemaName(data: ClassSchema): string {
+  private getTableNameFromClass(data: Class): string {
     return data.name;
   }
 

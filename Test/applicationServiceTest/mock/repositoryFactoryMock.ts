@@ -1,8 +1,8 @@
+import RepositoryFactory from "../../../src/domain/repositoryFactory/repositoryFactory";
 import {
   RepositoryName,
   RepositoryCollection,
 } from "../../../src/domain/repositoryFactory/repositoryFactory.type";
-import RepositoryFactory from "../../../src/domain/repositoryFactory/repositoryFactory";
 import UserAccountRepositoryMock from "./userAccountRepositoryMock";
 import EventStoreMock from "./eventStoreMock";
 import UserAccountProfileRepositoryMock from "./userAccountProfileRepositoryMock";
@@ -10,7 +10,7 @@ import ITUAndISOSpecRepositoryMock from "./iTUAndISOSpecRepositoryMock";
 import FakeDb from "./fakeDb/fakeDb";
 
 class RepositoryFactoryMock implements RepositoryFactory {
-  private DB = new FakeDb();
+  private db = new FakeDb();
 
   getRepositories<T extends RepositoryName[]>(
     ...repos: T
@@ -20,25 +20,21 @@ class RepositoryFactoryMock implements RepositoryFactory {
     repos.forEach((repo) => {
       switch (repo) {
         case "UserAccountRepository":
-          const repository = new UserAccountRepositoryMock(this.DB);
+          const repository = new UserAccountRepositoryMock(this.db);
           repositories[repo] = repository;
           break;
         case "EventStore":
-          repositories[repo] = new EventStoreMock(this.DB);
+          repositories[repo] = new EventStoreMock(this.db);
           break;
         case "UserAccountProfileRepository":
-          repositories[repo] = new UserAccountProfileRepositoryMock(this.DB);
+          repositories[repo] = new UserAccountProfileRepositoryMock(this.db);
           break;
         case "ITUAndISOSpecRepository":
-          repositories[repo] = new ITUAndISOSpecRepositoryMock(this.DB);
+          repositories[repo] = new ITUAndISOSpecRepositoryMock(this.db);
           break;
       }
     });
     return repositories;
-  }
-
-  reset(): void {
-    this.DB = new FakeDb();
   }
 }
 

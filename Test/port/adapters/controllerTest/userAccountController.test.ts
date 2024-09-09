@@ -27,7 +27,7 @@ describe("UserAccountController", () => {
   );
 
   describe("createUserAccount", () => {
-    it("should create a new user account and send response with status 201", async () => {
+    it("should create and store a new user account with event, and send response with status 201", async () => {
       const request: unknown = new RequestMock({
         userAccountId: "54b8a43c-a882-42ac-b60b-087f079a8710",
         username: "username",
@@ -40,7 +40,7 @@ describe("UserAccountController", () => {
         response as Required<Response>
       );
 
-      const { userAccount, event } = await retrieveUserAccountAndEventStored(
+      const { userAccount, events } = await retrieveUserAccountAndEventStored(
         request as Required<Request>
       );
 
@@ -49,7 +49,7 @@ describe("UserAccountController", () => {
         request as Required<Request>
       );
       assertThatPropertiesIn_newUserAccountCreated_match(
-        event[0],
+        events[0],
         request as Required<Request>
       );
 
@@ -70,11 +70,11 @@ describe("UserAccountController", () => {
       const userAccount = await repositories.UserAccountRepository.getById(
         aRequest.body.userAccountId
       );
-      const event = (await repositories.EventStore.getAllEventWithName(
+      const events = (await repositories.EventStore.getAllEventWithName(
         EventName.NewUserAccountCreated
       )) as NewUserAccountCreated[];
 
-      return { userAccount, event };
+      return { userAccount, events };
     }
 
     function assertThatPropertiesIn_userAccount_match(

@@ -5,33 +5,31 @@ import FakeDb from "./fakeDb/fakeDb";
 class UserAccountProfileRepositoryMock implements UserAccountProfileRepository {
   private db: FakeDb;
 
-  constructor(db: FakeDb) {
-    this.db = db;
+  constructor(aDb: FakeDb) {
+    this.db = aDb;
   }
 
   async doesUserAccountProfileWithUserAccountIdExist(
-    userAccountId: string
+    anId: string
   ): Promise<boolean> {
-    if (this.db.find(UserAccountProfile, userAccountId) !== undefined)
-      return true;
-    else return false;
+    const userAccountProfile = this.db.find(UserAccountProfile, anId);
+
+    if (userAccountProfile instanceof UserAccountProfile) return true;
+
+    return false;
   }
 
   async save(aUserAccountProfile: UserAccountProfile): Promise<void> {
     this.db.save(aUserAccountProfile);
   }
 
-  async remove(id: string): Promise<void> {
-    this.db.remove(UserAccountProfile, id);
+  async remove(anId: string): Promise<void> {
+    this.db.remove(UserAccountProfile, anId);
   }
 
-  async getProfileById(
-    userAccountProfileId: string
-  ): Promise<UserAccountProfile> {
-    const userAccountProfile = this.db.find(
-      UserAccountProfile,
-      userAccountProfileId
-    );
+  async getById(anId: string): Promise<UserAccountProfile> {
+    const userAccountProfile = this.db.find(UserAccountProfile, anId);
+
     if (userAccountProfile instanceof UserAccountProfile) {
       return userAccountProfile;
     }

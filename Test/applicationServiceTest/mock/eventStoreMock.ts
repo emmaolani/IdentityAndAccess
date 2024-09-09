@@ -1,7 +1,7 @@
 import EventStore from "../../../src/domain/eventStore";
 import DomainEvent from "../../../src/domain/domainEvent";
 import FakeDb from "./fakeDb/fakeDb";
-import StoredEvent from "./storedEvents";
+import StoredEventMock from "./storedEventMock";
 
 class EventStoreMock implements EventStore {
   private db: FakeDb;
@@ -11,15 +11,15 @@ class EventStoreMock implements EventStore {
   }
 
   async append(anEvent: DomainEvent): Promise<void> {
-    this.db.save(new StoredEvent(anEvent));
+    this.db.save(new StoredEventMock(anEvent));
   }
 
   async getAllEventWithName(name: string): Promise<DomainEvent[]> {
     const events: DomainEvent[] = [];
-    const event = this.db.find(StoredEvent, name);
+    const storedEvent = this.db.find(StoredEventMock, name);
 
-    if (event instanceof StoredEvent) {
-      events.push(event.getEvent());
+    if (storedEvent instanceof StoredEventMock) {
+      events.push(storedEvent.getEvent());
       return events;
     }
     return events;

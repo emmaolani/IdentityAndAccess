@@ -1,19 +1,19 @@
 import UserAccountApplicationService from "../../../src/application/identity/userAccountApplicationService";
 import NewUserAccountCommand from "../../../src/application/identity/newUserAccountCommand";
-import UserAccount from "../../../src/domain/model/identity/userAccount/userAccount";
-import NewUserAccountCreated from "../../../src/domain/model/identity/userAccount/newUserAccountCreated";
 import RepositoryFactoryMock from "../mock/repositoryFactoryMock";
-import UUIDGenerator from "../../../src/port/adapters/controller/uUIDGenerator";
 import DomainEvent from "../../../src/domain/domainEvent";
+import UserAccount from "../../../src/domain/model/identity/userAccount/userAccount";
+import UserAccountId from "../../../src/domain/model/identity/userAccount/userAccountId";
+import UserName from "../../../src/domain/model/identity/userAccount/userName";
+import Password from "../../../src/domain/model/identity/userAccount/password";
+import NewUserAccountCreated from "../../../src/domain/model/identity/userAccount/newUserAccountCreated";
+import EventName from "../../../src/domain/enum/event/eventName";
 import {
   passwordError,
   userAccountIdError,
   userNamesError,
 } from "../../../src/domain/enum/errorMsg/userAccountErrorMsg";
-import UserAccountId from "../../../src/domain/model/identity/userAccount/userAccountId";
-import UserName from "../../../src/domain/model/identity/userAccount/userName";
-import Password from "../../../src/domain/model/identity/userAccount/password";
-import EventName from "../../../src/domain/enum/event/eventName";
+import UUIDGenerator from "../../../src/port/adapters/controller/uUIDGenerator";
 
 describe("User Account Application Service", () => {
   const repositoryFactory = new RepositoryFactoryMock();
@@ -21,10 +21,10 @@ describe("User Account Application Service", () => {
     repositoryFactory
   );
 
-  it("should create a new userAccount and NewUserAccountCreated Event if there is no username conflict", async () => {
+  it("should create and store new userAccount and NewUserAccountCreated Event if there is no username conflict", async () => {
     const newUserAccountCommand = new NewUserAccountCommand(
       new UUIDGenerator().generate(),
-      "tester",
+      "tester1",
       "SecureP@ss1233"
     );
 
@@ -32,7 +32,7 @@ describe("User Account Application Service", () => {
       newUserAccountCommand
     );
 
-    const { userAccount, event } = await retrieveUserAccountAndEventStored(
+    const { userAccount, events } = await retrieveUserAccountAndEventStored(
       newUserAccountCommand
     );
 
@@ -41,7 +41,7 @@ describe("User Account Application Service", () => {
       newUserAccountCommand
     );
     assertThatPropertiesIn_newUserAccountCreated_match(
-      event[0],
+      events[0],
       newUserAccountCommand
     );
   });
@@ -57,11 +57,11 @@ describe("User Account Application Service", () => {
     const userAccount = await repositories.UserAccountRepository.getById(
       command.getId()
     );
-    const event = (await repositories.EventStore.getAllEventWithName(
+    const events = (await repositories.EventStore.getAllEventWithName(
       EventName.NewUserAccountCreated
     )) as NewUserAccountCreated[];
 
-    return { userAccount, event };
+    return { userAccount, events };
   }
 
   function assertThatPropertiesIn_userAccount_match(
@@ -89,11 +89,11 @@ describe("User Account Application Service", () => {
   it("should throw an error if there is a username conflict", async () => {
     const newUserAccountCommand = new NewUserAccountCommand(
       new UUIDGenerator().generate(),
-      "username",
+      "tester2",
       "SecureP@ss123"
     );
 
-    await storeUserAccountInDB(newUserAccountCommand); // store the user account in the database to simulate a conflict
+    await storeUserAccountInDB(newUserAccountCommand); // store the user account in the database to simulate a conflict in application service
 
     await expect(
       userAccountApplicationService.createUserAccount(newUserAccountCommand)
@@ -105,7 +105,7 @@ describe("User Account Application Service", () => {
   it("should throw an error if the argument is not UUID v4 format", async () => {
     const newUserAccountCommand = new NewUserAccountCommand(
       "invalidUUID",
-      "username",
+      "tester3",
       "SecureP@ss123"
     );
 
@@ -117,7 +117,7 @@ describe("User Account Application Service", () => {
   it("should throw an error if the username does not meet the requirements", async () => {
     const command = new NewUserAccountCommand(
       new UUIDGenerator().generate(),
-      "invalid+username",
+      "invalid+tester4",
       "SecureP@ss123"
     );
 
@@ -129,7 +129,7 @@ describe("User Account Application Service", () => {
   it("should throw an error if the password does not meet the requirements", async () => {
     const newUserAccountCommand = new NewUserAccountCommand(
       new UUIDGenerator().generate(),
-      "username",
+      "tester5",
       "invalidPassword"
     );
 

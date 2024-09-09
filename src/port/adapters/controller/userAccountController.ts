@@ -16,16 +16,16 @@ class UserAccountController {
 
   async createUserAccount(request: Request, response: Response) {
     try {
-      if (!this.resObjIsOf_type_ReqObjForCreatingUserAccount(request.body)) {
+      const body = request.body as NewUserAccountReqObj;
+
+      if (!this.reqObjIsOf_type_NewUserAccountReqObj(body)) {
         throw new Error("invalid request body");
       } // check if request body is of type ReqObjForCreatingUserAccount
 
-      const data: NewUserAccountReqObj = request.body;
-
       const newUserAccountCommand = new NewUserAccountCommand(
-        data.userAccountId,
-        data.username,
-        data.password
+        body.userAccountId,
+        body.username,
+        body.password
       );
 
       await this.userAccountApplicationService.createUserAccount(
@@ -33,7 +33,7 @@ class UserAccountController {
       );
 
       response.status(201).send({
-        userAccountId: data.userAccountId,
+        userAccountId: body.userAccountId,
         message: "User account created",
       });
     } catch (error) {
@@ -41,8 +41,8 @@ class UserAccountController {
     }
   }
 
-  private resObjIsOf_type_ReqObjForCreatingUserAccount(
-    obj: any
+  private reqObjIsOf_type_NewUserAccountReqObj(
+    obj: NewUserAccountReqObj
   ): obj is NewUserAccountReqObj {
     return (
       typeof obj === "object" &&

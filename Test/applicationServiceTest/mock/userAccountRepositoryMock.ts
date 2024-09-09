@@ -9,10 +9,11 @@ class UserAccountRepositoryMock implements UserAccountRepository {
     this.db = aDb;
   }
 
-  async doesUserAccountExist(anId: string): Promise<boolean> {
-    if (this.db.find(UserAccount, anId) !== undefined) {
-      return true;
-    }
+  async doesUserAccountWithUsernameExist(aUsername: string): Promise<boolean> {
+    const userAccount = this.db.find(UserAccount, aUsername);
+
+    if (userAccount instanceof UserAccount) return true;
+
     return false;
   }
 
@@ -25,13 +26,14 @@ class UserAccountRepositoryMock implements UserAccountRepository {
     return;
   }
 
-  async remove(id: string): Promise<void> {
-    this.db.remove(UserAccount, id);
+  async remove(anId: string): Promise<void> {
+    this.db.remove(UserAccount, anId);
     return;
   }
 
   async getById(id: string): Promise<UserAccount> {
     const userAccount = this.db.find(UserAccount, id);
+
     if (userAccount instanceof UserAccount) {
       return userAccount;
     }

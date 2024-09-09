@@ -21,11 +21,10 @@ class ITUAndISOSpecRepositoryMock implements ITUAndISOSpecRepository {
   async getSpecByCountryCode(aCountryCode: string): Promise<ITUAndISOSpec> {
     const ituAndISOSpec = this.db.find(ITUAndISOSpec, aCountryCode);
 
-    if (ituAndISOSpec !== undefined) {
-      if (ituAndISOSpec instanceof ITUAndISOSpec) {
-        return ituAndISOSpec;
-      }
+    if (ituAndISOSpec instanceof ITUAndISOSpec) {
+      return ituAndISOSpec;
     }
+
     throw new Error(ITUAndISOSpecRepoErrorMsg.ITUAndISOSpecNotFound);
   }
 }

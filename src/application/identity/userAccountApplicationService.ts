@@ -57,7 +57,8 @@ class UserAccountApplicationService {
     aUsername: string,
     aUserAccountRepository: UserAccountRepository
   ) {
-    const result = await aUserAccountRepository.doesUserAccountExist(aUsername);
+    const result =
+      await aUserAccountRepository.doesUserAccountWithUsernameExist(aUsername);
     if (result) {
       throw new Error("User account already exists");
     }

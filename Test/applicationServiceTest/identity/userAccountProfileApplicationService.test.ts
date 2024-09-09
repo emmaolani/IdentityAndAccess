@@ -35,7 +35,7 @@ describe("UserAccountProfileApplicationService", () => {
       await addDefaultITUAndISOSpecToDb();
     });
 
-    it("should create a userAccountProfile and publish NewUserAccountProfileCreated event", async () => {
+    it("should create and store userAccountProfile with published NewUserAccountProfileCreated event", async () => {
       const command = createNewUserAccountProfileCommand(
         new UUIDGenerator().generate(),
         new UUIDGenerator().generate(),
@@ -48,7 +48,7 @@ describe("UserAccountProfileApplicationService", () => {
         command
       );
 
-      const { userAccountProfile, event } =
+      const { userAccountProfile, events } =
         await retrieveUserAccountProfileAndEventStored(command);
 
       assertThatPropertiesIn_userAccountProfile_match(
@@ -60,7 +60,7 @@ describe("UserAccountProfileApplicationService", () => {
       );
 
       assertThatEventIsPublishedWithCorrectProperties(
-        event[0],
+        events[0],
         userAccountProfile
       );
     });
@@ -74,14 +74,14 @@ describe("UserAccountProfileApplicationService", () => {
       );
 
       const userAccountProfile =
-        await repositories.UserAccountProfileRepository.getProfileById(
+        await repositories.UserAccountProfileRepository.getById(
           command.getUserProfileId()
         );
-      const event = (await repositories.EventStore.getAllEventWithName(
+      const events = (await repositories.EventStore.getAllEventWithName(
         EventName.NewUserAccountProfileCreated
       )) as NewUserAccountProfileCreated[];
 
-      return { userAccountProfile, event };
+      return { userAccountProfile, events };
     }
 
     function assertThatPropertiesIn_userAccountProfile_match(
@@ -120,7 +120,7 @@ describe("UserAccountProfileApplicationService", () => {
         "NG"
       );
 
-      await storeUserAccountProfileInDb(command); // store userAccountProfile in db to create conflict
+      await storeUserAccountProfileInDb(command); // store userAccountProfile in db to simulate conflict in application service
 
       await expect(
         userAccountProfileApplicationService.createUserAccountProfile(command)
@@ -165,15 +165,15 @@ describe("UserAccountProfileApplicationService", () => {
       );
     }
 
-    /* This is a rare case; it occurs when the phoneNumberValidator data file includes 
-    a country code that lacks a corresponding ITUAndISOSpec in the database */
+    /* This is a rare case; it occurs when phoneNumberValidator those not throw an error this may happen if the
+       phoneNumberValidator data file includes a country code that lacks a corresponding ITUAndISOSpec in the database */
     it("it should throw an error if the a valid country code does not have a ITUAndISOSpec in the DB", async () => {
       const command = createNewUserAccountProfileCommand(
         new UUIDGenerator().generate(),
         new UUIDGenerator().generate(),
         "test@tester.com",
         "2234567899",
-        "US" // US is a valid country code but does not have a corresponding ITUAndISOSpec in the database
+        "US" // US is a valid country code but does not have a corresponding ITUAndISOSpec in the test database
       );
 
       await expect(
@@ -210,7 +210,7 @@ describe("UserAccountProfileApplicationService", () => {
       ).rejects.toThrow(emailAddressError.invalidEmail);
     });
 
-    it("should throw error if userAccount id is wrong", async () => {
+    it("should throw error if userAccount id is no of format UUID v4", async () => {
       const command = createNewUserAccountProfileCommand(
         "invalid Id",
         new UUIDGenerator().generate(),
@@ -224,7 +224,7 @@ describe("UserAccountProfileApplicationService", () => {
       ).rejects.toThrow(userAccountIdError.invalidUUID);
     });
 
-    it("should throw error if userAccountProfile id is wrong", async () => {
+    it("should throw error if userAccountProfile id is not of format UUID v4", async () => {
       const command = createNewUserAccountProfileCommand(
         new UUIDGenerator().generate(),
         "invalid Id",
