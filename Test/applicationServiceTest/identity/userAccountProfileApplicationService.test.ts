@@ -5,7 +5,7 @@ import RepositoryFactoryMock from "../mock/repositoryFactoryMock";
 import UserAccountProfile from "../../../src/domain/model/identity/userAccount/userAccountProfile/userAccountProfile";
 import NewUserAccountProfileCreated from "../../../src/domain/model/identity/userAccount/userAccountProfile/newUserAccountProfileCreated";
 import UUIDGenerator from "../../../src/port/adapters/controller/uUIDGenerator";
-import UserAccountProfileApplicationServiceError from "../../../src/application/errorMsg/userAccountProfileApplicationServiceerrorMsg";
+import userAccountProfileRepoError from "../../../src/port/_enums/errorMsg/repositories/repositoryErrorMsg/userAccountProfileRepoErrorMsg";
 import {
   emailAddressError,
   phoneNumberError,
@@ -34,6 +34,21 @@ describe("UserAccountProfileApplicationService", () => {
     beforeAll(async () => {
       await addDefaultITUAndISOSpecToDb();
     });
+
+    async function addDefaultITUAndISOSpecToDb() {
+      const repositories = repositoryFactory.getRepositories(
+        "ITUAndISOSpecRepository"
+      );
+
+      await repositories.ITUAndISOSpecRepository.save(
+        new ITUAndISOSpec(
+          new ITUAndISOSpecId(new UUIDGenerator().generate()),
+          "countryId",
+          "NG",
+          "234"
+        )
+      );
+    }
 
     it("should create and store userAccountProfile with published NewUserAccountProfileCreated event", async () => {
       const command = createNewUserAccountProfileCommand(
@@ -124,9 +139,7 @@ describe("UserAccountProfileApplicationService", () => {
 
       await expect(
         userAccountProfileApplicationService.createUserAccountProfile(command)
-      ).rejects.toThrow(
-        UserAccountProfileApplicationServiceError.userAccountAlreadyHasProfile
-      );
+      ).rejects.toThrow(userAccountProfileRepoError.userAccountProfileNotFound);
 
       await removeUserAccountProfileFromDb(command);
     });
@@ -237,21 +250,6 @@ describe("UserAccountProfileApplicationService", () => {
         userAccountProfileApplicationService.createUserAccountProfile(command)
       ).rejects.toThrow(UserAccountProfileIdError.invalidUUID);
     });
-
-    async function addDefaultITUAndISOSpecToDb() {
-      const repositories = repositoryFactory.getRepositories(
-        "ITUAndISOSpecRepository"
-      );
-
-      await repositories.ITUAndISOSpecRepository.save(
-        new ITUAndISOSpec(
-          new ITUAndISOSpecId(new UUIDGenerator().generate()),
-          "countryId",
-          "NG",
-          "234"
-        )
-      );
-    }
 
     function createNewUserAccountProfileCommand(
       aUserAccountId: string,

@@ -16,7 +16,14 @@ import UserAccountId from "../../../../src/domain/model/identity/userAccount/use
 import UserAccountProfileId from "../../../../src/domain/model/identity/userAccount/userAccountProfile/userAccountProfileId";
 import EmailAddress from "../../../../src/domain/model/contactDetails/emailAddress";
 import PhoneNumber from "../../../../src/domain/model/contactDetails/phoneNumber";
-import UserAccountProfileApplicationServiceError from "../../../../src/application/errorMsg/userAccountProfileApplicationServiceerrorMsg";
+import userAccountProfileRepoError from "../../../../src/port/_enums/errorMsg/repositories/repositoryErrorMsg/userAccountProfileRepoErrorMsg";
+import { ITUAndISOSpecRepoErrorMsg } from "../../../../src/port/_enums/errorMsg/repositories/repositoryErrorMsg/iTuAndISOSpecRepoErrorMsg";
+import {
+  emailAddressError,
+  phoneNumberError,
+} from "../../../../src/domain/enum/errorMsg/contactDetailErrorMsg";
+import { userAccountIdError } from "../../../../src/domain/enum/errorMsg/userAccountErrorMsg";
+import { UserAccountProfileIdError } from "../../../../src/domain/enum/errorMsg/userAccountProfileErrorMsg";
 
 describe("userAccount", () => {
   const repositoryFactory = new RepositoryFactoryMock();
@@ -50,6 +57,21 @@ describe("userAccount", () => {
       );
     }
 
+    it("should respond with a status of 400 if the request body is invalid", async () => {
+      const request: unknown = new RequestMock({});
+      const response: unknown = new ResponseMock();
+
+      await userAccountProfileController.createUserAccountProfile(
+        request as Request,
+        response as Response
+      );
+
+      expect((response as ResponseMock).getStatus()).toBe(400);
+      expect((response as ResponseMock).getResponse()).toEqual({
+        message: "Invalid request body",
+      });
+    });
+
     it("should create userAccountProfile and an event, and send a 201 status code", async () => {
       const request: unknown = new RequestMock({
         userAccountProfileId: new UUIDGenerator().generate(),
@@ -72,11 +94,11 @@ describe("userAccount", () => {
           (request as Request).body as NewUserAccountProfileReqObj
         );
 
+      // asserting that the userAccountProfile and event was created with the correct properties
       assertThatPropertiesIn_userAccountProfile_match(
         userAccountProfile,
         (request as Request).body as NewUserAccountProfileReqObj
       );
-
       assertThatEventIsPublishedWithCorrectProperties(
         events[0],
         userAccountProfile
@@ -162,8 +184,7 @@ describe("userAccount", () => {
 
       expect((response as ResponseMock).getStatus()).toBe(409);
       expect((response as ResponseMock).getResponse()).toEqual({
-        message:
-          UserAccountProfileApplicationServiceError.userAccountAlreadyHasProfile,
+        message: userAccountProfileRepoError.userAccountProfileNotFound,
       });
 
       removeUserAccountProfileFromDb(
@@ -204,5 +225,123 @@ describe("userAccount", () => {
         aRequestBody.userAccountProfileId
       );
     }
+
+    /* This is a rare case; it occurs when phoneNumberValidator those not throw an error this may happen if the
+      phoneNumberValidator data file includes a country code that lacks a corresponding ITUAndISOSpec in the database */
+    it("it should return 404 status code if a valid country code does not have a ITUAndISOSpec in the DB", async () => {
+      const request: unknown = new RequestMock({
+        userAccountProfileId: new UUIDGenerator().generate(),
+        userAccountId: new UUIDGenerator().generate(),
+        email: "tester@test.com",
+        phoneNumber: {
+          countryCode: "US",
+          number: "2234567899", // US is a valid country code but does not have a corresponding ITUAndISOSpec in the test database
+        },
+      });
+      const response: unknown = new ResponseMock();
+
+      await userAccountProfileController.createUserAccountProfile(
+        request as Request,
+        response as Response
+      );
+
+      expect((response as ResponseMock).getStatus()).toBe(404);
+      expect((response as ResponseMock).getResponse()).toEqual({
+        message: ITUAndISOSpecRepoErrorMsg.ITUAndISOSpecNotFound,
+      });
+    });
+
+    // phoneNumberValidator should always validate the phone number before the ITUAndISOSpec is retrieved
+    it("should respond with a status of 400 if the phoneNumber is invalid", async () => {
+      const request: unknown = new RequestMock({
+        userAccountProfileId: new UUIDGenerator().generate(),
+        userAccountId: new UUIDGenerator().generate(),
+        email: "tester@test.com",
+        phoneNumber: {
+          countryCode: "US",
+          number: "223",
+        },
+      });
+      const response: unknown = new ResponseMock();
+
+      await userAccountProfileController.createUserAccountProfile(
+        request as Request,
+        response as Response
+      );
+
+      expect((response as ResponseMock).getStatus()).toBe(400);
+      expect((response as ResponseMock).getResponse()).toEqual({
+        message: phoneNumberError.invalidPhoneNumber,
+      });
+    });
+
+    it("should respond with a 400 error if email address is not valid", async () => {
+      const request: unknown = new RequestMock({
+        userAccountProfileId: new UUIDGenerator().generate(),
+        userAccountId: new UUIDGenerator().generate(),
+        email: "testerTestCom",
+        phoneNumber: {
+          countryCode: "NG",
+          number: "08123456778",
+        },
+      });
+      const response: unknown = new ResponseMock();
+
+      await userAccountProfileController.createUserAccountProfile(
+        request as Request,
+        response as Response
+      );
+
+      expect((response as ResponseMock).getStatus()).toBe(400);
+      expect((response as ResponseMock).getResponse()).toEqual({
+        message: emailAddressError.invalidEmail,
+      });
+    });
+
+    it("should respond with a 500 error if the userAccountId is not a valid UUID", async () => {
+      const request: unknown = new RequestMock({
+        userAccountProfileId: new UUIDGenerator().generate(),
+        userAccountId: "invalidUUID",
+        email: "tester@test.com",
+        phoneNumber: {
+          countryCode: "NG",
+          number: "08123456778",
+        },
+      });
+      const response: unknown = new ResponseMock();
+
+      await userAccountProfileController.createUserAccountProfile(
+        request as Request,
+        response as Response
+      );
+
+      expect((response as ResponseMock).getStatus()).toBe(500);
+      expect((response as ResponseMock).getResponse()).toEqual({
+        message: userAccountIdError.invalidUUID,
+      });
+    });
+
+    it("should respond with a 500 error if the userAccountProfileId is not a valid UUID", async () => {
+      const request: unknown = new RequestMock({
+        userAccountProfileId: "invalidUUID",
+        userAccountId: new UUIDGenerator().generate(),
+        email: "tester@test.com",
+        phoneNumber: {
+          countryCode: "NG",
+          number: "08123456778",
+        },
+      });
+      const response: unknown = new ResponseMock();
+
+      await userAccountProfileController.createUserAccountProfile(
+        request as Request,
+        response as Response
+      );
+
+      expect((response as ResponseMock).getStatus()).toBe(500);
+      expect((response as ResponseMock).getResponse()).toEqual({
+        message: UserAccountProfileIdError.invalidUUID,
+      });
+    });
   });
 });

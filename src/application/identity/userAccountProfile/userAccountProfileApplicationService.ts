@@ -2,7 +2,6 @@ import RepositoryFactory from "../../../domain/repositoryFactory/repositoryFacto
 import NewUserAccountProfileCommand from "./newUserAccountProfileCommand";
 import PhoneNumberValidator from "../../phoneNumberValidator";
 import UserAccountId from "../../../domain/model/identity/userAccount/userAccountId";
-import UserAccountProfileRepository from "../../../domain/model/identity/userAccount/userAccountProfile/userAccountProfileRepository";
 import DomainEventPublisher from "../../../domain/domainEventPublisher";
 import DomainEventSubscriber from "../../../domain/domainEventSubscriber";
 import EventStoreDelegate from "../../eventStoreDelegate";
@@ -11,7 +10,6 @@ import UserAccountProfileId from "../../../domain/model/identity/userAccount/use
 import EmailAddress from "../../../domain/model/contactDetails/emailAddress";
 import PhoneNumber from "../../../domain/model/contactDetails/phoneNumber";
 import ITUAndISOSpecId from "../../../domain/model/geographicEntities/ITUAndISOSpecId";
-import UserAccountProfileApplicationServiceError from "../../errorMsg/userAccountProfileApplicationServiceerrorMsg";
 
 class UserAccountProfileApplicationService {
   private repositoryFactory: RepositoryFactory;
@@ -45,9 +43,8 @@ class UserAccountProfileApplicationService {
       aCommand.getUserAccountId()
     );
 
-    await this.throwErrorIfUserAccountAlreadyHaveProfile(
-      aCommand.getUserAccountId(),
-      repositories.UserAccountProfileRepository
+    await repositories.UserAccountProfileRepository.throwErrorIfUserAccountDoesNotHaveProfile(
+      aCommand.getUserAccountId()
     );
 
     const iTUAndISOSpec =
@@ -78,22 +75,6 @@ class UserAccountProfileApplicationService {
 
     repositories.UserAccountProfileRepository.save(userAccountProfile);
     repositories.UserAccountProfileRepository.commit();
-  }
-
-  private async throwErrorIfUserAccountAlreadyHaveProfile(
-    aUserAccountId: string,
-    aRepository: UserAccountProfileRepository
-  ): Promise<void> {
-    if (
-      await aRepository.doesUserAccountProfileWithUserAccountIdExist(
-        aUserAccountId
-      )
-    ) {
-      throw new Error(
-        UserAccountProfileApplicationServiceError.userAccountAlreadyHasProfile
-      );
-    }
-    return;
   }
 
   private initializeDomainEventPublisher(subscriber: DomainEventSubscriber) {

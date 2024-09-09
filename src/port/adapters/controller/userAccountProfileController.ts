@@ -2,7 +2,14 @@ import UserAccountProfileApplicationService from "../../../application/identity/
 import { Request, Response } from "express";
 import NewUserAccountProfileReqObj from "./requestBodyTypes/newUserAccountProfileReqObj.type";
 import NewUserAccountProfileCommand from "../../../application/identity/userAccountProfile/newUserAccountProfileCommand";
-import UserAccountProfileApplicationServiceError from "../../../application/errorMsg/userAccountProfileApplicationServiceerrorMsg";
+import userAccountProfileRepoError from "../../_enums/errorMsg/repositories/repositoryErrorMsg/userAccountProfileRepoErrorMsg";
+import { ITUAndISOSpecRepoErrorMsg } from "../../_enums/errorMsg/repositories/repositoryErrorMsg/iTuAndISOSpecRepoErrorMsg";
+import {
+  emailAddressError,
+  phoneNumberError,
+} from "../../../domain/enum/errorMsg/contactDetailErrorMsg";
+import { userAccountIdError } from "../../../domain/enum/errorMsg/userAccountErrorMsg";
+import { UserAccountProfileIdError } from "../../../domain/enum/errorMsg/userAccountProfileErrorMsg";
 
 class UserAccountProfileController {
   private userAccountProfileApplicationService: UserAccountProfileApplicationService;
@@ -17,11 +24,11 @@ class UserAccountProfileController {
   async createUserAccountProfile(aRequest: Request, aResponse: Response) {
     const body = aRequest.body as NewUserAccountProfileReqObj;
 
-    if (!this.reqBodyIsOf_type_NewUserAccountProfileReqObj(body)) {
-      throw new Error("invalid request body");
-    }
-
     try {
+      if (!this.reqBodyIsOf_type_NewUserAccountProfileReqObj(body)) {
+        throw new Error("Invalid request body");
+      }
+
       const newUserAccountProfileCommand = new NewUserAccountProfileCommand(
         body.userAccountId,
         body.userAccountProfileId,
@@ -65,13 +72,35 @@ class UserAccountProfileController {
   }
 
   private errorResponse(aResponse: Response, error: Error) {
-    if (
-      error.message ===
-      UserAccountProfileApplicationServiceError.userAccountAlreadyHasProfile
+    if (error.message === "Invalid request body") {
+      aResponse.status(400).send({ message: "Invalid request body" });
+    } else if (
+      error.message === userAccountProfileRepoError.userAccountProfileNotFound
     ) {
       aResponse.status(409).send({
-        message:
-          UserAccountProfileApplicationServiceError.userAccountAlreadyHasProfile,
+        message: userAccountProfileRepoError.userAccountProfileNotFound,
+      });
+    } else if (
+      error.message === ITUAndISOSpecRepoErrorMsg.ITUAndISOSpecNotFound
+    ) {
+      aResponse.status(404).send({
+        message: ITUAndISOSpecRepoErrorMsg.ITUAndISOSpecNotFound,
+      });
+    } else if (error.message === phoneNumberError.invalidPhoneNumber) {
+      aResponse.status(400).send({
+        message: phoneNumberError.invalidPhoneNumber,
+      });
+    } else if (error.message === emailAddressError.invalidEmail) {
+      aResponse.status(400).send({
+        message: emailAddressError.invalidEmail,
+      });
+    } else if (error.message === userAccountIdError.invalidUUID) {
+      aResponse.status(500).send({
+        message: userAccountIdError.invalidUUID,
+      });
+    } else if (error.message === UserAccountProfileIdError.invalidUUID) {
+      aResponse.status(500).send({
+        message: UserAccountProfileIdError.invalidUUID,
       });
     }
   }

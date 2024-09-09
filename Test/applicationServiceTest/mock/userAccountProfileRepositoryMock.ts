@@ -1,6 +1,7 @@
 import UserAccountProfileRepository from "../../../src/domain/model/identity/userAccount/userAccountProfile/userAccountProfileRepository";
 import UserAccountProfile from "../../../src/domain/model/identity/userAccount/userAccountProfile/userAccountProfile";
 import FakeDb from "./fakeDb/fakeDb";
+import userAccountProfileRepoError from "../../../src/port/_enums/errorMsg/repositories/repositoryErrorMsg/userAccountProfileRepoErrorMsg";
 
 class UserAccountProfileRepositoryMock implements UserAccountProfileRepository {
   private db: FakeDb;
@@ -9,14 +10,12 @@ class UserAccountProfileRepositoryMock implements UserAccountProfileRepository {
     this.db = aDb;
   }
 
-  async doesUserAccountProfileWithUserAccountIdExist(
-    anId: string
-  ): Promise<boolean> {
+  async throwErrorIfUserAccountDoesNotHaveProfile(anId: string): Promise<void> {
     const userAccountProfile = this.db.find(UserAccountProfile, anId);
 
-    if (userAccountProfile instanceof UserAccountProfile) return true;
+    if (!(userAccountProfile instanceof UserAccountProfile)) return;
 
-    return false;
+    throw new Error(userAccountProfileRepoError.userAccountProfileNotFound);
   }
 
   async save(aUserAccountProfile: UserAccountProfile): Promise<void> {
