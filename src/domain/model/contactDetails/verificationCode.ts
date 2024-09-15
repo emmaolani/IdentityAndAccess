@@ -1,7 +1,7 @@
-import ValueObject from "../../valueObject";
+import EntityValueObject from "../../EntityValueObject";
 import { verificationCodeError } from "../../enum/errorMsg/contactDetailErrorMsg";
 
-class VerificationCode extends ValueObject {
+class VerificationCode extends EntityValueObject {
   private value: string;
   private timeStamp: number;
   private allowedTimeDurationOfCode: number = 300000; // 5 minutes

@@ -43,7 +43,7 @@ class UserAccountProfileApplicationService {
       aCommand.getUserAccountId()
     );
 
-    await repositories.UserAccountProfileRepository.throwErrorIfUserAccountDoesNotHaveProfile(
+    await repositories.UserAccountProfileRepository.throwErrorIfUserAccountAlreadyHasProfile(
       aCommand.getUserAccountId()
     );
 

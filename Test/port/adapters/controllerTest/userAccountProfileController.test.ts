@@ -16,8 +16,8 @@ import UserAccountId from "../../../../src/domain/model/identity/userAccount/use
 import UserAccountProfileId from "../../../../src/domain/model/identity/userAccount/userAccountProfile/userAccountProfileId";
 import EmailAddress from "../../../../src/domain/model/contactDetails/emailAddress";
 import PhoneNumber from "../../../../src/domain/model/contactDetails/phoneNumber";
-import userAccountProfileRepoError from "../../../../src/port/_enums/errorMsg/repositories/repositoryErrorMsg/userAccountProfileRepoErrorMsg";
-import { ITUAndISOSpecRepoErrorMsg } from "../../../../src/port/_enums/errorMsg/repositories/repositoryErrorMsg/iTuAndISOSpecRepoErrorMsg";
+import userAccountProfileRepoError from "../../../../src/port/_enums/errorMsg/repositoryErrorMsg/userAccountProfileRepoErrorMsg";
+import { ITUAndISOSpecRepoErrorMsg } from "../../../../src/port/_enums/errorMsg/repositoryErrorMsg/iTuAndISOSpecRepoErrorMsg";
 import {
   emailAddressError,
   phoneNumberError,
@@ -184,7 +184,7 @@ describe("userAccount", () => {
 
       expect((response as ResponseMock).getStatus()).toBe(409);
       expect((response as ResponseMock).getResponse()).toEqual({
-        message: userAccountProfileRepoError.userAccountProfileNotFound,
+        message: userAccountProfileRepoError.userAccountProfileAlreadyExist,
       });
 
       removeUserAccountProfileFromDb(

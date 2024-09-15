@@ -1,6 +1,6 @@
-import ValueObject from "../../../valueObject";
+import EntityValueObject from "../../../EntityValueObject";
 
-class Address extends ValueObject {
+class Address extends EntityValueObject {
   private countryId: string;
   private stateId: string;
 

@@ -2,8 +2,8 @@ import UserAccountProfileApplicationService from "../../../application/identity/
 import { Request, Response } from "express";
 import NewUserAccountProfileReqObj from "./requestBodyTypes/newUserAccountProfileReqObj.type";
 import NewUserAccountProfileCommand from "../../../application/identity/userAccountProfile/newUserAccountProfileCommand";
-import userAccountProfileRepoError from "../../_enums/errorMsg/repositories/repositoryErrorMsg/userAccountProfileRepoErrorMsg";
-import { ITUAndISOSpecRepoErrorMsg } from "../../_enums/errorMsg/repositories/repositoryErrorMsg/iTuAndISOSpecRepoErrorMsg";
+import userAccountProfileRepoError from "../../_enums/errorMsg/repositoryErrorMsg/userAccountProfileRepoErrorMsg";
+import { ITUAndISOSpecRepoErrorMsg } from "../../_enums/errorMsg/repositoryErrorMsg/iTuAndISOSpecRepoErrorMsg";
 import {
   emailAddressError,
   phoneNumberError,
@@ -75,10 +75,11 @@ class UserAccountProfileController {
     if (error.message === "Invalid request body") {
       aResponse.status(400).send({ message: "Invalid request body" });
     } else if (
-      error.message === userAccountProfileRepoError.userAccountProfileNotFound
+      error.message ===
+      userAccountProfileRepoError.userAccountProfileAlreadyExist
     ) {
       aResponse.status(409).send({
-        message: userAccountProfileRepoError.userAccountProfileNotFound,
+        message: userAccountProfileRepoError.userAccountProfileAlreadyExist,
       });
     } else if (
       error.message === ITUAndISOSpecRepoErrorMsg.ITUAndISOSpecNotFound

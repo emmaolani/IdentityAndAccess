@@ -1,7 +1,7 @@
-import ValueObject from "../../../valueObject";
+import EntityValueObject from "../../../EntityValueObject";
 import { userAccountIdError } from "../../../enum/errorMsg/userAccountErrorMsg";
 
-class UserAccountId extends ValueObject {
+class UserAccountId extends EntityValueObject {
   private id: string;
 
   constructor(aValue: string) {

@@ -1,9 +1,9 @@
-import ValueObject from "../../valueObject";
+import EntityValueObject from "../../EntityValueObject";
 import ITUAndISOSpecId from "../geographicEntities/ITUAndISOSpecId";
 import VerificationCode from "./verificationCode";
 import { phoneNumberError } from "../../enum/errorMsg/contactDetailErrorMsg";
 
-class PhoneNumber extends ValueObject {
+class PhoneNumber extends EntityValueObject {
   private value: string;
   private iTUAndISOSpecId: ITUAndISOSpecId;
   private isActive: boolean;

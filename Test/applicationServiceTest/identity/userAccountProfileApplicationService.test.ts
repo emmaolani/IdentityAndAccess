@@ -5,14 +5,14 @@ import RepositoryFactoryMock from "../mock/repositoryFactoryMock";
 import UserAccountProfile from "../../../src/domain/model/identity/userAccount/userAccountProfile/userAccountProfile";
 import NewUserAccountProfileCreated from "../../../src/domain/model/identity/userAccount/userAccountProfile/newUserAccountProfileCreated";
 import UUIDGenerator from "../../../src/port/adapters/controller/uUIDGenerator";
-import userAccountProfileRepoError from "../../../src/port/_enums/errorMsg/repositories/repositoryErrorMsg/userAccountProfileRepoErrorMsg";
+import userAccountProfileRepoError from "../../../src/port/_enums/errorMsg/repositoryErrorMsg/userAccountProfileRepoErrorMsg";
 import {
   emailAddressError,
   phoneNumberError,
 } from "../../../src/domain/enum/errorMsg/contactDetailErrorMsg";
 import { userAccountIdError } from "../../../src/domain/enum/errorMsg/userAccountErrorMsg";
 import { UserAccountProfileIdError } from "../../../src/domain/enum/errorMsg/userAccountProfileErrorMsg";
-import { ITUAndISOSpecRepoErrorMsg } from "../../../src/port/_enums/errorMsg/repositories/repositoryErrorMsg/iTuAndISOSpecRepoErrorMsg";
+import { ITUAndISOSpecRepoErrorMsg } from "../../../src/port/_enums/errorMsg/repositoryErrorMsg/iTuAndISOSpecRepoErrorMsg";
 import UserAccountProfileId from "../../../src/domain/model/identity/userAccount/userAccountProfile/userAccountProfileId";
 import UserAccountId from "../../../src/domain/model/identity/userAccount/userAccountId";
 import EmailAddress from "../../../src/domain/model/contactDetails/emailAddress";
@@ -139,7 +139,9 @@ describe("UserAccountProfileApplicationService", () => {
 
       await expect(
         userAccountProfileApplicationService.createUserAccountProfile(command)
-      ).rejects.toThrow(userAccountProfileRepoError.userAccountProfileNotFound);
+      ).rejects.toThrow(
+        userAccountProfileRepoError.userAccountProfileAlreadyExist
+      );
 
       await removeUserAccountProfileFromDb(command);
     });

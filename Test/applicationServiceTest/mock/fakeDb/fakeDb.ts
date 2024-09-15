@@ -20,7 +20,7 @@ class FakeDb {
     if (data instanceof ITUAndISOSpec) {
       table = this.db.get(tableName);
       table?.set(data["countryCode"], data);
-      table?.set(data["id"]["iD"], data);
+      table?.set(data["id"]["value"], data);
     } else if (data instanceof UserAccountProfile) {
       table = this.db.get(tableName);
       table?.set(data["id"]["id"], data);

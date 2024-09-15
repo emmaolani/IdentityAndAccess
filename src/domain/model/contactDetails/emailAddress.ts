@@ -1,8 +1,8 @@
 import VerificationCode from "./verificationCode";
-import ValueObject from "../../valueObject";
+import EntityValueObject from "../../EntityValueObject";
 import { emailAddressError } from "../../enum/errorMsg/contactDetailErrorMsg";
 
-class EmailAddress extends ValueObject {
+class EmailAddress extends EntityValueObject {
   private value: string;
   private isActive: boolean;
   private verificationCode: VerificationCode | null;

@@ -2,7 +2,7 @@ import UserAccountProfile from "./userAccountProfile";
 
 interface UserAccountProfileRepository {
   getById(userAccountProfileId: string): Promise<UserAccountProfile>;
-  throwErrorIfUserAccountDoesNotHaveProfile(
+  throwErrorIfUserAccountAlreadyHasProfile(
     userAccountId: string
   ): Promise<void>;
   save(userAccountProfile: UserAccountProfile): Promise<void>;

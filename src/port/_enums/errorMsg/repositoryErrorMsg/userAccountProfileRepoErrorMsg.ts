@@ -1,5 +1,5 @@
 enum userAccountProfileRepoError {
-  userAccountProfileNotFound = "User account profile not found",
+  userAccountProfileAlreadyExist = "User account already has a profile",
 }
 
 export default userAccountProfileRepoError;

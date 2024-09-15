@@ -1,7 +1,7 @@
-import ValueObject from "../../valueObject";
+import EntityValueObject from "../../EntityValueObject";
 import { ITUAndISOSpecIdIdError } from "../../enum/errorMsg/iTUAndISOErrorMsg";
 
-class ITUAndISOSpecId extends ValueObject {
+class ITUAndISOSpecId extends EntityValueObject {
   private value: string;
 
   constructor(value: string) {
