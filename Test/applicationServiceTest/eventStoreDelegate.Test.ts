@@ -1,5 +1,5 @@
 import EventStoreDelegate from "../../src/application/eventStoreDelegate";
-import NewUserAccountCreated from "../../src/domain/model/identity/userAccount/newUserAccountCreated";
+import NewUserAccountCreated from "../../src/domain/model/userAccount/newUserAccountCreated";
 import RepositoryFactoryMock from "./mock/repositoryFactoryMock";
 import EventName from "../../src/domain/enum/event/eventName";
 

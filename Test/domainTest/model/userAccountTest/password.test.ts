@@ -1,5 +1,5 @@
-import Password from "../../../../../src/domain/model/identity/userAccount/password";
-import { passwordError } from "../../../../../src/domain/enum/errorMsg/userAccountErrorMsg";
+import Password from "../../../../src/domain/model/userAccount/password";
+import { passwordError } from "../../../../src/domain/enum/errorMsg/userAccountErrorMsg";
 
 describe("Password", () => {
   it("should throw an error when password doesn't meet minimum requirement", () => {

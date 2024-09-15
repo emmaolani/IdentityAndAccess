@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import UserAccountApplicationService from "../../../application/identity/userAccountApplicationService";
-import NewUserAccountCommand from "../../../application/identity/newUserAccountCommand";
+import UserAccountApplicationService from "../../../application/userAccount/userAccountApplicationService";
+import NewUserAccountCommand from "../../../application/userAccount/newUserAccountCommand";
 import NewUserAccountReqObj from "./requestBodyTypes/newUserAccountReqObj.types";
 import {
   userNamesError,

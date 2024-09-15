@@ -1,7 +1,7 @@
-import UserAccountProfileApplicationService from "../../../application/identity/userAccountProfile/userAccountProfileApplicationService";
+import UserAccountProfileApplicationService from "../../../application/userAccount/userAccountProfile/userAccountProfileApplicationService";
 import { Request, Response } from "express";
 import NewUserAccountProfileReqObj from "./requestBodyTypes/newUserAccountProfileReqObj.type";
-import NewUserAccountProfileCommand from "../../../application/identity/userAccountProfile/newUserAccountProfileCommand";
+import NewUserAccountProfileCommand from "../../../application/userAccount/userAccountProfile/newUserAccountProfileCommand";
 import userAccountProfileRepoError from "../../_enums/errorMsg/repositoryErrorMsg/userAccountProfileRepoErrorMsg";
 import { ITUAndISOSpecRepoErrorMsg } from "../../_enums/errorMsg/repositoryErrorMsg/iTuAndISOSpecRepoErrorMsg";
 import {

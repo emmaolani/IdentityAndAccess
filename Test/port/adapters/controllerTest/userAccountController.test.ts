@@ -1,20 +1,20 @@
 import UserAccountController from "../../../../src/port/adapters/controller/userAccountController";
-import UserAccountApplicationService from "../../../../src/application/identity/userAccountApplicationService";
+import UserAccountApplicationService from "../../../../src/application/userAccount/userAccountApplicationService";
 import RepositoryFactoryMock from "../../../applicationServiceTest/mock/repositoryFactoryMock";
 import { Request, Response } from "express";
 import RequestMock from "./mock/requestMock";
 import ResponseMock from "./mock/responseMock";
-import UserAccount from "../../../../src/domain/model/identity/userAccount/userAccount";
-import NewUserAccountCreated from "../../../../src/domain/model/identity/userAccount/newUserAccountCreated";
+import UserAccount from "../../../../src/domain/model/userAccount/userAccount";
+import NewUserAccountCreated from "../../../../src/domain/model/userAccount/newUserAccountCreated";
 import DomainEvent from "../../../../src/domain/domainEvent";
 import {
   passwordError,
   userNamesError,
 } from "../../../../src/domain/enum/errorMsg/userAccountErrorMsg";
 import EventName from "../../../../src/domain/enum/event/eventName";
-import UserAccountId from "../../../../src/domain/model/identity/userAccount/userAccountId";
-import UserName from "../../../../src/domain/model/identity/userAccount/userName";
-import Password from "../../../../src/domain/model/identity/userAccount/password";
+import UserAccountId from "../../../../src/domain/model/userAccount/userAccountId";
+import UserName from "../../../../src/domain/model/userAccount/userName";
+import Password from "../../../../src/domain/model/userAccount/password";
 
 // TODO: write test for catching error when UUID is not valid
 describe("UserAccountController", () => {

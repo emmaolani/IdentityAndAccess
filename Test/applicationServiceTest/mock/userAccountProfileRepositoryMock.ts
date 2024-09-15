@@ -1,5 +1,5 @@
-import UserAccountProfileRepository from "../../../src/domain/model/identity/userAccount/userAccountProfile/userAccountProfileRepository";
-import UserAccountProfile from "../../../src/domain/model/identity/userAccount/userAccountProfile/userAccountProfile";
+import UserAccountProfileRepository from "../../../src/domain/model/userAccount/userAccountProfile/userAccountProfileRepository";
+import UserAccountProfile from "../../../src/domain/model/userAccount/userAccountProfile/userAccountProfile";
 import FakeDb from "./fakeDb/fakeDb";
 import userAccountProfileRepoError from "../../../src/port/_enums/errorMsg/repositoryErrorMsg/userAccountProfileRepoErrorMsg";
 

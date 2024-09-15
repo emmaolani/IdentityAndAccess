@@ -1,5 +1,5 @@
-import UserAccountRepository from "../../../src/domain/model/identity/userAccount/userAccountRepository";
-import UserAccount from "../../../src/domain/model/identity/userAccount/userAccount";
+import UserAccountRepository from "../../../src/domain/model/userAccount/userAccountRepository";
+import UserAccount from "../../../src/domain/model/userAccount/userAccount";
 import FakeDb from "./fakeDb/fakeDb";
 
 class UserAccountRepositoryMock implements UserAccountRepository {

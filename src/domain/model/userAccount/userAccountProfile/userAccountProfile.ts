@@ -1,8 +1,8 @@
 import UserAccountId from "../userAccountId";
 import UserAccountProfileId from "./userAccountProfileId";
-import EmailAddress from "../../../contactDetails/emailAddress";
-import PhoneNumber from "../../../contactDetails/phoneNumber";
-import DomainEventPublisher from "../../../../domainEventPublisher";
+import EmailAddress from "../../contactDetails/emailAddress";
+import PhoneNumber from "../../contactDetails/phoneNumber";
+import DomainEventPublisher from "../../../domainEventPublisher";
 import NewUserAccountProfileCreated from "./newUserAccountProfileCreated";
 
 class UserAccountProfile {

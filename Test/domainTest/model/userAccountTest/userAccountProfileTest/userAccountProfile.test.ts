@@ -1,10 +1,10 @@
-import UserAccountProfile from "../../../../../../src/domain/model/identity/userAccount/userAccountProfile/userAccountProfile";
-import UserAccountProfileId from "../../../../../../src/domain/model/identity/userAccount/userAccountProfile/userAccountProfileId";
-import UserAccountId from "../../../../../../src/domain/model/identity/userAccount/userAccountId";
-import EmailAddress from "../../../../../../src/domain/model/contactDetails/emailAddress";
-import ITUAndISOSpecId from "../../../../../../src/domain/model/geographicEntities/ITUAndISOSpecId";
-import PhoneNumber from "../../../../../../src/domain/model/contactDetails/phoneNumber";
-import UUIDGenerator from "../../../../../../src/port/adapters/controller/uUIDGenerator";
+import UserAccountProfile from "../../../../../src/domain/model/userAccount/userAccountProfile/userAccountProfile";
+import UserAccountProfileId from "../../../../../src/domain/model/userAccount/userAccountProfile/userAccountProfileId";
+import UserAccountId from "../../../../../src/domain/model/userAccount/userAccountId";
+import EmailAddress from "../../../../../src/domain/model/contactDetails/emailAddress";
+import ITUAndISOSpecId from "../../../../../src/domain/model/geographicEntities/ITUAndISOSpecId";
+import PhoneNumber from "../../../../../src/domain/model/contactDetails/phoneNumber";
+import UUIDGenerator from "../../../../../src/port/adapters/controller/uUIDGenerator";
 
 describe("User Account Profile", () => {
   let userAccountProfile: UserAccountProfile;

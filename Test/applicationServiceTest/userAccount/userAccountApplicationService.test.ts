@@ -1,12 +1,12 @@
-import UserAccountApplicationService from "../../../src/application/identity/userAccountApplicationService";
-import NewUserAccountCommand from "../../../src/application/identity/newUserAccountCommand";
+import UserAccountApplicationService from "../../../src/application/userAccount/userAccountApplicationService";
+import NewUserAccountCommand from "../../../src/application/userAccount/newUserAccountCommand";
 import RepositoryFactoryMock from "../mock/repositoryFactoryMock";
 import DomainEvent from "../../../src/domain/domainEvent";
-import UserAccount from "../../../src/domain/model/identity/userAccount/userAccount";
-import UserAccountId from "../../../src/domain/model/identity/userAccount/userAccountId";
-import UserName from "../../../src/domain/model/identity/userAccount/userName";
-import Password from "../../../src/domain/model/identity/userAccount/password";
-import NewUserAccountCreated from "../../../src/domain/model/identity/userAccount/newUserAccountCreated";
+import UserAccount from "../../../src/domain/model/userAccount/userAccount";
+import UserAccountId from "../../../src/domain/model/userAccount/userAccountId";
+import UserName from "../../../src/domain/model/userAccount/userName";
+import Password from "../../../src/domain/model/userAccount/password";
+import NewUserAccountCreated from "../../../src/domain/model/userAccount/newUserAccountCreated";
 import EventName from "../../../src/domain/enum/event/eventName";
 import {
   passwordError,

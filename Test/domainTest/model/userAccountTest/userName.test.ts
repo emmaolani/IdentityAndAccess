@@ -1,5 +1,5 @@
-import UserName from "../../../../../src/domain/model/identity/userAccount/userName";
-import { userNamesError } from "../../../../../src/domain/enum/errorMsg/userAccountErrorMsg";
+import UserName from "../../../../src/domain/model/userAccount/userName";
+import { userNamesError } from "../../../../src/domain/enum/errorMsg/userAccountErrorMsg";
 
 describe("UserName", () => {
   it("should remove white space", () => {

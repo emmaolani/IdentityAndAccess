@@ -1,5 +1,5 @@
-import EntityValueObject from "../../../EntityValueObject";
-import { passwordError } from "../../../enum/errorMsg/userAccountErrorMsg";
+import EntityValueObject from "../../EntityValueObject";
+import { passwordError } from "../../enum/errorMsg/userAccountErrorMsg";
 
 class Password extends EntityValueObject {
   private value: string;

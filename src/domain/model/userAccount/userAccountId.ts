@@ -1,5 +1,5 @@
-import EntityValueObject from "../../../EntityValueObject";
-import { userAccountIdError } from "../../../enum/errorMsg/userAccountErrorMsg";
+import EntityValueObject from "../../EntityValueObject";
+import { userAccountIdError } from "../../enum/errorMsg/userAccountErrorMsg";
 
 class UserAccountId extends EntityValueObject {
   private id: string;

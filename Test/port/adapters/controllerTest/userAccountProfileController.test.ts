@@ -1,9 +1,9 @@
 import UserAccountProfileController from "../../../../src/port/adapters/controller/userAccountProfileController";
-import UserAccountProfileApplicationService from "../../../../src/application/identity/userAccountProfile/userAccountProfileApplicationService";
+import UserAccountProfileApplicationService from "../../../../src/application/userAccount/userAccountProfile/userAccountProfileApplicationService";
 import RepositoryFactoryMock from "../../../applicationServiceTest/mock/repositoryFactoryMock";
 import PhoneNumberValidatorImp from "../../../../src/port/util/phoneNumberValidatorImp";
-import UserAccountProfile from "../../../../src/domain/model/identity/userAccount/userAccountProfile/userAccountProfile";
-import NewUserAccountProfileCreated from "../../../../src/domain/model/identity/userAccount/userAccountProfile/newUserAccountProfileCreated";
+import UserAccountProfile from "../../../../src/domain/model/userAccount/userAccountProfile/userAccountProfile";
+import NewUserAccountProfileCreated from "../../../../src/domain/model/userAccount/userAccountProfile/newUserAccountProfileCreated";
 import RequestMock from "./mock/requestMock";
 import ResponseMock from "./mock/responseMock";
 import { Request, Response } from "express";
@@ -12,8 +12,8 @@ import ITUAndISOSpec from "../../../../src/domain/model/geographicEntities/ITUAn
 import ITUAndISOSpecId from "../../../../src/domain/model/geographicEntities/ITUAndISOSpecId";
 import EventName from "../../../../src/domain/enum/event/eventName";
 import NewUserAccountProfileReqObj from "../../../../src/port/adapters/controller/requestBodyTypes/newUserAccountProfileReqObj.type";
-import UserAccountId from "../../../../src/domain/model/identity/userAccount/userAccountId";
-import UserAccountProfileId from "../../../../src/domain/model/identity/userAccount/userAccountProfile/userAccountProfileId";
+import UserAccountId from "../../../../src/domain/model/userAccount/userAccountId";
+import UserAccountProfileId from "../../../../src/domain/model/userAccount/userAccountProfile/userAccountProfileId";
 import EmailAddress from "../../../../src/domain/model/contactDetails/emailAddress";
 import PhoneNumber from "../../../../src/domain/model/contactDetails/phoneNumber";
 import userAccountProfileRepoError from "../../../../src/port/_enums/errorMsg/repositoryErrorMsg/userAccountProfileRepoErrorMsg";

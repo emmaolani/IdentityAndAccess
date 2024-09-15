@@ -1,5 +1,5 @@
 import DomainEventPublisher from "../../src/domain/domainEventPublisher";
-import NewUserAccountCreated from "../../src/domain/model/identity/userAccount/newUserAccountCreated";
+import NewUserAccountCreated from "../../src/domain/model/userAccount/newUserAccountCreated";
 import TestingEventSubscriber from "./mock/domainEventSubscriberMock/TestingEventSubscriberMock";
 
 describe("Domain Event Publisher", () => {

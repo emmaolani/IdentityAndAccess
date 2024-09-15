@@ -1,5 +1,5 @@
-import DomainEvent from "../../../../domainEvent";
-import EventName from "../../../../enum/event/eventName";
+import DomainEvent from "../../../domainEvent";
+import EventName from "../../../enum/event/eventName";
 
 class NewUserAccountProfileCreated implements DomainEvent {
   private userAccountProfileId: string;

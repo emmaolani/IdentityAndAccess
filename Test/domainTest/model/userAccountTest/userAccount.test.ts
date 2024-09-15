@@ -1,11 +1,11 @@
-import UserAccount from "../../../../../src/domain/model/identity/userAccount/userAccount";
-import UserName from "../../../../../src/domain/model/identity/userAccount/userName";
-import Password from "../../../../../src/domain/model/identity/userAccount/password";
-import UserAccountId from "../../../../../src/domain/model/identity/userAccount/userAccountId";
-import UUIDGenerator from "../../../../../src/port/adapters/controller/uUIDGenerator";
-import DomainEventPublisher from "../../../../../src/domain/domainEventPublisher";
-import TestingEventSubscriber from "../../../mock/domainEventSubscriberMock/TestingEventSubscriberMock";
-import NewUserAccountCreated from "../../../../../src/domain/model/identity/userAccount/newUserAccountCreated";
+import UserAccount from "../../../../src/domain/model/userAccount/userAccount";
+import UserName from "../../../../src/domain/model/userAccount/userName";
+import Password from "../../../../src/domain/model/userAccount/password";
+import UserAccountId from "../../../../src/domain/model/userAccount/userAccountId";
+import UUIDGenerator from "../../../../src/port/adapters/controller/uUIDGenerator";
+import DomainEventPublisher from "../../../../src/domain/domainEventPublisher";
+import TestingEventSubscriber from "../../mock/domainEventSubscriberMock/TestingEventSubscriberMock";
+import NewUserAccountCreated from "../../../../src/domain/model/userAccount/newUserAccountCreated";
 
 // TODO: implement AccessRuleId and RestrictionId Properties
 describe("UserAccount", () => {

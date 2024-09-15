@@ -3,11 +3,11 @@ import DomainEventPublisher from "../../domain/domainEventPublisher";
 import DomainEventSubscriber from "../../domain/domainEventSubscriber";
 import EventStoreDelegate from "../eventStoreDelegate";
 import NewUserAccountCommand from "./newUserAccountCommand";
-import UserAccount from "../../domain/model/identity/userAccount/userAccount";
-import UserName from "../../domain/model/identity/userAccount/userName";
-import Password from "../../domain/model/identity/userAccount/password";
-import UserAccountId from "../../domain/model/identity/userAccount/userAccountId";
-import UserAccountRepository from "../../domain/model/identity/userAccount/userAccountRepository";
+import UserAccount from "../../domain/model/userAccount/userAccount";
+import UserName from "../../domain/model/userAccount/userName";
+import Password from "../../domain/model/userAccount/password";
+import UserAccountId from "../../domain/model/userAccount/userAccountId";
+import UserAccountRepository from "../../domain/model/userAccount/userAccountRepository";
 
 class UserAccountApplicationService {
   private repositoryFactory: RepositoryFactory;

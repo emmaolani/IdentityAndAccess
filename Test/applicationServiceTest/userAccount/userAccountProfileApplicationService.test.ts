@@ -1,25 +1,25 @@
-import UserAccountProfileApplicationService from "../../../src/application/identity/userAccountProfile/userAccountProfileApplicationService";
-import NewUserAccountProfileCommand from "../../../src/application/identity/userAccountProfile/newUserAccountProfileCommand";
+import UserAccountProfileApplicationService from "../../../src/application/userAccount/userAccountProfile/userAccountProfileApplicationService";
+import NewUserAccountProfileCommand from "../../../src/application/userAccount/userAccountProfile/newUserAccountProfileCommand";
 import PhoneNumberValidatorImp from "../../../src/port/util/phoneNumberValidatorImp";
 import RepositoryFactoryMock from "../mock/repositoryFactoryMock";
-import UserAccountProfile from "../../../src/domain/model/identity/userAccount/userAccountProfile/userAccountProfile";
-import NewUserAccountProfileCreated from "../../../src/domain/model/identity/userAccount/userAccountProfile/newUserAccountProfileCreated";
+import NewUserAccountProfileCreated from "../../../src/domain/model/userAccount/userAccountProfile/newUserAccountProfileCreated";
 import UUIDGenerator from "../../../src/port/adapters/controller/uUIDGenerator";
-import userAccountProfileRepoError from "../../../src/port/_enums/errorMsg/repositoryErrorMsg/userAccountProfileRepoErrorMsg";
+import UserAccountProfileId from "../../../src/domain/model/userAccount/userAccountProfile/userAccountProfileId";
+import UserAccountProfile from "../../../src/domain/model/userAccount/userAccountProfile/userAccountProfile";
+import UserAccountId from "../../../src/domain/model/userAccount/userAccountId";
+import EmailAddress from "../../../src/domain/model/contactDetails/emailAddress";
+import PhoneNumber from "../../../src/domain/model/contactDetails/phoneNumber";
+import ITUAndISOSpecId from "../../../src/domain/model/geographicEntities/ITUAndISOSpecId";
+import ITUAndISOSpec from "../../../src/domain/model/geographicEntities/ITUAndISOSpec";
+import EventName from "../../../src/domain/enum/event/eventName";
 import {
   emailAddressError,
   phoneNumberError,
 } from "../../../src/domain/enum/errorMsg/contactDetailErrorMsg";
+import userAccountProfileRepoError from "../../../src/port/_enums/errorMsg/repositoryErrorMsg/userAccountProfileRepoErrorMsg";
 import { userAccountIdError } from "../../../src/domain/enum/errorMsg/userAccountErrorMsg";
 import { UserAccountProfileIdError } from "../../../src/domain/enum/errorMsg/userAccountProfileErrorMsg";
 import { ITUAndISOSpecRepoErrorMsg } from "../../../src/port/_enums/errorMsg/repositoryErrorMsg/iTuAndISOSpecRepoErrorMsg";
-import UserAccountProfileId from "../../../src/domain/model/identity/userAccount/userAccountProfile/userAccountProfileId";
-import UserAccountId from "../../../src/domain/model/identity/userAccount/userAccountId";
-import EmailAddress from "../../../src/domain/model/contactDetails/emailAddress";
-import PhoneNumber from "../../../src/domain/model/contactDetails/phoneNumber";
-import ITUAndISOSpec from "../../../src/domain/model/geographicEntities/ITUAndISOSpec";
-import ITUAndISOSpecId from "../../../src/domain/model/geographicEntities/ITUAndISOSpecId";
-import EventName from "../../../src/domain/enum/event/eventName";
 
 describe("UserAccountProfileApplicationService", () => {
   const repositoryFactory = new RepositoryFactoryMock();

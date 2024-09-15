@@ -1,6 +1,6 @@
 import ITUAndISOSpec from "../../../../src/domain/model/geographicEntities/ITUAndISOSpec";
-import UserAccount from "../../../../src/domain/model/identity/userAccount/userAccount";
-import UserAccountProfile from "../../../../src/domain/model/identity/userAccount/userAccountProfile/userAccountProfile";
+import UserAccount from "../../../../src/domain/model/userAccount/userAccount";
+import UserAccountProfile from "../../../../src/domain/model/userAccount/userAccountProfile/userAccountProfile";
 import { Instance, Class } from "./schema";
 import StoredEventMock from "../storedEventMock";
 

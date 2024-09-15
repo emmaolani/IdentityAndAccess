@@ -1,5 +1,5 @@
-import EntityValueObject from "../../../EntityValueObject";
-import { userNamesError } from "../../../enum/errorMsg/userAccountErrorMsg";
+import EntityValueObject from "../../EntityValueObject";
+import { userNamesError } from "../../enum/errorMsg/userAccountErrorMsg";
 
 class UserName extends EntityValueObject {
   private value: string;
