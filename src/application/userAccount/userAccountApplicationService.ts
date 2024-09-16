@@ -7,7 +7,8 @@ import UserAccount from "../../domain/model/userAccount/userAccount";
 import UserName from "../../domain/model/userAccount/userName";
 import Password from "../../domain/model/userAccount/password";
 import UserAccountId from "../../domain/model/userAccount/userAccountId";
-import UserAccountRepository from "../../domain/model/userAccount/userAccountRepository";
+import AuthenticationMethod from "../../domain/model/accountAccessControl/authenticationMethod/authenticationMethod";
+import Restriction from "../../domain/model/accountAccessControl/restriction/restriction";
 
 class UserAccountApplicationService {
   private repositoryFactory: RepositoryFactory;
@@ -19,8 +20,21 @@ class UserAccountApplicationService {
   async createUserAccount(aCommand: NewUserAccountCommand) {
     const repositories = this.repositoryFactory.getRepositories(
       "UserAccountRepository",
+      "AuthenticationMethodRepository",
+      "RestrictionRepository",
       "EventStore"
     );
+
+    await repositories.UserAccountRepository.throwErrorIfUserNameExistsInDB(
+      aCommand.getUsername()
+    );
+
+    const authenticationMethod: AuthenticationMethod =
+      await repositories.AuthenticationMethodRepository.getByType("password");
+    const restriction: Restriction =
+      await repositories.RestrictionRepository.getByReason(
+        "awaiting profile creation"
+      );
 
     const domainEventPublisher: DomainEventPublisher =
       this.initializeDomainEventPublisher(
@@ -29,13 +43,10 @@ class UserAccountApplicationService {
 
     const userAccount: UserAccount = new UserAccount(
       new UserAccountId(aCommand.getId()),
+      authenticationMethod.getId(),
+      restriction.getId(),
       new UserName(aCommand.getUsername()),
       new Password(aCommand.getPassword())
-    );
-
-    await this.throwErrorIfUserNameExistsInDB(
-      aCommand.getUsername(),
-      repositories.UserAccountRepository
     );
 
     await userAccount.publishNewUserAccountCreatedEvent(domainEventPublisher);
@@ -51,17 +62,6 @@ class UserAccountApplicationService {
     publisher.subscribe(subscriber);
 
     return publisher;
-  }
-
-  private async throwErrorIfUserNameExistsInDB(
-    aUsername: string,
-    aUserAccountRepository: UserAccountRepository
-  ) {
-    const result =
-      await aUserAccountRepository.doesUserAccountWithUsernameExist(aUsername);
-    if (result) {
-      throw new Error("User account already exists");
-    }
   }
 }
 

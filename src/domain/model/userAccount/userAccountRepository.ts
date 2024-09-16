@@ -1,7 +1,7 @@
 import UserAccount from "./userAccount";
 
 interface UserAccountRepository {
-  doesUserAccountWithUsernameExist(username: string): Promise<boolean>;
+  throwErrorIfUserNameExistsInDB(username: string): Promise<void>;
   save(userAccount: UserAccount): Promise<void>;
   getById(id: string): Promise<UserAccount>;
   remove(id: string): Promise<void>;

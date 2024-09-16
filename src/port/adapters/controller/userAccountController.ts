@@ -6,6 +6,7 @@ import {
   userNamesError,
   passwordError,
 } from "../../../domain/enum/errorMsg/userAccountErrorMsg";
+import UserAccountRepoErrorMsg from "../../_enums/errorMsg/repositoryErrorMsg/userAccountRepoErrorMsg";
 
 class UserAccountController {
   private userAccountApplicationService: UserAccountApplicationService;
@@ -59,8 +60,12 @@ class UserAccountController {
   private errorResponse(response: Response, error: Error) {
     if (error.message === "invalid request body") {
       response.status(400).send({ message: "invalid request body" });
-    } else if (error.message === "User account already exists") {
-      response.status(409).send({ message: "user account exists" });
+    } else if (
+      error.message === UserAccountRepoErrorMsg.UserAccountAlreadyExists
+    ) {
+      response
+        .status(409)
+        .send({ message: UserAccountRepoErrorMsg.UserAccountAlreadyExists });
       return;
     } else if (
       error.message === userNamesError.userNameNotMeetingRequirements

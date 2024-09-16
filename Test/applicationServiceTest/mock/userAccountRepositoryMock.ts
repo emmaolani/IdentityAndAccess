@@ -1,6 +1,7 @@
 import UserAccountRepository from "../../../src/domain/model/userAccount/userAccountRepository";
 import UserAccount from "../../../src/domain/model/userAccount/userAccount";
 import FakeDb from "./fakeDb/fakeDb";
+import UserAccountRepoErrorMsg from "../../../src/port/_enums/errorMsg/repositoryErrorMsg/userAccountRepoErrorMsg";
 
 class UserAccountRepositoryMock implements UserAccountRepository {
   private db: FakeDb;
@@ -9,12 +10,14 @@ class UserAccountRepositoryMock implements UserAccountRepository {
     this.db = aDb;
   }
 
-  async doesUserAccountWithUsernameExist(aUsername: string): Promise<boolean> {
+  async throwErrorIfUserNameExistsInDB(aUsername: string): Promise<void> {
     const userAccount = this.db.find(UserAccount, aUsername);
 
-    if (userAccount instanceof UserAccount) return true;
+    if (userAccount instanceof UserAccount) {
+      throw Error(UserAccountRepoErrorMsg.UserAccountAlreadyExists);
+    }
 
-    return false;
+    return;
   }
 
   async lockUserAccount(UserAccountId: string): Promise<void> {

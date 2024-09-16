@@ -1,4 +1,6 @@
 import UserAccountId from "./userAccountId";
+import AuthenticationMethodId from "../accountAccessControl/authenticationMethod/authenticationMethodId";
+import RestrictionId from "../accountAccessControl/restriction/restrictionId";
 import UserName from "./userName";
 import Password from "./password";
 import NewUserAccountCreated from "./newUserAccountCreated";
@@ -6,12 +8,21 @@ import DomainEventPublisher from "../../domainEventPublisher";
 
 class UserAccount {
   private id: UserAccountId;
+  private authenticationMethodId: AuthenticationMethodId;
+  private restrictionId: RestrictionId;
   private username: UserName;
   private password: Password;
-  private isActive: boolean;
 
-  constructor(anId: UserAccountId, aUsername: UserName, aPassword: Password) {
+  constructor(
+    anId: UserAccountId,
+    aAuthenticationId: AuthenticationMethodId,
+    aRestrictionId: RestrictionId,
+    aUsername: UserName,
+    aPassword: Password
+  ) {
     this.setId(anId);
+    this.setAuthenticationMethodId(aAuthenticationId);
+    this.setRestrictionId(aRestrictionId);
     this.setUsername(aUsername);
     this.setPassword(aPassword);
   }
@@ -26,6 +37,16 @@ class UserAccount {
 
   private setPassword(aPassword: Password) {
     this.password = aPassword;
+  }
+
+  private setAuthenticationMethodId(
+    anAuthenticationMethodId: AuthenticationMethodId
+  ) {
+    this.authenticationMethodId = anAuthenticationMethodId;
+  }
+
+  private setRestrictionId(aRestrictionId: RestrictionId) {
+    this.restrictionId = aRestrictionId;
   }
 
   async publishNewUserAccountCreatedEvent(

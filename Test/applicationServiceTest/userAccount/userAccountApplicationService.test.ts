@@ -4,6 +4,8 @@ import RepositoryFactoryMock from "../mock/repositoryFactoryMock";
 import DomainEvent from "../../../src/domain/domainEvent";
 import UserAccount from "../../../src/domain/model/userAccount/userAccount";
 import UserAccountId from "../../../src/domain/model/userAccount/userAccountId";
+import AuthenticationMethodId from "../../../src/domain/model/accountAccessControl/authenticationMethod/authenticationMethodId";
+import RestrictionId from "../../../src/domain/model/accountAccessControl/restriction/restrictionId";
 import UserName from "../../../src/domain/model/userAccount/userName";
 import Password from "../../../src/domain/model/userAccount/password";
 import NewUserAccountCreated from "../../../src/domain/model/userAccount/newUserAccountCreated";
@@ -14,12 +16,27 @@ import {
   userNamesError,
 } from "../../../src/domain/enum/errorMsg/userAccountErrorMsg";
 import UUIDGenerator from "../../../src/port/adapters/controller/uUIDGenerator";
+import PlaceHolderRepository from "../mock/fakeDb/defaultRepository";
+import UserAccountRepoErrorMsg from "../../../src/port/_enums/errorMsg/repositoryErrorMsg/userAccountRepoErrorMsg";
 
 describe("User Account Application Service", () => {
   const repositoryFactory = new RepositoryFactoryMock();
   const userAccountApplicationService = new UserAccountApplicationService(
     repositoryFactory
   );
+
+  beforeAll(() => {
+    savePlaceHolders();
+  });
+
+  function savePlaceHolders() {
+    const placeHolderRepository = repositoryFactory.getPlaceHolderRepo();
+
+    placeHolderRepository.savePlaceholders({
+      authenticationMethod: true,
+      restriction: true,
+    });
+  }
 
   it("should create and store new userAccount and NewUserAccountCreated Event if there is no username conflict", async () => {
     const newUserAccountCommand = new NewUserAccountCommand(
@@ -72,6 +89,12 @@ describe("User Account Application Service", () => {
     expect(userAccount["id"]["id"]).toBe(aCommand.getId());
     expect(userAccount["username"]["value"]).toBe(aCommand.getUsername());
     expect(userAccount["password"]["value"]).toBe(aCommand.getPassword());
+    expect(userAccount["authenticationMethodId"]["id"]).toBe(
+      PlaceHolderRepository.authenticationMethodProperties.id
+    );
+    expect(userAccount["restrictionId"]["id"]).toBe(
+      PlaceHolderRepository.restrictionProperties.id
+    );
   }
 
   function assertThatPropertiesIn_newUserAccountCreated_match(
@@ -97,7 +120,7 @@ describe("User Account Application Service", () => {
 
     await expect(
       userAccountApplicationService.createUserAccount(newUserAccountCommand)
-    ).rejects.toThrow("User account already exists");
+    ).rejects.toThrow(UserAccountRepoErrorMsg.UserAccountAlreadyExists);
 
     await removeUserAccountInDB(newUserAccountCommand);
   });
@@ -146,6 +169,8 @@ describe("User Account Application Service", () => {
     await repositories.UserAccountRepository.save(
       new UserAccount(
         new UserAccountId(aCommand.getId()),
+        new AuthenticationMethodId(new UUIDGenerator().generate()),
+        new RestrictionId(new UUIDGenerator().generate()),
         new UserName(aCommand.getUsername()),
         new Password(aCommand.getPassword())
       )

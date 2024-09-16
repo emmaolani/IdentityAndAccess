@@ -1,13 +1,17 @@
-import UserAccountRepository from "../model/identity/userAccount/userAccountRepository";
+import UserAccountRepository from "../model/userAccount/userAccountRepository";
 import EventStore from "../eventStore";
 import ITUAndISOSpecRepository from "../model/geographicEntities/ITUAndISOSpecRepository";
-import UserAccountProfileRepository from "../model/identity/userAccount/userAccountProfile/userAccountProfileRepository";
+import UserAccountProfileRepository from "../model/userAccount/userAccountProfile/userAccountProfileRepository";
+import AuthenticationMethodRepository from "../model/accountAccessControl/authenticationMethod/authenticationMethodRepository";
+import RestrictionRepository from "../model/accountAccessControl/restriction/restrictionRepository";
 
 type RepositoryName =
   | "UserAccountRepository"
   | "EventStore"
   | "ITUAndISOSpecRepository"
-  | "UserAccountProfileRepository";
+  | "UserAccountProfileRepository"
+  | "AuthenticationMethodRepository"
+  | "RestrictionRepository";
 
 // Define the return type for the factory method
 type RepositoryCollection<T extends RepositoryName[]> = {
@@ -19,6 +23,10 @@ type RepositoryCollection<T extends RepositoryName[]> = {
     ? ITUAndISOSpecRepository
     : K extends "UserAccountProfileRepository"
     ? UserAccountProfileRepository
+    : K extends "AuthenticationMethodRepository"
+    ? AuthenticationMethodRepository
+    : K extends "RestrictionRepository"
+    ? RestrictionRepository
     : never;
 };
 

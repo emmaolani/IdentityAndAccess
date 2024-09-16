@@ -1,43 +1,63 @@
-import UserAccount from "../../../../src/domain/model/userAccount/userAccount";
+import UserAccountId from "../../../../src/domain/model/userAccount/userAccountId";
+import AuthenticationMethodId from "../../../../src/domain/model/accountAccessControl/authenticationMethod/authenticationMethodId";
+import RestrictionId from "../../../../src/domain/model/accountAccessControl/restriction/restrictionId";
 import UserName from "../../../../src/domain/model/userAccount/userName";
 import Password from "../../../../src/domain/model/userAccount/password";
-import UserAccountId from "../../../../src/domain/model/userAccount/userAccountId";
+import UserAccount from "../../../../src/domain/model/userAccount/userAccount";
 import UUIDGenerator from "../../../../src/port/adapters/controller/uUIDGenerator";
 import DomainEventPublisher from "../../../../src/domain/domainEventPublisher";
 import TestingEventSubscriber from "../../mock/domainEventSubscriberMock/TestingEventSubscriberMock";
 import NewUserAccountCreated from "../../../../src/domain/model/userAccount/newUserAccountCreated";
 
-// TODO: implement AccessRuleId and RestrictionId Properties
 describe("UserAccount", () => {
   let userAccount: UserAccount;
 
   it("should create a user account", () => {
-    const id = new UUIDGenerator().generate();
+    const userAccountId = new UUIDGenerator().generate();
+    const authenticationMethodId = new UUIDGenerator().generate();
+    const restrictionId = new UUIDGenerator().generate();
     const username = "username";
     const password = "SecureP@ss123";
+
     userAccount = new UserAccount(
-      new UserAccountId(id),
+      new UserAccountId(userAccountId),
+      new AuthenticationMethodId(authenticationMethodId),
+      new RestrictionId(restrictionId),
       new UserName(username),
       new Password(password)
     );
 
-    assertThatPropertiesIn_userAccount_match(id, username, password);
+    assertThat_userAccount_propertiesMatches(
+      userAccountId,
+      username,
+      password,
+      authenticationMethodId,
+      restrictionId
+    );
   });
 
-  function assertThatPropertiesIn_userAccount_match(
+  function assertThat_userAccount_propertiesMatches(
     anId: string,
     aUsername: string,
-    aPassword: string
+    aPassword: string,
+    anAuthenticationMethodId: string,
+    aRestrictionId: string
   ) {
     expect(userAccount).toBeInstanceOf(UserAccount);
     expect(userAccount["id"]["id"]).toBe(anId);
     expect(userAccount["username"]["value"]).toBe(aUsername);
     expect(userAccount["password"]["value"]).toBe(aPassword);
+    expect(userAccount["authenticationMethodId"]["id"]).toBe(
+      anAuthenticationMethodId
+    );
+    expect(userAccount["restrictionId"]["id"]).toBe(aRestrictionId);
   }
 
   it("should publish new user account created event", async () => {
     userAccount = new UserAccount(
       new UserAccountId(new UUIDGenerator().generate()),
+      new AuthenticationMethodId(new UUIDGenerator().generate()),
+      new RestrictionId(new UUIDGenerator().generate()),
       new UserName("username"),
       new Password("SecureP@ss123")
     );

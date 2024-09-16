@@ -1,6 +1,8 @@
 import ITUAndISOSpec from "../../../../src/domain/model/geographicEntities/ITUAndISOSpec";
 import UserAccount from "../../../../src/domain/model/userAccount/userAccount";
 import UserAccountProfile from "../../../../src/domain/model/userAccount/userAccountProfile/userAccountProfile";
+import AuthenticationMethod from "../../../../src/domain/model/accountAccessControl/authenticationMethod/authenticationMethod";
+import Restriction from "../../../../src/domain/model/accountAccessControl/restriction/restriction";
 import { Instance, Class } from "./schema";
 import StoredEventMock from "../storedEventMock";
 
@@ -13,7 +15,7 @@ class FakeDb {
 
   save(data: Instance): void {
     let table: Map<string, Instance> | undefined;
-    const tableName = this.getTableNameFromInstance(data);
+    const tableName = this.getTableNameForInstance(data);
 
     if (!this.doesTableExist(tableName)) this.createTableFor(tableName);
 
@@ -32,10 +34,18 @@ class FakeDb {
     } else if (data instanceof StoredEventMock) {
       table = this.db.get(tableName);
       table?.set(data.getEventName(), data);
+    } else if (data instanceof AuthenticationMethod) {
+      table = this.db.get(tableName);
+      table?.set(data["id"]["id"], data);
+      table?.set(data["type"]["type"], data);
+    } else if (data instanceof Restriction) {
+      table = this.db.get(tableName);
+      table?.set(data["id"]["id"], data);
+      table?.set(data["reason"]["reason"], data);
     }
   }
 
-  private getTableNameFromInstance(obj: Instance): string {
+  private getTableNameForInstance(obj: Instance): string {
     return new Object(obj).constructor.name;
   }
 
@@ -45,7 +55,7 @@ class FakeDb {
 
   remove(data: Class, aKey: string): void {
     let table: Map<string, Instance> | undefined;
-    const tableName = this.getTableNameFromClass(data);
+    const tableName = this.getTableNameForClass(data);
 
     if (!this.doesTableExist(tableName)) return;
     table = this.db.get(tableName);
@@ -53,7 +63,7 @@ class FakeDb {
   }
 
   find(data: Class, aKey: string): Instance | undefined {
-    const tableName = this.getTableNameFromClass(data);
+    const tableName = this.getTableNameForClass(data);
 
     if (this.doesTableExist(tableName)) {
       const table = this.db.get(tableName);
@@ -62,7 +72,7 @@ class FakeDb {
     return undefined;
   }
 
-  private getTableNameFromClass(data: Class): string {
+  private getTableNameForClass(data: Class): string {
     return data.name;
   }
 
