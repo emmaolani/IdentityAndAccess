@@ -10,7 +10,7 @@ import UserAccountProfileRepositoryMock from "./userAccountProfileRepositoryMock
 import ITUAndISOSpecRepositoryMock from "./iTUAndISOSpecRepositoryMock";
 import AuthenticationMethodRepositoryMock from "./authenticationMethodRepositoryMock";
 import RestrictionRepositoryMock from "./restrictionRepositoryMock";
-import PlaceHolderRepository from "./fakeDb/defaultRepository";
+import TestPrerequisiteRepository from "./testPrerequisiteRepository";
 
 class RepositoryFactoryMock implements RepositoryFactory {
   private db: FakeDb;
@@ -50,8 +50,8 @@ class RepositoryFactoryMock implements RepositoryFactory {
     return repositories;
   }
 
-  getPlaceHolderRepo() {
-    return new PlaceHolderRepository(this.db);
+  getTestPrerequisiteRepository() {
+    return new TestPrerequisiteRepository(this.db);
   }
 
   private setFakeDb() {

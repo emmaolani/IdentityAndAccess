@@ -11,160 +11,161 @@ import {
   userNamesError,
 } from "../../../src/domain/enum/errorMsg/userAccountErrorMsg";
 import UUIDGenerator from "../../../src/port/adapters/controller/uUIDGenerator";
-import PlaceHolderRepository from "../mock/fakeDb/defaultRepository";
+import TestPrerequisiteRepository from "../mock/testPrerequisiteRepository";
 import UserAccountRepoErrorMsg from "../../../src/port/_enums/errorMsg/repositoryErrorMsg/userAccountRepoErrorMsg";
 
-describe("User Account Application Service", () => {
+describe("UserAccountApplicationService", () => {
   const repositoryFactory = new RepositoryFactoryMock();
   const userAccountApplicationService = new UserAccountApplicationService(
     repositoryFactory
   );
 
   beforeAll(() => {
-    savePlaceHolders();
-  });
+    const testPrerequisiteRepository =
+      repositoryFactory.getTestPrerequisiteRepository();
 
-  function savePlaceHolders() {
-    const placeHolderRepository = repositoryFactory.getPlaceHolderRepo();
-
-    placeHolderRepository.savePlaceholders(
+    testPrerequisiteRepository.savePrerequisiteObjects(
       "authenticationMethod",
       "restriction"
     );
-  }
-
-  it("should create and store new userAccount and NewUserAccountCreated Event if there is no username conflict", async () => {
-    const newUserAccountCommand = new NewUserAccountCommand(
-      new UUIDGenerator().generate(),
-      "username",
-      "SecureP@ss1233"
-    );
-
-    await userAccountApplicationService.createUserAccount(
-      newUserAccountCommand
-    );
-
-    const { userAccount, events } = await retrieveUserAccountAndEventStored(
-      newUserAccountCommand
-    );
-
-    assertThatPropertiesIn_userAccount_match(
-      userAccount,
-      newUserAccountCommand
-    );
-    assertThatPropertiesIn_newUserAccountCreated_match(
-      events[0],
-      newUserAccountCommand
-    );
   });
 
-  async function retrieveUserAccountAndEventStored(
-    command: NewUserAccountCommand
-  ) {
-    const repositories = repositoryFactory.getRepositories(
-      "UserAccountRepository",
-      "EventStore"
-    );
+  describe("createUserAccount", () => {
+    it("should create and store new userAccount and NewUserAccountCreated Event if there is no username conflict", async () => {
+      const newUserAccountCommand = new NewUserAccountCommand(
+        new UUIDGenerator().generate(),
+        "username",
+        "SecureP@ss1233"
+      );
 
-    const userAccount = await repositories.UserAccountRepository.getById(
-      command.getId()
-    );
-    const events = (await repositories.EventStore.getAllEventWithName(
-      EventName.NewUserAccountCreated
-    )) as NewUserAccountCreated[];
+      await userAccountApplicationService.createUserAccount(
+        newUserAccountCommand
+      );
 
-    return { userAccount, events };
-  }
+      const { userAccount, events } = await retrieveUserAccountAndEventStored(
+        newUserAccountCommand
+      );
 
-  function assertThatPropertiesIn_userAccount_match(
-    userAccount: UserAccount,
-    aCommand: NewUserAccountCommand
-  ) {
-    expect(userAccount).toBeInstanceOf(UserAccount);
-    expect(userAccount["id"]["id"]).toBe(aCommand.getId());
-    expect(userAccount["username"]["value"]).toBe(aCommand.getUsername());
-    expect(userAccount["password"]["value"]).toBe(aCommand.getPassword());
-    expect(userAccount["authenticationMethodId"]["id"]).toBe(
-      PlaceHolderRepository.authenticationMethodProperties.id
-    );
-    expect(userAccount["restrictionId"]["id"]).toBe(
-      PlaceHolderRepository.restrictionProperties.id
-    );
-  }
+      assertThatPropertiesIn_userAccount_match(
+        userAccount,
+        newUserAccountCommand
+      );
+      assertThatPropertiesIn_newUserAccountCreated_match(
+        events[0],
+        newUserAccountCommand
+      );
+    });
 
-  function assertThatPropertiesIn_newUserAccountCreated_match(
-    event: DomainEvent,
-    aCommand: NewUserAccountCommand
-  ) {
-    expect(event).toBeInstanceOf(NewUserAccountCreated);
+    async function retrieveUserAccountAndEventStored(
+      command: NewUserAccountCommand
+    ) {
+      const repositories = repositoryFactory.getRepositories(
+        "UserAccountRepository",
+        "EventStore"
+      );
 
-    if (event instanceof NewUserAccountCreated) {
-      expect(event["userAccountId"]).toBe(aCommand.getId());
-      expect(event["userName"]).toBe(aCommand.getUsername());
+      const userAccount = await repositories.UserAccountRepository.getById(
+        command.getId()
+      );
+      const events = (await repositories.EventStore.getAllEventWithName(
+        EventName.NewUserAccountCreated
+      )) as NewUserAccountCreated[];
+
+      return { userAccount, events };
     }
-  }
 
-  it("should throw an error if there is a username conflict", async () => {
-    const newUserAccountCommand = new NewUserAccountCommand(
-      new UUIDGenerator().generate(),
-      PlaceHolderRepository.userAccountProperties.username,
-      PlaceHolderRepository.userAccountProperties.password
-    );
+    function assertThatPropertiesIn_userAccount_match(
+      userAccount: UserAccount,
+      aCommand: NewUserAccountCommand
+    ) {
+      expect(userAccount).toBeInstanceOf(UserAccount);
+      expect(userAccount["id"]["id"]).toBe(aCommand.getId());
+      expect(userAccount["username"]["value"]).toBe(aCommand.getUsername());
+      expect(userAccount["password"]["value"]).toBe(aCommand.getPassword());
+      expect(userAccount["authenticationMethodId"]["id"]).toBe(
+        TestPrerequisiteRepository.authenticationMethodProperties.id
+      );
+      expect(userAccount["restrictionId"]["id"]).toBe(
+        TestPrerequisiteRepository.restrictionProperties.id
+      );
+    }
 
-    storeUserAccountInDB(); // store the user account in the database to simulate a conflict in application service
+    function assertThatPropertiesIn_newUserAccountCreated_match(
+      event: DomainEvent,
+      aCommand: NewUserAccountCommand
+    ) {
+      expect(event).toBeInstanceOf(NewUserAccountCreated);
 
-    await expect(
-      userAccountApplicationService.createUserAccount(newUserAccountCommand)
-    ).rejects.toThrow(UserAccountRepoErrorMsg.UserAccountAlreadyExists);
+      if (event instanceof NewUserAccountCreated) {
+        expect(event["userAccountId"]).toBe(aCommand.getId());
+        expect(event["userName"]).toBe(aCommand.getUsername());
+      }
+    }
 
-    removeUserAccountInDB();
+    it("should throw an error if there is a username conflict", async () => {
+      const newUserAccountCommand = new NewUserAccountCommand(
+        new UUIDGenerator().generate(),
+        TestPrerequisiteRepository.userAccountProperties.username,
+        TestPrerequisiteRepository.userAccountProperties.password
+      );
+
+      storeUserAccountInDB(); // store the user account in the database to simulate a conflict in application service
+
+      await expect(
+        userAccountApplicationService.createUserAccount(newUserAccountCommand)
+      ).rejects.toThrow(UserAccountRepoErrorMsg.UserAccountAlreadyExists);
+
+      removeUserAccountInDB();
+    });
+
+    it("should throw an error if the argument is not UUID v4 format", async () => {
+      const newUserAccountCommand = new NewUserAccountCommand(
+        "invalidUUID",
+        "tester3",
+        "SecureP@ss123"
+      );
+
+      await expect(
+        userAccountApplicationService.createUserAccount(newUserAccountCommand)
+      ).rejects.toThrow(userAccountIdError.invalidUUID);
+    });
+
+    it("should throw an error if the username does not meet the requirements", async () => {
+      const command = new NewUserAccountCommand(
+        new UUIDGenerator().generate(),
+        "invalid+tester4",
+        "SecureP@ss123"
+      );
+
+      await expect(
+        userAccountApplicationService.createUserAccount(command)
+      ).rejects.toThrow(userNamesError.userNameNotMeetingRequirements);
+    });
+
+    it("should throw an error if the password does not meet the requirements", async () => {
+      const newUserAccountCommand = new NewUserAccountCommand(
+        new UUIDGenerator().generate(),
+        "tester5",
+        "invalidPassword"
+      );
+
+      await expect(
+        userAccountApplicationService.createUserAccount(newUserAccountCommand)
+      ).rejects.toThrow(passwordError.passwordNotMeetingRequirements);
+    });
+
+    function storeUserAccountInDB() {
+      const testPrerequisiteRepository =
+        repositoryFactory.getTestPrerequisiteRepository();
+
+      testPrerequisiteRepository.savePrerequisiteObjects("userAccount");
+    }
+
+    function removeUserAccountInDB() {
+      const testPrerequisiteRepository =
+        repositoryFactory.getTestPrerequisiteRepository();
+
+      testPrerequisiteRepository.removePrerequisiteObjects("userAccount");
+    }
   });
-
-  it("should throw an error if the argument is not UUID v4 format", async () => {
-    const newUserAccountCommand = new NewUserAccountCommand(
-      "invalidUUID",
-      "tester3",
-      "SecureP@ss123"
-    );
-
-    await expect(
-      userAccountApplicationService.createUserAccount(newUserAccountCommand)
-    ).rejects.toThrow(userAccountIdError.invalidUUID);
-  });
-
-  it("should throw an error if the username does not meet the requirements", async () => {
-    const command = new NewUserAccountCommand(
-      new UUIDGenerator().generate(),
-      "invalid+tester4",
-      "SecureP@ss123"
-    );
-
-    await expect(
-      userAccountApplicationService.createUserAccount(command)
-    ).rejects.toThrow(userNamesError.userNameNotMeetingRequirements);
-  });
-
-  it("should throw an error if the password does not meet the requirements", async () => {
-    const newUserAccountCommand = new NewUserAccountCommand(
-      new UUIDGenerator().generate(),
-      "tester5",
-      "invalidPassword"
-    );
-
-    await expect(
-      userAccountApplicationService.createUserAccount(newUserAccountCommand)
-    ).rejects.toThrow(passwordError.passwordNotMeetingRequirements);
-  });
-
-  function storeUserAccountInDB() {
-    const placeHolderRepository = repositoryFactory.getPlaceHolderRepo();
-
-    placeHolderRepository.savePlaceholders("userAccount");
-  }
-
-  function removeUserAccountInDB() {
-    const placeHolderRepository = repositoryFactory.getPlaceHolderRepo();
-
-    placeHolderRepository.removePlaceholders("userAccount");
-  }
 });

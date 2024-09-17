@@ -12,11 +12,10 @@ import {
   userNamesError,
 } from "../../../../src/domain/enum/errorMsg/userAccountErrorMsg";
 import EventName from "../../../../src/domain/enum/event/eventName";
-import PlaceHolderRepository from "../../../applicationService/mock/fakeDb/defaultRepository";
+import TestPrerequisiteRepository from "../../../applicationService/mock/testPrerequisiteRepository";
 import UserAccountRepoErrorMsg from "../../../../src/port/_enums/errorMsg/repositoryErrorMsg/userAccountRepoErrorMsg";
 import UUIDGenerator from "../../../../src/port/adapters/controller/uUIDGenerator";
 
-// TODO: write test for catching error when UUID is not valid
 describe("UserAccountController", () => {
   const repositoryFactory = new RepositoryFactoryMock();
   const userAccountApplicationService = new UserAccountApplicationService(
@@ -27,17 +26,14 @@ describe("UserAccountController", () => {
   );
 
   beforeAll(() => {
-    savePlaceHolders();
-  });
+    const testPrerequisiteRepository =
+      repositoryFactory.getTestPrerequisiteRepository();
 
-  function savePlaceHolders() {
-    const placeHolderRepository = repositoryFactory.getPlaceHolderRepo();
-
-    placeHolderRepository.savePlaceholders(
+    testPrerequisiteRepository.savePrerequisiteObjects(
       "authenticationMethod",
       "restriction"
     );
-  }
+  });
 
   describe("createUserAccount", () => {
     it("should create and store a new user account with event, and send response with status 201", async () => {
@@ -100,10 +96,10 @@ describe("UserAccountController", () => {
       expect(userAccount["username"]["value"]).toBe(aRequest.body.username);
       expect(userAccount["password"]["value"]).toBe(aRequest.body.password);
       expect(userAccount["authenticationMethodId"]["id"]).toBe(
-        PlaceHolderRepository.authenticationMethodProperties.id
+        TestPrerequisiteRepository.authenticationMethodProperties.id
       );
       expect(userAccount["restrictionId"]["id"]).toBe(
-        PlaceHolderRepository.restrictionProperties.id
+        TestPrerequisiteRepository.restrictionProperties.id
       );
     }
 
@@ -136,9 +132,9 @@ describe("UserAccountController", () => {
 
     it("should send 409 if there is conflict with username", async () => {
       const request: unknown = new RequestMock({
-        userAccountId: PlaceHolderRepository.userAccountProperties.id,
-        username: PlaceHolderRepository.userAccountProperties.username,
-        password: PlaceHolderRepository.userAccountProperties.password,
+        userAccountId: TestPrerequisiteRepository.userAccountProperties.id,
+        username: TestPrerequisiteRepository.userAccountProperties.username,
+        password: TestPrerequisiteRepository.userAccountProperties.password,
       });
 
       const response: unknown = new ResponseMock();
@@ -156,6 +152,26 @@ describe("UserAccountController", () => {
       });
 
       removeUserAccountInDB();
+    });
+
+    it("should send a status code 500 if UUID for userAccount is invalid", async () => {
+      const request: unknown = new RequestMock({
+        userAccountId: "invalidUUID",
+        username: "username", // this username does not meet requirements
+        password: "SecureP@123",
+      });
+
+      const response: unknown = new ResponseMock();
+
+      await userAccountController.createUserAccount(
+        request as Required<Request>,
+        response as Required<Response>
+      );
+
+      expect((response as ResponseMock).getStatus()).toBe(500);
+      expect((response as ResponseMock).getResponse()).toEqual({
+        message: "server error",
+      });
     });
 
     it("should send a status code 400 if the user password does not meet security requirement", async () => {
@@ -198,14 +214,16 @@ describe("UserAccountController", () => {
     });
 
     function storeUserAccountInDB() {
-      const placeHolderRepo = repositoryFactory.getPlaceHolderRepo();
-      placeHolderRepo.savePlaceholders("userAccount");
+      const testPrerequisiteRepository =
+        repositoryFactory.getTestPrerequisiteRepository();
+      testPrerequisiteRepository.savePrerequisiteObjects("userAccount");
     }
 
     function removeUserAccountInDB() {
-      const placeHolderRepo = repositoryFactory.getPlaceHolderRepo();
+      const testPrerequisiteRepository =
+        repositoryFactory.getTestPrerequisiteRepository();
 
-      placeHolderRepo.removePlaceholders("userAccount");
+      testPrerequisiteRepository.removePrerequisiteObjects("userAccount");
     }
   });
 });

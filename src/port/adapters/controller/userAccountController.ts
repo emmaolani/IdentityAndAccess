@@ -5,6 +5,7 @@ import NewUserAccountReqObj from "./requestBodyTypes/newUserAccountReqObj.types"
 import {
   userNamesError,
   passwordError,
+  userAccountIdError,
 } from "../../../domain/enum/errorMsg/userAccountErrorMsg";
 import UserAccountRepoErrorMsg from "../../_enums/errorMsg/repositoryErrorMsg/userAccountRepoErrorMsg";
 
@@ -67,6 +68,8 @@ class UserAccountController {
         .status(409)
         .send({ message: UserAccountRepoErrorMsg.UserAccountAlreadyExists });
       return;
+    } else if (error.message === userAccountIdError.invalidUUID) {
+      response.status(500).send({ message: "server error" });
     } else if (
       error.message === userNamesError.userNameNotMeetingRequirements
     ) {
