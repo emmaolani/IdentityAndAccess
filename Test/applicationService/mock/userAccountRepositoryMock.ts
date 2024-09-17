@@ -20,7 +20,8 @@ class UserAccountRepositoryMock implements UserAccountRepository {
     return;
   }
 
-  async lockUserAccount(UserAccountId: string): Promise<void> {
+  async lockUserAccount(anId: string): Promise<void> {
+    await this.getById(anId);
     return;
   }
 
@@ -41,7 +42,7 @@ class UserAccountRepositoryMock implements UserAccountRepository {
       return userAccount;
     }
 
-    throw new Error("UserAccount not found");
+    throw new Error(UserAccountRepoErrorMsg.UserAccountNotFound);
   }
 
   async commit(): Promise<void> {

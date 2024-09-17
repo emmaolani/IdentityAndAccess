@@ -10,6 +10,7 @@ import {
 } from "../../../domain/enum/errorMsg/contactDetailErrorMsg";
 import { userAccountIdError } from "../../../domain/enum/errorMsg/userAccountErrorMsg";
 import { UserAccountProfileIdError } from "../../../domain/enum/errorMsg/userAccountProfileErrorMsg";
+import UserAccountRepoErrorMsg from "../../_enums/errorMsg/repositoryErrorMsg/userAccountRepoErrorMsg";
 
 class UserAccountProfileController {
   private userAccountProfileApplicationService: UserAccountProfileApplicationService;
@@ -30,8 +31,8 @@ class UserAccountProfileController {
       }
 
       const newUserAccountProfileCommand = new NewUserAccountProfileCommand(
-        body.userAccountId,
         body.userAccountProfileId,
+        body.userAccountId,
         body.email,
         body.phoneNumber.number,
         body.phoneNumber.countryCode
@@ -95,13 +96,15 @@ class UserAccountProfileController {
       aResponse.status(400).send({
         message: emailAddressError.invalidEmail,
       });
+    } else if (error.message === UserAccountRepoErrorMsg.UserAccountNotFound) {
+      aResponse.status(500).send({ message: "server error" });
     } else if (error.message === userAccountIdError.invalidUUID) {
       aResponse.status(500).send({
-        message: userAccountIdError.invalidUUID,
+        message: "server error",
       });
     } else if (error.message === UserAccountProfileIdError.invalidUUID) {
       aResponse.status(500).send({
-        message: UserAccountProfileIdError.invalidUUID,
+        message: "server error",
       });
     }
   }

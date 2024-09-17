@@ -4,13 +4,7 @@ import PhoneNumberValidatorImp from "../../../src/port/util/phoneNumberValidator
 import RepositoryFactoryMock from "../mock/repositoryFactoryMock";
 import NewUserAccountProfileCreated from "../../../src/domain/model/userAccount/userAccountProfile/newUserAccountProfileCreated";
 import UUIDGenerator from "../../../src/port/adapters/controller/uUIDGenerator";
-import UserAccountProfileId from "../../../src/domain/model/userAccount/userAccountProfile/userAccountProfileId";
 import UserAccountProfile from "../../../src/domain/model/userAccount/userAccountProfile/userAccountProfile";
-import UserAccountId from "../../../src/domain/model/userAccount/userAccountId";
-import EmailAddress from "../../../src/domain/model/contactDetails/emailAddress";
-import PhoneNumber from "../../../src/domain/model/contactDetails/phoneNumber";
-import ITUAndISOSpecId from "../../../src/domain/model/geographicEntities/ITUAndISOSpecId";
-import ITUAndISOSpec from "../../../src/domain/model/geographicEntities/ITUAndISOSpec";
 import EventName from "../../../src/domain/enum/event/eventName";
 import {
   emailAddressError,
@@ -20,6 +14,8 @@ import userAccountProfileRepoError from "../../../src/port/_enums/errorMsg/repos
 import { userAccountIdError } from "../../../src/domain/enum/errorMsg/userAccountErrorMsg";
 import { UserAccountProfileIdError } from "../../../src/domain/enum/errorMsg/userAccountProfileErrorMsg";
 import { ITUAndISOSpecRepoErrorMsg } from "../../../src/port/_enums/errorMsg/repositoryErrorMsg/iTuAndISOSpecRepoErrorMsg";
+import TestPrerequisiteRepository from "../mock/testPrerequisiteRepository";
+import UserAccountRepoErrorMsg from "../../../src/port/_enums/errorMsg/repositoryErrorMsg/userAccountRepoErrorMsg";
 
 describe("UserAccountProfileApplicationService", () => {
   const repositoryFactory = new RepositoryFactoryMock();
@@ -32,28 +28,19 @@ describe("UserAccountProfileApplicationService", () => {
 
   describe("createUserAccountProfile", () => {
     beforeAll(async () => {
-      await addDefaultITUAndISOSpecToDb();
+      const testPrerequisiteRepository =
+        repositoryFactory.getTestPrerequisiteRepository();
+
+      testPrerequisiteRepository.savePrerequisiteObjects(
+        "ITUAndISOSpec",
+        "userAccount"
+      );
     });
 
-    async function addDefaultITUAndISOSpecToDb() {
-      const repositories = repositoryFactory.getRepositories(
-        "ITUAndISOSpecRepository"
-      );
-
-      await repositories.ITUAndISOSpecRepository.save(
-        new ITUAndISOSpec(
-          new ITUAndISOSpecId(new UUIDGenerator().generate()),
-          "countryId",
-          "NG",
-          "234"
-        )
-      );
-    }
-
     it("should create and store userAccountProfile with published NewUserAccountProfileCreated event", async () => {
-      const command = createNewUserAccountProfileCommand(
+      const command = new NewUserAccountProfileCommand(
         new UUIDGenerator().generate(),
-        new UUIDGenerator().generate(),
+        TestPrerequisiteRepository.userAccountProperties.id,
         "test@tester.com",
         "08012345678",
         "NG"
@@ -68,16 +55,110 @@ describe("UserAccountProfileApplicationService", () => {
 
       assertThatPropertiesIn_userAccountProfile_match(
         userAccountProfile,
-        command.getUserProfileId(),
-        command.getUserAccountId(),
-        command.getEmailAddress(),
-        command.getPhoneNumber().number
+        command
       );
 
       assertThatEventIsPublishedWithCorrectProperties(
         events[0],
         userAccountProfile
       );
+    });
+
+    it("should throw error if userAccountProfile with userAccountId already exists", async () => {
+      const command = new NewUserAccountProfileCommand(
+        new UUIDGenerator().generate(),
+        TestPrerequisiteRepository.userAccountProperties.id,
+        "test@tester.com",
+        "08012345678",
+        "NG"
+      );
+
+      await storeUserAccountProfileInDb(); // store userAccountProfile in db to simulate conflict in application service
+
+      await expect(
+        userAccountProfileApplicationService.createUserAccountProfile(command)
+      ).rejects.toThrow(
+        userAccountProfileRepoError.userAccountProfileAlreadyExist
+      );
+
+      await removeUserAccountProfileFromDb();
+    });
+
+    /* This is a rare case; it occurs when phoneNumberValidator those not throw an error this may happen if the
+       phoneNumberValidator data file includes a country code that lacks a corresponding ITUAndISOSpec in the database */
+    it("it should throw an error if the a valid country code does not have a ITUAndISOSpec in the DB", async () => {
+      const command = new NewUserAccountProfileCommand(
+        new UUIDGenerator().generate(),
+        TestPrerequisiteRepository.userAccountProperties.id,
+        "test@tester.com",
+        "2234567899",
+        "US" // US is a valid country code but does not have a corresponding ITUAndISOSpec in the test database
+      );
+
+      await expect(
+        userAccountProfileApplicationService.createUserAccountProfile(command)
+      ).rejects.toThrow(ITUAndISOSpecRepoErrorMsg.ITUAndISOSpecNotFound);
+    });
+
+    // phoneNumberValidator should always validate the phone number before the ITUAndISOSpec is retrieved
+    it("should throw error if phoneNumber is invalid", async () => {
+      const command = new NewUserAccountProfileCommand(
+        new UUIDGenerator().generate(),
+        TestPrerequisiteRepository.userAccountProperties.id,
+        "test@tester.com",
+        "22345678", // invalid mobile number for usa
+        "US"
+      );
+
+      await expect(
+        userAccountProfileApplicationService.createUserAccountProfile(command)
+      ).rejects.toThrow(phoneNumberError.invalidPhoneNumber);
+    });
+
+    it("should throw error if email is invalid", async () => {
+      const command = new NewUserAccountProfileCommand(
+        new UUIDGenerator().generate(),
+        TestPrerequisiteRepository.userAccountProperties.id,
+        "testTester.com", // invalid email
+        "08112345678",
+        "NG"
+      );
+
+      await expect(
+        userAccountProfileApplicationService.createUserAccountProfile(command)
+      ).rejects.toThrow(emailAddressError.invalidEmail);
+    });
+
+    it("should throw an error if userAccount is not found in db", async () => {
+      const command = new NewUserAccountProfileCommand(
+        "invalid Id",
+        TestPrerequisiteRepository.userAccountProperties.id,
+        "test@tester.com",
+        "08112345678",
+        "NG"
+      );
+
+      removePrerequisiteUserAccountFromDB();
+
+      await expect(
+        userAccountProfileApplicationService.createUserAccountProfile(command)
+      ).rejects.toThrow(UserAccountRepoErrorMsg.UserAccountNotFound);
+
+      addPrerequisiteUserAccountToDB();
+    });
+
+    it("should throw error if userAccountProfile id is not of format UUID v4", async () => {
+      const command = new NewUserAccountProfileCommand(
+        "invalid Id",
+        TestPrerequisiteRepository.userAccountProperties.id,
+        "test@tester.com",
+        "08112345678",
+        "NG"
+      );
+
+      await expect(
+        userAccountProfileApplicationService.createUserAccountProfile(command)
+      ).rejects.toThrow(UserAccountProfileIdError.invalidUUID);
     });
 
     async function retrieveUserAccountProfileAndEventStored(
@@ -101,17 +182,18 @@ describe("UserAccountProfileApplicationService", () => {
 
     function assertThatPropertiesIn_userAccountProfile_match(
       aUserAccountProfile: UserAccountProfile,
-      anId: string,
-      aUserAccountId: string,
-      anEmail: string,
-      aPhoneNumber: string
+      aCommand: NewUserAccountProfileCommand
     ) {
       expect(aUserAccountProfile).toBeInstanceOf(UserAccountProfile);
-      expect(aUserAccountProfile.getId()).toBe(anId);
-      expect(aUserAccountProfile["userAccountId"]["id"]).toBe(aUserAccountId);
-      expect(aUserAccountProfile["emailAddress"].getValue()).toBe(anEmail);
+      expect(aUserAccountProfile.getId()).toBe(aCommand.getUserProfileId());
+      expect(aUserAccountProfile["userAccountId"]["id"]).toBe(
+        aCommand.getUserAccountId()
+      );
+      expect(aUserAccountProfile["emailAddress"].getValue()).toBe(
+        aCommand.getEmailAddress()
+      );
       expect(aUserAccountProfile["phoneNumber"].getValue()).toBe(
-        aPhoneNumber.slice(1) // phoneNumber is stored without the calling code or national prefix
+        aCommand.getPhoneNumber().number.slice(1) // phoneNumber is stored without the calling code or national prefix
       );
     }
 
@@ -126,147 +208,34 @@ describe("UserAccountProfileApplicationService", () => {
       );
     }
 
-    it("should throw error if userAccountProfile with userAccountId already exists", async () => {
-      const command = createNewUserAccountProfileCommand(
-        new UUIDGenerator().generate(),
-        new UUIDGenerator().generate(),
-        "test@tester.com",
-        "08012345678",
-        "NG"
-      );
+    function storeUserAccountProfileInDb() {
+      const testPrerequisiteRepository =
+        repositoryFactory.getTestPrerequisiteRepository();
 
-      await storeUserAccountProfileInDb(command); // store userAccountProfile in db to simulate conflict in application service
+      testPrerequisiteRepository.savePrerequisiteObjects("userAccountProfile");
+    }
 
-      await expect(
-        userAccountProfileApplicationService.createUserAccountProfile(command)
-      ).rejects.toThrow(
-        userAccountProfileRepoError.userAccountProfileAlreadyExist
-      );
+    function removeUserAccountProfileFromDb() {
+      const testPrerequisiteRepository =
+        repositoryFactory.getTestPrerequisiteRepository();
 
-      await removeUserAccountProfileFromDb(command);
-    });
-
-    async function storeUserAccountProfileInDb(
-      command: NewUserAccountProfileCommand
-    ) {
-      const repositories = repositoryFactory.getRepositories(
-        "UserAccountProfileRepository"
-      );
-
-      await repositories.UserAccountProfileRepository.save(
-        new UserAccountProfile(
-          new UserAccountProfileId(command.getUserProfileId()),
-          new UserAccountId(command.getUserAccountId()),
-          new EmailAddress(command.getEmailAddress(), false, null),
-          new PhoneNumber(
-            command.getPhoneNumber().number,
-            new ITUAndISOSpecId(new UUIDGenerator().generate()),
-            false,
-            null
-          )
-        )
+      testPrerequisiteRepository.removePrerequisiteObjects(
+        "userAccountProfile"
       );
     }
 
-    async function removeUserAccountProfileFromDb(
-      command: NewUserAccountProfileCommand
-    ) {
-      const repositories = repositoryFactory.getRepositories(
-        "UserAccountProfileRepository"
-      );
+    function removePrerequisiteUserAccountFromDB() {
+      const testPrerequisiteRepository =
+        repositoryFactory.getTestPrerequisiteRepository();
 
-      await repositories.UserAccountProfileRepository.remove(
-        command.getUserProfileId()
-      );
+      testPrerequisiteRepository.removePrerequisiteObjects("userAccount");
     }
 
-    /* This is a rare case; it occurs when phoneNumberValidator those not throw an error this may happen if the
-       phoneNumberValidator data file includes a country code that lacks a corresponding ITUAndISOSpec in the database */
-    it("it should throw an error if the a valid country code does not have a ITUAndISOSpec in the DB", async () => {
-      const command = createNewUserAccountProfileCommand(
-        new UUIDGenerator().generate(),
-        new UUIDGenerator().generate(),
-        "test@tester.com",
-        "2234567899",
-        "US" // US is a valid country code but does not have a corresponding ITUAndISOSpec in the test database
-      );
+    function addPrerequisiteUserAccountToDB() {
+      const testPrerequisiteRepository =
+        repositoryFactory.getTestPrerequisiteRepository();
 
-      await expect(
-        userAccountProfileApplicationService.createUserAccountProfile(command)
-      ).rejects.toThrow(ITUAndISOSpecRepoErrorMsg.ITUAndISOSpecNotFound);
-    });
-
-    // phoneNumberValidator should always validate the phone number before the ITUAndISOSpec is retrieved
-    it("should throw error if phoneNumber is invalid", async () => {
-      const command = createNewUserAccountProfileCommand(
-        new UUIDGenerator().generate(),
-        new UUIDGenerator().generate(),
-        "test@tester.com",
-        "22345678", // invalid mobile number for usa
-        "US"
-      );
-
-      await expect(
-        userAccountProfileApplicationService.createUserAccountProfile(command)
-      ).rejects.toThrow(phoneNumberError.invalidPhoneNumber);
-    });
-
-    it("should throw error if email is invalid", async () => {
-      const command = createNewUserAccountProfileCommand(
-        new UUIDGenerator().generate(),
-        new UUIDGenerator().generate(),
-        "testTester.com", // invalid email
-        "08112345678",
-        "NG"
-      );
-
-      await expect(
-        userAccountProfileApplicationService.createUserAccountProfile(command)
-      ).rejects.toThrow(emailAddressError.invalidEmail);
-    });
-
-    it("should throw error if userAccount id is no of format UUID v4", async () => {
-      const command = createNewUserAccountProfileCommand(
-        "invalid Id",
-        new UUIDGenerator().generate(),
-        "test@tester.com", // invalid email
-        "08112345678",
-        "NG"
-      );
-
-      await expect(
-        userAccountProfileApplicationService.createUserAccountProfile(command)
-      ).rejects.toThrow(userAccountIdError.invalidUUID);
-    });
-
-    it("should throw error if userAccountProfile id is not of format UUID v4", async () => {
-      const command = createNewUserAccountProfileCommand(
-        new UUIDGenerator().generate(),
-        "invalid Id",
-        "test@tester.com",
-        "08112345678",
-        "NG"
-      );
-
-      await expect(
-        userAccountProfileApplicationService.createUserAccountProfile(command)
-      ).rejects.toThrow(UserAccountProfileIdError.invalidUUID);
-    });
-
-    function createNewUserAccountProfileCommand(
-      aUserAccountId: string,
-      aUserProfileId: string,
-      anEmail: string,
-      aPhoneNumber: string,
-      aCountryCode: string
-    ): NewUserAccountProfileCommand {
-      return new NewUserAccountProfileCommand(
-        aUserAccountId,
-        aUserProfileId,
-        anEmail,
-        aPhoneNumber,
-        aCountryCode
-      );
+      testPrerequisiteRepository.savePrerequisiteObjects("userAccount");
     }
   });
 });

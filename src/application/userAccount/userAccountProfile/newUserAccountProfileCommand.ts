@@ -1,6 +1,6 @@
 class NewUserAccountProfileCommand {
-  private userAccountId: string;
   private userProfileId: string;
+  private userAccountId: string;
   private emailAddress: string;
   private phoneNumber: {
     number: string;
@@ -8,14 +8,14 @@ class NewUserAccountProfileCommand {
   };
 
   constructor(
-    aUserAccountId: string,
     aUserProfileId: string,
+    aUserAccountId: string,
     anEmailAddress: string,
     aPhoneNumber: string,
     aCountryCode: string
   ) {
-    this.userAccountId = aUserAccountId;
     this.userProfileId = aUserProfileId;
+    this.userAccountId = aUserAccountId;
     this.emailAddress = anEmailAddress;
     this.phoneNumber = {
       number: aPhoneNumber,

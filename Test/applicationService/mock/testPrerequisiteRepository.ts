@@ -9,10 +9,16 @@ import UserAccount from "../../../src/domain/model/userAccount/userAccount";
 import UserAccountId from "../../../src/domain/model/userAccount/userAccountId";
 import UserName from "../../../src/domain/model/userAccount/userName";
 import Password from "../../../src/domain/model/userAccount/password";
+import ITUAndISOSpec from "../../../src/domain/model/geographicEntities/ITUAndISOSpec";
+import ITUAndISOSpecId from "../../../src/domain/model/geographicEntities/ITUAndISOSpecId";
+import UserAccountProfile from "../../../src/domain/model/userAccount/userAccountProfile/userAccountProfile";
+import UserAccountProfileId from "../../../src/domain/model/userAccount/userAccountProfile/userAccountProfileId";
+import EmailAddress from "../../../src/domain/model/contactDetails/emailAddress";
+import PhoneNumber from "../../../src/domain/model/contactDetails/phoneNumber";
 
 class TestPrerequisiteRepository {
   private db: FakeDb;
-  private listOfAllPlaceHolders: prerequisiteObjects[];
+  private listOfAllPrerequisiteObjects: prerequisiteObjects[];
   static authenticationMethodProperties = {
     id: "550e8400-e29b-41d4-a716-446655440000",
     type: "password",
@@ -26,6 +32,17 @@ class TestPrerequisiteRepository {
     username: "username",
     password: "123Emm@oaa",
   };
+  static ITUAndISOSpecificationProperties = {
+    id: "f47bc10b-58cc-4392-a567-0e02b2c3d606",
+    countryId: "id",
+    countryCode: "NG",
+    callingCode: "234",
+  };
+  static userAccountProfileProperties = {
+    id: "c69bc10b-58cc-4392-a567-0e02b2b3d606",
+    email: "test@tester.com",
+    phone: "8127456800",
+  };
 
   constructor(aDb: FakeDb) {
     this.db = aDb;
@@ -34,7 +51,7 @@ class TestPrerequisiteRepository {
 
   savePrerequisiteObjects(...objects: prerequisiteObjects[]) {
     if (objects.includes("ALL") && objects.length == 1) {
-      this.saveObjectsSpecified(this.listOfAllPlaceHolders);
+      this.saveObjectsSpecified(this.listOfAllPrerequisiteObjects);
     } else {
       this.saveObjectsSpecified(objects);
     }
@@ -52,6 +69,12 @@ class TestPrerequisiteRepository {
         case "userAccount":
           this.db.save(this.createUserAccount());
           break;
+        case "ITUAndISOSpec":
+          this.db.save(this.createITUAndISOSpecification());
+          break;
+        case "userAccountProfile":
+          this.db.save(this.createUserAccountProfile());
+          break;
         default:
           break;
       }
@@ -60,7 +83,7 @@ class TestPrerequisiteRepository {
 
   removePrerequisiteObjects(...objects: prerequisiteObjects[]) {
     if (objects.includes("ALL") && objects.length === 0) {
-      this.removeObjectsSpecified(this.listOfAllPlaceHolders);
+      this.removeObjectsSpecified(this.listOfAllPrerequisiteObjects);
     } else {
       this.removeObjectsSpecified(objects);
     }
@@ -97,6 +120,17 @@ class TestPrerequisiteRepository {
             UserAccount,
             TestPrerequisiteRepository.userAccountProperties.username
           );
+          break;
+        case "userAccountProfile":
+          this.db.remove(
+            UserAccountProfile,
+            TestPrerequisiteRepository.userAccountProfileProperties.id
+          );
+          this.db.remove(
+            UserAccountProfile,
+            TestPrerequisiteRepository.userAccountProperties.id
+          );
+          break;
         default:
           break;
       }
@@ -130,11 +164,47 @@ class TestPrerequisiteRepository {
       new Password(TestPrerequisiteRepository.userAccountProperties.password)
     );
   }
+
+  private createITUAndISOSpecification() {
+    return new ITUAndISOSpec(
+      new ITUAndISOSpecId(
+        TestPrerequisiteRepository.ITUAndISOSpecificationProperties.id
+      ),
+      TestPrerequisiteRepository.ITUAndISOSpecificationProperties.countryId,
+      TestPrerequisiteRepository.ITUAndISOSpecificationProperties.countryCode,
+      TestPrerequisiteRepository.ITUAndISOSpecificationProperties.callingCode
+    );
+  }
+
+  private createUserAccountProfile() {
+    return new UserAccountProfile(
+      new UserAccountProfileId(
+        TestPrerequisiteRepository.userAccountProfileProperties.id
+      ),
+      new UserAccountId(TestPrerequisiteRepository.userAccountProperties.id),
+      new EmailAddress(
+        TestPrerequisiteRepository.userAccountProfileProperties.email,
+        false,
+        null
+      ),
+      new PhoneNumber(
+        TestPrerequisiteRepository.userAccountProfileProperties.phone,
+        new ITUAndISOSpecId(
+          TestPrerequisiteRepository.ITUAndISOSpecificationProperties.id
+        ),
+        false,
+        null
+      )
+    );
+  }
+
   private setPlaceHolderList() {
-    this.listOfAllPlaceHolders = [
+    this.listOfAllPrerequisiteObjects = [
       "authenticationMethod",
       "restriction",
       "userAccount",
+      "ITUAndISOSpec",
+      "userAccountProfile",
     ];
   }
 }
@@ -143,6 +213,8 @@ type prerequisiteObjects =
   | "authenticationMethod"
   | "restriction"
   | "userAccount"
+  | "ITUAndISOSpec"
+  | "userAccountProfile"
   | "ALL";
 
 export default TestPrerequisiteRepository;

@@ -8,22 +8,15 @@ import RequestMock from "./mock/requestMock";
 import ResponseMock from "./mock/responseMock";
 import { Request, Response } from "express";
 import UUIDGenerator from "../../../../src/port/adapters/controller/uUIDGenerator";
-import ITUAndISOSpec from "../../../../src/domain/model/geographicEntities/ITUAndISOSpec";
-import ITUAndISOSpecId from "../../../../src/domain/model/geographicEntities/ITUAndISOSpecId";
 import EventName from "../../../../src/domain/enum/event/eventName";
 import NewUserAccountProfileReqObj from "../../../../src/port/adapters/controller/requestBodyTypes/newUserAccountProfileReqObj.type";
-import UserAccountId from "../../../../src/domain/model/userAccount/userAccountId";
-import UserAccountProfileId from "../../../../src/domain/model/userAccount/userAccountProfile/userAccountProfileId";
-import EmailAddress from "../../../../src/domain/model/contactDetails/emailAddress";
-import PhoneNumber from "../../../../src/domain/model/contactDetails/phoneNumber";
 import userAccountProfileRepoError from "../../../../src/port/_enums/errorMsg/repositoryErrorMsg/userAccountProfileRepoErrorMsg";
 import { ITUAndISOSpecRepoErrorMsg } from "../../../../src/port/_enums/errorMsg/repositoryErrorMsg/iTuAndISOSpecRepoErrorMsg";
 import {
   emailAddressError,
   phoneNumberError,
 } from "../../../../src/domain/enum/errorMsg/contactDetailErrorMsg";
-import { userAccountIdError } from "../../../../src/domain/enum/errorMsg/userAccountErrorMsg";
-import { UserAccountProfileIdError } from "../../../../src/domain/enum/errorMsg/userAccountProfileErrorMsg";
+import TestPrerequisiteRepository from "../../../applicationService/mock/testPrerequisiteRepository";
 
 describe("userAccount", () => {
   const repositoryFactory = new RepositoryFactoryMock();
@@ -39,23 +32,14 @@ describe("userAccount", () => {
 
   describe("createUserAccountProfile", () => {
     beforeAll(async () => {
-      await addDefaultITUAndISOSpecToDb();
+      const testPrerequisiteRepository =
+        repositoryFactory.getTestPrerequisiteRepository();
+
+      testPrerequisiteRepository.savePrerequisiteObjects(
+        "ITUAndISOSpec",
+        "userAccount"
+      );
     });
-
-    async function addDefaultITUAndISOSpecToDb() {
-      const repositories = repositoryFactory.getRepositories(
-        "ITUAndISOSpecRepository"
-      );
-
-      await repositories.ITUAndISOSpecRepository.save(
-        new ITUAndISOSpec(
-          new ITUAndISOSpecId(new UUIDGenerator().generate()),
-          "countryId",
-          "NG",
-          "234"
-        )
-      );
-    }
 
     it("should respond with a status of 400 if the request body is invalid", async () => {
       const request: unknown = new RequestMock({});
@@ -75,7 +59,7 @@ describe("userAccount", () => {
     it("should create userAccountProfile and an event, and send a 201 status code", async () => {
       const request: unknown = new RequestMock({
         userAccountProfileId: new UUIDGenerator().generate(),
-        userAccountId: new UUIDGenerator().generate(),
+        userAccountId: TestPrerequisiteRepository.userAccountProperties.id,
         email: "tester@test.com",
         phoneNumber: {
           countryCode: "NG",
@@ -164,7 +148,7 @@ describe("userAccount", () => {
     it("should respond with a status of 409 if a userAccount already have a userAccountProfile", async () => {
       const request: unknown = new RequestMock({
         userAccountProfileId: new UUIDGenerator().generate(),
-        userAccountId: new UUIDGenerator().generate(),
+        userAccountId: TestPrerequisiteRepository.userAccountProperties.id,
         email: "tester@test.com",
         phoneNumber: {
           countryCode: "NG",
@@ -173,9 +157,7 @@ describe("userAccount", () => {
       });
       const response: unknown = new ResponseMock();
 
-      storeUserAccountProfileInDb(
-        (request as Request).body as NewUserAccountProfileReqObj
-      );
+      storeUserAccountProfileInDb();
 
       await userAccountProfileController.createUserAccountProfile(
         request as Request,
@@ -187,42 +169,22 @@ describe("userAccount", () => {
         message: userAccountProfileRepoError.userAccountProfileAlreadyExist,
       });
 
-      removeUserAccountProfileFromDb(
-        (request as Request).body as NewUserAccountProfileReqObj
-      );
+      removeUserAccountProfileFromDb();
     });
 
-    async function storeUserAccountProfileInDb(
-      aRequestBody: NewUserAccountProfileReqObj
-    ) {
-      const repositories = repositoryFactory.getRepositories(
-        "UserAccountProfileRepository"
-      );
+    async function storeUserAccountProfileInDb() {
+      const testPrerequisiteRepository =
+        repositoryFactory.getTestPrerequisiteRepository();
 
-      await repositories.UserAccountProfileRepository.save(
-        new UserAccountProfile(
-          new UserAccountProfileId(aRequestBody.userAccountProfileId),
-          new UserAccountId(aRequestBody.userAccountId),
-          new EmailAddress(aRequestBody.email, false, null),
-          new PhoneNumber(
-            aRequestBody.phoneNumber.number,
-            new ITUAndISOSpecId(new UUIDGenerator().generate()),
-            false,
-            null
-          )
-        )
-      );
+      testPrerequisiteRepository.savePrerequisiteObjects("userAccountProfile");
     }
 
-    async function removeUserAccountProfileFromDb(
-      aRequestBody: NewUserAccountProfileReqObj
-    ) {
-      const repositories = repositoryFactory.getRepositories(
-        "UserAccountProfileRepository"
-      );
+    async function removeUserAccountProfileFromDb() {
+      const testPrerequisiteRepository =
+        repositoryFactory.getTestPrerequisiteRepository();
 
-      await repositories.UserAccountProfileRepository.remove(
-        aRequestBody.userAccountProfileId
+      testPrerequisiteRepository.removePrerequisiteObjects(
+        "userAccountProfile"
       );
     }
 
@@ -231,7 +193,7 @@ describe("userAccount", () => {
     it("it should return 404 status code if a valid country code does not have a ITUAndISOSpec in the DB", async () => {
       const request: unknown = new RequestMock({
         userAccountProfileId: new UUIDGenerator().generate(),
-        userAccountId: new UUIDGenerator().generate(),
+        userAccountId: TestPrerequisiteRepository.userAccountProperties.id,
         email: "tester@test.com",
         phoneNumber: {
           countryCode: "US",
@@ -255,7 +217,7 @@ describe("userAccount", () => {
     it("should respond with a status of 400 if the phoneNumber is invalid", async () => {
       const request: unknown = new RequestMock({
         userAccountProfileId: new UUIDGenerator().generate(),
-        userAccountId: new UUIDGenerator().generate(),
+        userAccountId: TestPrerequisiteRepository.userAccountProperties.id,
         email: "tester@test.com",
         phoneNumber: {
           countryCode: "US",
@@ -278,7 +240,7 @@ describe("userAccount", () => {
     it("should respond with a 400 error if email address is not valid", async () => {
       const request: unknown = new RequestMock({
         userAccountProfileId: new UUIDGenerator().generate(),
-        userAccountId: new UUIDGenerator().generate(),
+        userAccountId: TestPrerequisiteRepository.userAccountProperties.id,
         email: "testerTestCom",
         phoneNumber: {
           countryCode: "NG",
@@ -298,10 +260,10 @@ describe("userAccount", () => {
       });
     });
 
-    it("should respond with a 500 error if the userAccountId is not a valid UUID", async () => {
+    it("should respond with a 500 error if the userAccount is not found in DB", async () => {
       const request: unknown = new RequestMock({
         userAccountProfileId: new UUIDGenerator().generate(),
-        userAccountId: "invalidUUID",
+        userAccountId: TestPrerequisiteRepository.userAccountProperties.id,
         email: "tester@test.com",
         phoneNumber: {
           countryCode: "NG",
@@ -310,6 +272,8 @@ describe("userAccount", () => {
       });
       const response: unknown = new ResponseMock();
 
+      removePrerequisiteUserAccountFromDB();
+
       await userAccountProfileController.createUserAccountProfile(
         request as Request,
         response as Response
@@ -317,14 +281,30 @@ describe("userAccount", () => {
 
       expect((response as ResponseMock).getStatus()).toBe(500);
       expect((response as ResponseMock).getResponse()).toEqual({
-        message: userAccountIdError.invalidUUID,
+        message: "server error",
       });
+
+      addPrerequisiteUserAccountToDB();
     });
+
+    function removePrerequisiteUserAccountFromDB() {
+      const testPrerequisiteRepository =
+        repositoryFactory.getTestPrerequisiteRepository();
+
+      testPrerequisiteRepository.removePrerequisiteObjects("userAccount");
+    }
+
+    function addPrerequisiteUserAccountToDB() {
+      const testPrerequisiteRepository =
+        repositoryFactory.getTestPrerequisiteRepository();
+
+      testPrerequisiteRepository.savePrerequisiteObjects("userAccount");
+    }
 
     it("should respond with a 500 error if the userAccountProfileId is not a valid UUID", async () => {
       const request: unknown = new RequestMock({
         userAccountProfileId: "invalidUUID",
-        userAccountId: new UUIDGenerator().generate(),
+        userAccountId: TestPrerequisiteRepository.userAccountProperties.id,
         email: "tester@test.com",
         phoneNumber: {
           countryCode: "NG",
@@ -340,7 +320,7 @@ describe("userAccount", () => {
 
       expect((response as ResponseMock).getStatus()).toBe(500);
       expect((response as ResponseMock).getResponse()).toEqual({
-        message: UserAccountProfileIdError.invalidUUID,
+        message: "server error",
       });
     });
   });
