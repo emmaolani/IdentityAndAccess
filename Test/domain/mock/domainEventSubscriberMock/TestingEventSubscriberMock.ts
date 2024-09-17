@@ -1,5 +1,5 @@
-import DomainEventSubscriber from "../../../../src/domain/domainEventSubscriber";
-import DomainEvent from "../../../../src/domain/domainEvent";
+import DomainEventSubscriber from "../../model/identity/userAccountTest/userAccountMockObjectuserAccountCreationFormMock.ts/domain/domainEventSubscriber";
+import DomainEvent from "../../model/identity/userAccountTest/userAccountMockObjectuserAccountCreationFormMock.ts/domain/domainEvent";
 
 class TestingEventSubscriber implements DomainEventSubscriber {
   event: DomainEvent;

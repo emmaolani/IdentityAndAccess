@@ -1,5 +1,5 @@
-import Type from "../../../../../src/domain/model/accountAccessControl/authenticationMethod/type";
 import { typeError } from "../../../../../src/domain/enum/errorMsg/authenticationMethodErrorMsg";
+import Type from "../../../../../src/domain/model/accountAccessControl/authenticationMethod/type";
 
 describe("Type", () => {
   let type: Type;

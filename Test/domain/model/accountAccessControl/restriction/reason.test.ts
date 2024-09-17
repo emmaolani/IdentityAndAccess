@@ -1,5 +1,5 @@
-import Reason from "../../../../../src/domain/model/accountAccessControl/restriction/reason";
 import { reasonError } from "../../../../../src/domain/enum/errorMsg/restrictionErrorMsg";
+import Reason from "../../../../../src/domain/model/accountAccessControl/restriction/reason";
 
 describe("Reason", () => {
   let reason: Reason;

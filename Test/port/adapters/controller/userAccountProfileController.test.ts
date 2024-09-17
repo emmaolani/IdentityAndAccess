@@ -1,6 +1,6 @@
 import UserAccountProfileController from "../../../../src/port/adapters/controller/userAccountProfileController";
 import UserAccountProfileApplicationService from "../../../../src/application/userAccount/userAccountProfile/userAccountProfileApplicationService";
-import RepositoryFactoryMock from "../../../applicationServiceTest/mock/repositoryFactoryMock";
+import RepositoryFactoryMock from "../../../applicationService/mock/repositoryFactoryMock";
 import PhoneNumberValidatorImp from "../../../../src/port/util/phoneNumberValidatorImp";
 import UserAccountProfile from "../../../../src/domain/model/userAccount/userAccountProfile/userAccountProfile";
 import NewUserAccountProfileCreated from "../../../../src/domain/model/userAccount/userAccountProfile/newUserAccountProfileCreated";

@@ -1,6 +1,6 @@
 import UserAccountController from "../../../../src/port/adapters/controller/userAccountController";
 import UserAccountApplicationService from "../../../../src/application/userAccount/userAccountApplicationService";
-import RepositoryFactoryMock from "../../../applicationServiceTest/mock/repositoryFactoryMock";
+import RepositoryFactoryMock from "../../../applicationService/mock/repositoryFactoryMock";
 import { Request, Response } from "express";
 import RequestMock from "./mock/requestMock";
 import ResponseMock from "./mock/responseMock";
@@ -12,14 +12,9 @@ import {
   userNamesError,
 } from "../../../../src/domain/enum/errorMsg/userAccountErrorMsg";
 import EventName from "../../../../src/domain/enum/event/eventName";
-import UserAccountId from "../../../../src/domain/model/userAccount/userAccountId";
-import AuthenticationMethodId from "../../../../src/domain/model/accountAccessControl/authenticationMethod/authenticationMethodId";
-import RestrictionId from "../../../../src/domain/model/accountAccessControl/restriction/restrictionId";
-import UserName from "../../../../src/domain/model/userAccount/userName";
-import Password from "../../../../src/domain/model/userAccount/password";
-import UUIDGenerator from "../../../../src/port/adapters/controller/uUIDGenerator";
-import PlaceHolderRepository from "../../../applicationServiceTest/mock/fakeDb/defaultRepository";
+import PlaceHolderRepository from "../../../applicationService/mock/fakeDb/defaultRepository";
 import UserAccountRepoErrorMsg from "../../../../src/port/_enums/errorMsg/repositoryErrorMsg/userAccountRepoErrorMsg";
+import UUIDGenerator from "../../../../src/port/adapters/controller/uUIDGenerator";
 
 // TODO: write test for catching error when UUID is not valid
 describe("UserAccountController", () => {
@@ -38,19 +33,20 @@ describe("UserAccountController", () => {
   function savePlaceHolders() {
     const placeHolderRepository = repositoryFactory.getPlaceHolderRepo();
 
-    placeHolderRepository.savePlaceholders({
-      authenticationMethod: true,
-      restriction: true,
-    });
+    placeHolderRepository.savePlaceholders(
+      "authenticationMethod",
+      "restriction"
+    );
   }
 
   describe("createUserAccount", () => {
     it("should create and store a new user account with event, and send response with status 201", async () => {
       const request: unknown = new RequestMock({
-        userAccountId: "54b8a43c-a882-42ac-b60b-087f079a8710",
-        username: "username",
+        userAccountId: new UUIDGenerator().generate(),
+        username: "username1",
         password: "SecureP@ss1234",
       });
+
       const response: unknown = new ResponseMock();
 
       await userAccountController.createUserAccount(
@@ -74,7 +70,7 @@ describe("UserAccountController", () => {
       // asserting that the response was sent with status 201
       expect((response as ResponseMock).getStatus()).toBe(201);
       expect((response as ResponseMock).getResponse()).toEqual({
-        userAccountId: "54b8a43c-a882-42ac-b60b-087f079a8710",
+        userAccountId: (request as RequestMock).body.userAccountId,
         message: "User account created",
       });
     });
@@ -140,14 +136,14 @@ describe("UserAccountController", () => {
 
     it("should send 409 if there is conflict with username", async () => {
       const request: unknown = new RequestMock({
-        userAccountId: "54b8a43c-a882-42ac-b60b-087f079a8710",
-        username: "username",
-        password: "SecureP@ss123",
+        userAccountId: PlaceHolderRepository.userAccountProperties.id,
+        username: PlaceHolderRepository.userAccountProperties.username,
+        password: PlaceHolderRepository.userAccountProperties.password,
       });
 
       const response: unknown = new ResponseMock();
 
-      await storeUserAccountInDB(request as Required<Request>);
+      storeUserAccountInDB();
 
       await userAccountController.createUserAccount(
         request as Required<Request>,
@@ -159,12 +155,12 @@ describe("UserAccountController", () => {
         message: UserAccountRepoErrorMsg.UserAccountAlreadyExists,
       });
 
-      await removeUserAccountInDB(request as Required<Request>);
+      removeUserAccountInDB();
     });
 
     it("should send a status code 400 if the user password does not meet security requirement", async () => {
       const request: unknown = new RequestMock({
-        userAccountId: "54b8a43c-a882-42ac-b60b-087f079a8710",
+        userAccountId: new UUIDGenerator().generate(),
         username: "username",
         password: "password", // this password does not meet requirements
       });
@@ -184,7 +180,7 @@ describe("UserAccountController", () => {
 
     it("should send a status code 400 if the user username does not meet requirements", async () => {
       const request: unknown = new RequestMock({
-        userAccountId: "54b8a43c-a882-42ac-b60b-087f079a8710",
+        userAccountId: new UUIDGenerator().generate(),
         username: "user+n-ame", // this username does not meet requirements
         password: "SecureP@123",
       });
@@ -201,28 +197,15 @@ describe("UserAccountController", () => {
       });
     });
 
-    async function storeUserAccountInDB(aRequest: Request) {
-      const repositories = repositoryFactory.getRepositories(
-        "UserAccountRepository"
-      );
-
-      await repositories.UserAccountRepository.save(
-        new UserAccount(
-          new UserAccountId(aRequest.body.userAccountId as string),
-          new AuthenticationMethodId(new UUIDGenerator().generate()),
-          new RestrictionId(new UUIDGenerator().generate()),
-          new UserName(aRequest.body.username as string),
-          new Password(aRequest.body.password as string)
-        )
-      );
+    function storeUserAccountInDB() {
+      const placeHolderRepo = repositoryFactory.getPlaceHolderRepo();
+      placeHolderRepo.savePlaceholders("userAccount");
     }
 
-    async function removeUserAccountInDB(aRequest: Request) {
-      const repositories = repositoryFactory.getRepositories(
-        "UserAccountRepository"
-      );
+    function removeUserAccountInDB() {
+      const placeHolderRepo = repositoryFactory.getPlaceHolderRepo();
 
-      await repositories.UserAccountRepository.remove(aRequest.body.username);
+      placeHolderRepo.removePlaceholders("userAccount");
     }
   });
 });

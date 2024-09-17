@@ -32,7 +32,7 @@
     // "paths": {},                                      /* Specify a set of entries that re-map imports to additional lookup locations. */
     "rootDirs": [
       "./src",
-      "test/domainTest/model/identity/userAccountTest/userAccountMockObjectuserAccountCreationFormMock.ts"
+      "test/domain/model/identity/userAccountTest/userAccountMockObjectuserAccountCreationFormMock.ts"
     ] /* Allow multiple folders to be treated as one when resolving modules. */,
     // "typeRoots": [],                                  /* Specify multiple folders that act like './node_modules/@types'. */
     // "types": [],                                      /* Specify type package names to be included without being referenced in a source file. */

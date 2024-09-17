@@ -3,11 +3,6 @@ import NewUserAccountCommand from "../../../src/application/userAccount/newUserA
 import RepositoryFactoryMock from "../mock/repositoryFactoryMock";
 import DomainEvent from "../../../src/domain/domainEvent";
 import UserAccount from "../../../src/domain/model/userAccount/userAccount";
-import UserAccountId from "../../../src/domain/model/userAccount/userAccountId";
-import AuthenticationMethodId from "../../../src/domain/model/accountAccessControl/authenticationMethod/authenticationMethodId";
-import RestrictionId from "../../../src/domain/model/accountAccessControl/restriction/restrictionId";
-import UserName from "../../../src/domain/model/userAccount/userName";
-import Password from "../../../src/domain/model/userAccount/password";
 import NewUserAccountCreated from "../../../src/domain/model/userAccount/newUserAccountCreated";
 import EventName from "../../../src/domain/enum/event/eventName";
 import {
@@ -32,16 +27,16 @@ describe("User Account Application Service", () => {
   function savePlaceHolders() {
     const placeHolderRepository = repositoryFactory.getPlaceHolderRepo();
 
-    placeHolderRepository.savePlaceholders({
-      authenticationMethod: true,
-      restriction: true,
-    });
+    placeHolderRepository.savePlaceholders(
+      "authenticationMethod",
+      "restriction"
+    );
   }
 
   it("should create and store new userAccount and NewUserAccountCreated Event if there is no username conflict", async () => {
     const newUserAccountCommand = new NewUserAccountCommand(
       new UUIDGenerator().generate(),
-      "tester1",
+      "username",
       "SecureP@ss1233"
     );
 
@@ -112,17 +107,17 @@ describe("User Account Application Service", () => {
   it("should throw an error if there is a username conflict", async () => {
     const newUserAccountCommand = new NewUserAccountCommand(
       new UUIDGenerator().generate(),
-      "tester2",
-      "SecureP@ss123"
+      PlaceHolderRepository.userAccountProperties.username,
+      PlaceHolderRepository.userAccountProperties.password
     );
 
-    await storeUserAccountInDB(newUserAccountCommand); // store the user account in the database to simulate a conflict in application service
+    storeUserAccountInDB(); // store the user account in the database to simulate a conflict in application service
 
     await expect(
       userAccountApplicationService.createUserAccount(newUserAccountCommand)
     ).rejects.toThrow(UserAccountRepoErrorMsg.UserAccountAlreadyExists);
 
-    await removeUserAccountInDB(newUserAccountCommand);
+    removeUserAccountInDB();
   });
 
   it("should throw an error if the argument is not UUID v4 format", async () => {
@@ -161,27 +156,15 @@ describe("User Account Application Service", () => {
     ).rejects.toThrow(passwordError.passwordNotMeetingRequirements);
   });
 
-  async function storeUserAccountInDB(aCommand: NewUserAccountCommand) {
-    const repositories = repositoryFactory.getRepositories(
-      "UserAccountRepository"
-    );
+  function storeUserAccountInDB() {
+    const placeHolderRepository = repositoryFactory.getPlaceHolderRepo();
 
-    await repositories.UserAccountRepository.save(
-      new UserAccount(
-        new UserAccountId(aCommand.getId()),
-        new AuthenticationMethodId(new UUIDGenerator().generate()),
-        new RestrictionId(new UUIDGenerator().generate()),
-        new UserName(aCommand.getUsername()),
-        new Password(aCommand.getPassword())
-      )
-    );
+    placeHolderRepository.savePlaceholders("userAccount");
   }
 
-  async function removeUserAccountInDB(aCommand: NewUserAccountCommand) {
-    const repositories = repositoryFactory.getRepositories(
-      "UserAccountRepository"
-    );
+  function removeUserAccountInDB() {
+    const placeHolderRepository = repositoryFactory.getPlaceHolderRepo();
 
-    await repositories.UserAccountRepository.remove(aCommand.getUsername());
+    placeHolderRepository.removePlaceholders("userAccount");
   }
 });
