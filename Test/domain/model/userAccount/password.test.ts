@@ -1,16 +1,16 @@
 import Password from "../../../../src/domain/model/userAccount/password";
-import { passwordError } from "../../../../src/domain/enum/errorMsg/userAccountErrorMsg";
+import { userAccountErrorMsg } from "../../../../src/domain/model/userAccount/userAccountErrorMsg";
 
 describe("Password", () => {
   it("should throw an error when password doesn't meet minimum requirement", () => {
     expect(() => new Password("password")).toThrow(
-      passwordError.passwordNotMeetingRequirements
+      userAccountErrorMsg.passwordNotMeetingRequirements
     );
     expect(() => new Password("")).toThrow(
-      passwordError.passwordNotMeetingRequirements
+      userAccountErrorMsg.passwordNotMeetingRequirements
     );
     expect(() => new Password(" ")).toThrow(
-      passwordError.passwordNotMeetingRequirements
+      userAccountErrorMsg.passwordNotMeetingRequirements
     );
   });
 

@@ -1,7 +1,7 @@
-import EntityValueObject from "../../EntityValueObject";
-import { verificationCodeError } from "../../enum/errorMsg/contactDetailErrorMsg";
+import PersistentValueObject from "../../EntityValueObject";
+import { contactDetailErrorMsg } from "./contactDetailErrorMsg";
 
-class VerificationCode extends EntityValueObject {
+class VerificationCode extends PersistentValueObject {
   private value: string;
   private timeStamp: number;
   private allowedTimeDurationOfCode: number = 300000; // 5 minutes
@@ -21,7 +21,7 @@ class VerificationCode extends EntityValueObject {
     const sevenDigitRegex = /^\d{7}$/;
 
     if (!sevenDigitRegex.test(aValue)) {
-      throw new Error(verificationCodeError.invalidCode);
+      throw new Error(contactDetailErrorMsg.invalidCode);
     }
   }
 
@@ -32,7 +32,7 @@ class VerificationCode extends EntityValueObject {
 
   private checkIfTimeStampIsInvalid(aTimeStamp: number) {
     if (aTimeStamp > Date.now() || aTimeStamp < 0) {
-      throw Error(verificationCodeError.invalidTimeStamp);
+      throw Error(contactDetailErrorMsg.invalidTimeStamp);
     } else {
       return;
     }
@@ -45,13 +45,13 @@ class VerificationCode extends EntityValueObject {
 
   private throwErrorIfCodeHasExpired() {
     if (Date.now() - this.timeStamp > this.allowedTimeDurationOfCode) {
-      throw new Error(verificationCodeError.expiredCode);
+      throw new Error(contactDetailErrorMsg.expiredCode);
     }
   }
 
   private throwErrorIfCodeDoesNotMatch(code: string) {
     if (this.value !== code) {
-      throw new Error(verificationCodeError.invalidCode);
+      throw new Error(contactDetailErrorMsg.invalidCode);
     }
   }
 }

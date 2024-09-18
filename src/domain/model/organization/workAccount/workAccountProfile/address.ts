@@ -1,6 +1,6 @@
-import EntityValueObject from "../../../EntityValueObject";
+import PersistentValueObject from "../../../../EntityValueObject";
 
-class Address extends EntityValueObject {
+class Address extends PersistentValueObject {
   private countryId: string;
   private stateId: string;
 

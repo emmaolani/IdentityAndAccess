@@ -1,4 +1,4 @@
-import Address from "../../../../src/domain/model/organization/WorkAccountProfile.ts/address";
+import Address from "../../../../../../src/domain/model/organization/workAccount/workAccountProfile/address";
 
 describe("address", () => {
   let countryId: string = "countryID";

@@ -1,4 +1,4 @@
-import { authenticationMethodIdError } from "../../../enum/errorMsg/authenticationMethodErrorMsg";
+import { authenticationMethodErrorMsg } from "./authenticationMethodErrorMsg";
 
 class AuthenticationMethodId {
   private id: string;
@@ -17,7 +17,7 @@ class AuthenticationMethodId {
       /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i; // regex for UUID v4
 
     if (!uuidRegex.test(aValue)) {
-      throw new Error(authenticationMethodIdError.invalidUUID);
+      throw new Error(authenticationMethodErrorMsg.invalidUUID);
     }
   }
 

@@ -1,5 +1,5 @@
 import PhoneNumberValidatorImp from "../../../src/port/util/phoneNumberValidatorImp";
-import { phoneNumberError } from "../../../src/domain/enum/errorMsg/contactDetailErrorMsg";
+import { contactDetailErrorMsg } from "../../../src/domain/model/contactDetails/contactDetailErrorMsg";
 
 describe("PhoneNumberValidator", () => {
   const phoneNumberValidator = new PhoneNumberValidatorImp();
@@ -41,25 +41,25 @@ describe("PhoneNumberValidator", () => {
   it("should throw error if number is invalid", () => {
     expect(() =>
       phoneNumberValidator.getValidNationalNumberForRegion("1234567890", "US")
-    ).toThrow(phoneNumberError.invalidPhoneNumber); // invalid US number
+    ).toThrow(contactDetailErrorMsg.invalidPhoneNumber); // invalid US number
     expect(() =>
       phoneNumberValidator.getValidNationalNumberForRegion("123456789", "US")
-    ).toThrow(phoneNumberError.invalidPhoneNumber); // invalid US number
+    ).toThrow(contactDetailErrorMsg.invalidPhoneNumber); // invalid US number
     expect(() =>
       phoneNumberValidator.getValidNationalNumberForRegion("223456789", "US")
-    ).toThrow(phoneNumberError.invalidPhoneNumber); // invalid US number
+    ).toThrow(contactDetailErrorMsg.invalidPhoneNumber); // invalid US number
 
     expect(() =>
       phoneNumberValidator.getValidNationalNumberForRegion("123456789", "NG")
-    ).toThrow(phoneNumberError.invalidPhoneNumber); // invalid Nigeria number
+    ).toThrow(contactDetailErrorMsg.invalidPhoneNumber); // invalid Nigeria number
     expect(() =>
       phoneNumberValidator.getValidNationalNumberForRegion(
         "+4348123456789",
         "NG"
       )
-    ).toThrow(phoneNumberError.invalidPhoneNumber); // invalid Nigeria number
+    ).toThrow(contactDetailErrorMsg.invalidPhoneNumber); // invalid Nigeria number
     expect(() =>
       phoneNumberValidator.getValidNationalNumberForRegion("8123456", "NG")
-    ).toThrow(phoneNumberError.invalidPhoneNumber); // invalid Nigeria number
+    ).toThrow(contactDetailErrorMsg.invalidPhoneNumber); // invalid Nigeria number
   });
 });

@@ -1,7 +1,7 @@
 import Restriction from "../../../../../src/domain/model/accountAccessControl/restriction/restriction";
 import RestrictionId from "../../../../../src/domain/model/accountAccessControl/restriction/restrictionId";
 import Reason from "../../../../../src/domain/model/accountAccessControl/restriction/reason";
-import UUIDGenerator from "../../../../../src/port/adapters/controller/uUIDGenerator";
+import UUIDGenerator from "../../../../../src/port/util/uUIDGenerator";
 
 describe("Restriction", () => {
   let restriction: Restriction;

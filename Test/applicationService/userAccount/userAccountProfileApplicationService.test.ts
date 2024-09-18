@@ -3,19 +3,15 @@ import NewUserAccountProfileCommand from "../../../src/application/userAccount/u
 import PhoneNumberValidatorImp from "../../../src/port/util/phoneNumberValidatorImp";
 import RepositoryFactoryMock from "../mock/repositoryFactoryMock";
 import NewUserAccountProfileCreated from "../../../src/domain/model/userAccount/userAccountProfile/newUserAccountProfileCreated";
-import UUIDGenerator from "../../../src/port/adapters/controller/uUIDGenerator";
+import UUIDGenerator from "../../../src/port/util/uUIDGenerator";
 import UserAccountProfile from "../../../src/domain/model/userAccount/userAccountProfile/userAccountProfile";
-import EventName from "../../../src/domain/enum/event/eventName";
-import {
-  emailAddressError,
-  phoneNumberError,
-} from "../../../src/domain/enum/errorMsg/contactDetailErrorMsg";
-import userAccountProfileRepoError from "../../../src/port/_enums/errorMsg/repositoryErrorMsg/userAccountProfileRepoErrorMsg";
-import { userAccountIdError } from "../../../src/domain/enum/errorMsg/userAccountErrorMsg";
-import { UserAccountProfileIdError } from "../../../src/domain/enum/errorMsg/userAccountProfileErrorMsg";
-import { ITUAndISOSpecRepoErrorMsg } from "../../../src/port/_enums/errorMsg/repositoryErrorMsg/iTuAndISOSpecRepoErrorMsg";
+import EventName from "../../../src/domain/eventName";
+import { contactDetailErrorMsg } from "../../../src/domain/model/contactDetails/contactDetailErrorMsg";
+import userAccountProfileRepoError from "../../../src/port/adapters/persistance/repositoryErrorMsg/userAccountProfileRepoErrorMsg";
+import { UserAccountProfileErrorMsg } from "../../../src/domain/model/userAccount/userAccountProfile/userAccountProfileErrorMsg";
+import { ITUAndISOSpecRepoErrorMsg } from "../../../src/port/adapters/persistance/repositoryErrorMsg/iTuAndISOSpecRepoErrorMsg";
 import TestPrerequisiteRepository from "../mock/testPrerequisiteRepository";
-import UserAccountRepoErrorMsg from "../../../src/port/_enums/errorMsg/repositoryErrorMsg/userAccountRepoErrorMsg";
+import UserAccountRepoErrorMsg from "../../../src/port/adapters/persistance/repositoryErrorMsg/userAccountRepoErrorMsg";
 
 describe("UserAccountProfileApplicationService", () => {
   const repositoryFactory = new RepositoryFactoryMock();
@@ -112,7 +108,7 @@ describe("UserAccountProfileApplicationService", () => {
 
       await expect(
         userAccountProfileApplicationService.createUserAccountProfile(command)
-      ).rejects.toThrow(phoneNumberError.invalidPhoneNumber);
+      ).rejects.toThrow(contactDetailErrorMsg.invalidPhoneNumber);
     });
 
     it("should throw error if email is invalid", async () => {
@@ -126,7 +122,7 @@ describe("UserAccountProfileApplicationService", () => {
 
       await expect(
         userAccountProfileApplicationService.createUserAccountProfile(command)
-      ).rejects.toThrow(emailAddressError.invalidEmail);
+      ).rejects.toThrow(contactDetailErrorMsg.invalidEmail);
     });
 
     it("should throw an error if userAccount is not found in db", async () => {
@@ -158,7 +154,7 @@ describe("UserAccountProfileApplicationService", () => {
 
       await expect(
         userAccountProfileApplicationService.createUserAccountProfile(command)
-      ).rejects.toThrow(UserAccountProfileIdError.invalidUUID);
+      ).rejects.toThrow(UserAccountProfileErrorMsg.invalidUUID);
     });
 
     async function retrieveUserAccountProfileAndEventStored(

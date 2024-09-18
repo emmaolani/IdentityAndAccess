@@ -1,4 +1,4 @@
-import { typeError } from "../../../enum/errorMsg/authenticationMethodErrorMsg";
+import { authenticationMethodErrorMsg } from "./authenticationMethodErrorMsg";
 
 class Type {
   private type: string;
@@ -17,7 +17,7 @@ class Type {
     const regex = /^\s*$/; // empty string or whitespace
 
     if (regex.test(aName)) {
-      throw new Error(typeError.invalidType);
+      throw new Error(authenticationMethodErrorMsg.invalidType);
     }
   }
 }

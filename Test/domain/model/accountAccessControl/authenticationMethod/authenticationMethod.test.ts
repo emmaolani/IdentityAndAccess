@@ -1,7 +1,7 @@
 import AuthenticationMethod from "../../../../../src/domain/model/accountAccessControl/authenticationMethod/authenticationMethod";
 import AuthenticationMethodId from "../../../../../src/domain/model/accountAccessControl/authenticationMethod/authenticationMethodId";
 import Type from "../../../../../src/domain/model/accountAccessControl/authenticationMethod/type";
-import UUIDGenerator from "../../../../../src/port/adapters/controller/uUIDGenerator";
+import UUIDGenerator from "../../../../../src/port/util/uUIDGenerator";
 
 describe("AuthenticationMethod", () => {
   let authenticationMethod: AuthenticationMethod;

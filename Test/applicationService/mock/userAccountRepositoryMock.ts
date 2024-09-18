@@ -1,7 +1,7 @@
 import UserAccountRepository from "../../../src/domain/model/userAccount/userAccountRepository";
 import UserAccount from "../../../src/domain/model/userAccount/userAccount";
 import FakeDb from "./fakeDb/fakeDb";
-import UserAccountRepoErrorMsg from "../../../src/port/_enums/errorMsg/repositoryErrorMsg/userAccountRepoErrorMsg";
+import UserAccountRepoErrorMsg from "../../../src/port/adapters/persistance/repositoryErrorMsg/userAccountRepoErrorMsg";
 
 class UserAccountRepositoryMock implements UserAccountRepository {
   private db: FakeDb;

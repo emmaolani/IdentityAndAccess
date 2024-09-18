@@ -1,20 +1,17 @@
-import UserAccountController from "../../../../src/port/adapters/controller/userAccountController";
-import UserAccountApplicationService from "../../../../src/application/userAccount/userAccountApplicationService";
-import RepositoryFactoryMock from "../../../applicationService/mock/repositoryFactoryMock";
+import UserAccountController from "../../../../../src/port/adapters/controller/userAccount/userAccountController";
+import UserAccountApplicationService from "../../../../../src/application/userAccount/userAccountApplicationService";
+import RepositoryFactoryMock from "../../../../applicationService/mock/repositoryFactoryMock";
 import { Request, Response } from "express";
-import RequestMock from "./mock/requestMock";
-import ResponseMock from "./mock/responseMock";
-import UserAccount from "../../../../src/domain/model/userAccount/userAccount";
-import NewUserAccountCreated from "../../../../src/domain/model/userAccount/newUserAccountCreated";
-import DomainEvent from "../../../../src/domain/domainEvent";
-import {
-  passwordError,
-  userNamesError,
-} from "../../../../src/domain/enum/errorMsg/userAccountErrorMsg";
-import EventName from "../../../../src/domain/enum/event/eventName";
-import TestPrerequisiteRepository from "../../../applicationService/mock/testPrerequisiteRepository";
-import UserAccountRepoErrorMsg from "../../../../src/port/_enums/errorMsg/repositoryErrorMsg/userAccountRepoErrorMsg";
-import UUIDGenerator from "../../../../src/port/adapters/controller/uUIDGenerator";
+import RequestMock from "../mock/requestMock";
+import ResponseMock from "../mock/responseMock";
+import UserAccount from "../../../../../src/domain/model/userAccount/userAccount";
+import NewUserAccountCreated from "../../../../../src/domain/model/userAccount/newUserAccountCreated";
+import DomainEvent from "../../../../../src/domain/domainEvent";
+import { userAccountErrorMsg } from "../../../../../src/domain/model/userAccount/userAccountErrorMsg";
+import EventName from "../../../../../src/domain/eventName";
+import TestPrerequisiteRepository from "../../../../applicationService/mock/testPrerequisiteRepository";
+import UserAccountRepoErrorMsg from "../../../../../src/port/adapters/persistance/repositoryErrorMsg/userAccountRepoErrorMsg";
+import UUIDGenerator from "../../../../../src/port/util/uUIDGenerator";
 
 describe("UserAccountController", () => {
   const repositoryFactory = new RepositoryFactoryMock();
@@ -190,7 +187,7 @@ describe("UserAccountController", () => {
 
       expect((response as ResponseMock).getStatus()).toBe(400);
       expect((response as ResponseMock).getResponse()).toEqual({
-        message: passwordError.passwordNotMeetingRequirements,
+        message: userAccountErrorMsg.passwordNotMeetingRequirements,
       });
     });
 
@@ -209,7 +206,7 @@ describe("UserAccountController", () => {
 
       expect((response as ResponseMock).getStatus()).toBe(400);
       expect((response as ResponseMock).getResponse()).toEqual({
-        message: userNamesError.userNameNotMeetingRequirements,
+        message: userAccountErrorMsg.userNameNotMeetingRequirements,
       });
     });
 

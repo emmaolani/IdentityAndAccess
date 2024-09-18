@@ -1,6 +1,6 @@
 import ITUAndISOSpecRepository from "../../../src/domain/model/geographicEntities/ITUAndISOSpecRepository";
 import ITUAndISOSpec from "../../../src/domain/model/geographicEntities/ITUAndISOSpec";
-import { ITUAndISOSpecRepoErrorMsg } from "../../../src/port/_enums/errorMsg/repositoryErrorMsg/iTuAndISOSpecRepoErrorMsg";
+import { ITUAndISOSpecRepoErrorMsg } from "../../../src/port/adapters/persistance/repositoryErrorMsg/iTuAndISOSpecRepoErrorMsg";
 import FakeDb from "./fakeDb/fakeDb";
 
 class ITUAndISOSpecRepositoryMock implements ITUAndISOSpecRepository {

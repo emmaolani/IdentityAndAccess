@@ -1,22 +1,19 @@
-import UserAccountProfileController from "../../../../src/port/adapters/controller/userAccountProfileController";
-import UserAccountProfileApplicationService from "../../../../src/application/userAccount/userAccountProfile/userAccountProfileApplicationService";
-import RepositoryFactoryMock from "../../../applicationService/mock/repositoryFactoryMock";
-import PhoneNumberValidatorImp from "../../../../src/port/util/phoneNumberValidatorImp";
-import UserAccountProfile from "../../../../src/domain/model/userAccount/userAccountProfile/userAccountProfile";
-import NewUserAccountProfileCreated from "../../../../src/domain/model/userAccount/userAccountProfile/newUserAccountProfileCreated";
-import RequestMock from "./mock/requestMock";
-import ResponseMock from "./mock/responseMock";
+import UserAccountProfileController from "../../../../../src/port/adapters/controller/userAccount/userAccountProfile/userAccountProfileController";
+import UserAccountProfileApplicationService from "../../../../../src/application/userAccount/userAccountProfile/userAccountProfileApplicationService";
+import RepositoryFactoryMock from "../../../../applicationService/mock/repositoryFactoryMock";
+import PhoneNumberValidatorImp from "../../../../../src/port/util/phoneNumberValidatorImp";
+import UserAccountProfile from "../../../../../src/domain/model/userAccount/userAccountProfile/userAccountProfile";
+import NewUserAccountProfileCreated from "../../../../../src/domain/model/userAccount/userAccountProfile/newUserAccountProfileCreated";
+import RequestMock from "../mock/requestMock";
+import ResponseMock from "../mock/responseMock";
 import { Request, Response } from "express";
-import UUIDGenerator from "../../../../src/port/adapters/controller/uUIDGenerator";
-import EventName from "../../../../src/domain/enum/event/eventName";
-import NewUserAccountProfileReqObj from "../../../../src/port/adapters/controller/requestBodyTypes/newUserAccountProfileReqObj.type";
-import userAccountProfileRepoError from "../../../../src/port/_enums/errorMsg/repositoryErrorMsg/userAccountProfileRepoErrorMsg";
-import { ITUAndISOSpecRepoErrorMsg } from "../../../../src/port/_enums/errorMsg/repositoryErrorMsg/iTuAndISOSpecRepoErrorMsg";
-import {
-  emailAddressError,
-  phoneNumberError,
-} from "../../../../src/domain/enum/errorMsg/contactDetailErrorMsg";
-import TestPrerequisiteRepository from "../../../applicationService/mock/testPrerequisiteRepository";
+import UUIDGenerator from "../../../../../src/port/util/uUIDGenerator";
+import EventName from "../../../../../src/domain/eventName";
+import NewUserAccountProfileReqObj from "../../../../../src/port/adapters/controller/userAccount/userAccountProfile/newUserAccountProfileReqObj.type";
+import userAccountProfileRepoError from "../../../../../src/port/adapters/persistance/repositoryErrorMsg/userAccountProfileRepoErrorMsg";
+import { ITUAndISOSpecRepoErrorMsg } from "../../../../../src/port/adapters/persistance/repositoryErrorMsg/iTuAndISOSpecRepoErrorMsg";
+import { contactDetailErrorMsg } from "../../../../../src/domain/model/contactDetails/contactDetailErrorMsg";
+import TestPrerequisiteRepository from "../../../../applicationService/mock/testPrerequisiteRepository";
 
 describe("userAccount", () => {
   const repositoryFactory = new RepositoryFactoryMock();
@@ -233,7 +230,7 @@ describe("userAccount", () => {
 
       expect((response as ResponseMock).getStatus()).toBe(400);
       expect((response as ResponseMock).getResponse()).toEqual({
-        message: phoneNumberError.invalidPhoneNumber,
+        message: contactDetailErrorMsg.invalidPhoneNumber,
       });
     });
 
@@ -256,7 +253,7 @@ describe("userAccount", () => {
 
       expect((response as ResponseMock).getStatus()).toBe(400);
       expect((response as ResponseMock).getResponse()).toEqual({
-        message: emailAddressError.invalidEmail,
+        message: contactDetailErrorMsg.invalidEmail,
       });
     });
 

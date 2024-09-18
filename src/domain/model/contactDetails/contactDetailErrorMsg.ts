@@ -1,19 +1,13 @@
-enum phoneNumberError {
+enum contactDetailErrorMsg {
   invalidPhoneNumber = "Invalid phone number",
   phoneAlreadyActivated = "Phone number is already activated",
-  noVerificationCode = "No verification code found",
-}
-
-enum emailAddressError {
+  noVerificationCodePhone = "No verification code for phone number",
   invalidEmail = "Invalid email",
   emailAlreadyActivated = "Email is already activated",
-  noVerificationCode = "No verification code found",
-}
-
-enum verificationCodeError {
+  noVerificationCodeEmail = "No verification code for email",
   invalidTimeStamp = "TimeStamp for verificationCode is invalid",
   invalidCode = "Invalid verification code",
   expiredCode = "verification code is expired",
 }
 
-export { phoneNumberError, emailAddressError, verificationCodeError };
+export { contactDetailErrorMsg };

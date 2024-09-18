@@ -1,6 +1,6 @@
 import AuthenticationMethod from "../../../src/domain/model/accountAccessControl/authenticationMethod/authenticationMethod";
 import AuthenticationMethodRepository from "../../../src/domain/model/accountAccessControl/authenticationMethod/authenticationMethodRepository";
-import { authenticationMethodRepoErrorMsg } from "../../../src/port/_enums/errorMsg/repositoryErrorMsg/authenticationMethodErrorMsg";
+import { authenticationMethodRepoErrorMsg } from "../../../src/port/adapters/persistance/repositoryErrorMsg/authenticationMethodErrorMsg";
 import FakeDb from "./fakeDb/fakeDb";
 
 class AuthenticationMethodRepositoryMock

@@ -1,11 +1,11 @@
-import WorkAccountProfile from "../../../../src/domain/model/organization/WorkAccountProfile.ts/workAccountProfile";
-import FullName from "../../../../src/domain/model/organization/WorkAccountProfile.ts/fullName";
-import Address from "../../../../src/domain/model/organization/WorkAccountProfile.ts/address";
-import EmailAddress from "../../../../src/domain/model/contactDetails/emailAddress";
-import PhoneNumber from "../../../../src/domain/model/contactDetails/phoneNumber";
-import VerificationCode from "../../../../src/domain/model/contactDetails/verificationCode";
-import { option } from "../../../factories/option";
-import PersonalInfoFactory from "../../../factories/personalInfoFactory";
+import WorkAccountProfile from "../../../../../../src/domain/model/organization/workAccount/workAccountProfile/workAccountProfile";
+import FullName from "../../../../../../src/domain/model/organization/workAccount/workAccountProfile/fullName";
+import Address from "../../../../../../src/domain/model/organization/workAccount/workAccountProfile/address";
+import EmailAddress from "../../../../../../src/domain/model/contactDetails/emailAddress";
+import PhoneNumber from "../../../../../../src/domain/model/contactDetails/phoneNumber";
+import VerificationCode from "../../../../../../src/domain/model/contactDetails/verificationCode";
+import { option } from "../../../../../factories/option";
+import PersonalInfoFactory from "../../../../../factories/personalInfoFactory";
 
 /* describe("PersonalInfo", () => {
   const workAccountProfileFactory = new PersonalInfoFactory();

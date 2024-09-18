@@ -1,7 +1,7 @@
-import EntityValueObject from "../../../EntityValueObject";
-import { fullNameError } from "../../../enum/errorMsg/workAccountProfileErrorMsg";
+import PersistentValueObject from "../../../../EntityValueObject";
+import workAccountProfileErrorMsg from "./workAccountProfileErrorMsg";
 
-class FullName extends EntityValueObject {
+class FullName extends PersistentValueObject {
   private name: string;
 
   constructor(aName: string) {
@@ -15,7 +15,7 @@ class FullName extends EntityValueObject {
 
   private setName(aName: string): void {
     if (this.IsAnEmpty(aName)) {
-      throw new Error(fullNameError.emptyFullName);
+      throw new Error(workAccountProfileErrorMsg.emptyName);
     }
 
     this.name = this.returnValidatedName(aName);

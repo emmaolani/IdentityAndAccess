@@ -1,4 +1,4 @@
-import { typeError } from "../../../../../src/domain/enum/errorMsg/authenticationMethodErrorMsg";
+import { authenticationMethodErrorMsg } from "../../../../../src/domain/model/accountAccessControl/authenticationMethod/authenticationMethodErrorMsg";
 import Type from "../../../../../src/domain/model/accountAccessControl/authenticationMethod/type";
 
 describe("Type", () => {
@@ -18,10 +18,10 @@ describe("Type", () => {
   it("should throw an error if the method name is an empty string", () => {
     expect(() => {
       new Type("");
-    }).toThrow(typeError.invalidType);
+    }).toThrow(authenticationMethodErrorMsg.invalidType);
 
     expect(() => {
       new Type("     ");
-    }).toThrow(typeError.invalidType);
+    }).toThrow(authenticationMethodErrorMsg.invalidType);
   });
 });

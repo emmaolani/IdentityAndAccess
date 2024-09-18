@@ -1,6 +1,6 @@
 import ITUAndISOSpec from "../../../../src/domain/model/geographicEntities/ITUAndISOSpec";
 import ITUAndISOSpecId from "../../../../src/domain/model/geographicEntities/ITUAndISOSpecId";
-import UUIDGenerator from "../../../../src/port/adapters/controller/uUIDGenerator";
+import UUIDGenerator from "../../../../src/port/util/uUIDGenerator";
 
 describe("ITUandISOSpecs", () => {
   it("should create an instance", () => {

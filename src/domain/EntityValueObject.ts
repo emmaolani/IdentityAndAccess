@@ -1,5 +1,5 @@
-class EntityValueObject {
+class PersistentValueObject {
   private persistanceId: string;
 }
 
-export default EntityValueObject;
+export default PersistentValueObject;

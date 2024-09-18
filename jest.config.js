@@ -2,5 +2,10 @@
 module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
-  testTimeout: 10000,
+  roots: ["<rootDir>/src", "<rootDir>/test"],
+  moduleDirectories: ["node_modules", "src"],
+  moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
+  moduleNameMapper: {
+    "^@/(.*)$": "<rootDir>/src/$1",
+  },
 };

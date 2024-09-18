@@ -1,16 +1,13 @@
-import UserAccountProfileApplicationService from "../../../application/userAccount/userAccountProfile/userAccountProfileApplicationService";
+import UserAccountProfileApplicationService from "../../../../../application/userAccount/userAccountProfile/userAccountProfileApplicationService";
 import { Request, Response } from "express";
-import NewUserAccountProfileReqObj from "./requestBodyTypes/newUserAccountProfileReqObj.type";
-import NewUserAccountProfileCommand from "../../../application/userAccount/userAccountProfile/newUserAccountProfileCommand";
-import userAccountProfileRepoError from "../../_enums/errorMsg/repositoryErrorMsg/userAccountProfileRepoErrorMsg";
-import { ITUAndISOSpecRepoErrorMsg } from "../../_enums/errorMsg/repositoryErrorMsg/iTuAndISOSpecRepoErrorMsg";
-import {
-  emailAddressError,
-  phoneNumberError,
-} from "../../../domain/enum/errorMsg/contactDetailErrorMsg";
-import { userAccountIdError } from "../../../domain/enum/errorMsg/userAccountErrorMsg";
-import { UserAccountProfileIdError } from "../../../domain/enum/errorMsg/userAccountProfileErrorMsg";
-import UserAccountRepoErrorMsg from "../../_enums/errorMsg/repositoryErrorMsg/userAccountRepoErrorMsg";
+import NewUserAccountProfileReqObj from "./newUserAccountProfileReqObj.type";
+import NewUserAccountProfileCommand from "../../../../../application/userAccount/userAccountProfile/newUserAccountProfileCommand";
+import userAccountProfileRepoError from "../../../persistance/repositoryErrorMsg/userAccountProfileRepoErrorMsg";
+import { ITUAndISOSpecRepoErrorMsg } from "../../../persistance/repositoryErrorMsg/iTuAndISOSpecRepoErrorMsg";
+import { contactDetailErrorMsg } from "../../../../../domain/model/contactDetails/contactDetailErrorMsg";
+import { userAccountErrorMsg } from "../../../../../domain/model/userAccount/userAccountErrorMsg";
+import { UserAccountProfileErrorMsg } from "../../../../../domain/model/userAccount/userAccountProfile/userAccountProfileErrorMsg";
+import UserAccountRepoErrorMsg from "../../../persistance/repositoryErrorMsg/userAccountRepoErrorMsg";
 
 class UserAccountProfileController {
   private userAccountProfileApplicationService: UserAccountProfileApplicationService;
@@ -88,21 +85,21 @@ class UserAccountProfileController {
       aResponse.status(404).send({
         message: ITUAndISOSpecRepoErrorMsg.ITUAndISOSpecNotFound,
       });
-    } else if (error.message === phoneNumberError.invalidPhoneNumber) {
+    } else if (error.message === contactDetailErrorMsg.invalidPhoneNumber) {
       aResponse.status(400).send({
-        message: phoneNumberError.invalidPhoneNumber,
+        message: contactDetailErrorMsg.invalidPhoneNumber,
       });
-    } else if (error.message === emailAddressError.invalidEmail) {
+    } else if (error.message === contactDetailErrorMsg.invalidEmail) {
       aResponse.status(400).send({
-        message: emailAddressError.invalidEmail,
+        message: contactDetailErrorMsg.invalidEmail,
       });
     } else if (error.message === UserAccountRepoErrorMsg.UserAccountNotFound) {
       aResponse.status(500).send({ message: "server error" });
-    } else if (error.message === userAccountIdError.invalidUUID) {
+    } else if (error.message === userAccountErrorMsg.invalidUUID) {
       aResponse.status(500).send({
         message: "server error",
       });
-    } else if (error.message === UserAccountProfileIdError.invalidUUID) {
+    } else if (error.message === UserAccountProfileErrorMsg.invalidUUID) {
       aResponse.status(500).send({
         message: "server error",
       });

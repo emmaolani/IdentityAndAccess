@@ -1,18 +1,9 @@
-enum userNamesError {
-  userNameNotMeetingRequirements = "UserName does not meet requirements",
-}
-
-enum passwordError {
-  passwordNotMeetingRequirements = "password does not meet security requirements",
-}
-
-enum userAccountIdError {
+enum userAccountErrorMsg {
   invalidUUID = "Invalid user account UUID",
-}
-
-enum userAccountError {
+  userNameNotMeetingRequirements = "UserName does not meet requirements",
+  passwordNotMeetingRequirements = "password does not meet security requirements",
   userAccountNotActive = "User account is not active",
   InvalidUsernameOrPassword = "Invalid username or password",
 }
 
-export { userNamesError, passwordError, userAccountIdError, userAccountError };
+export { userAccountErrorMsg };

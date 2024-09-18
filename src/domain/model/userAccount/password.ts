@@ -1,7 +1,7 @@
-import EntityValueObject from "../../EntityValueObject";
-import { passwordError } from "../../enum/errorMsg/userAccountErrorMsg";
+import PersistentValueObject from "../../EntityValueObject";
+import { userAccountErrorMsg } from "./userAccountErrorMsg";
 
-class Password extends EntityValueObject {
+class Password extends PersistentValueObject {
   private value: string;
 
   constructor(aValue: string) {
@@ -28,7 +28,7 @@ class Password extends EntityValueObject {
     if (aValue.match(regex)) {
       return;
     } else {
-      throw new Error(passwordError.passwordNotMeetingRequirements);
+      throw new Error(userAccountErrorMsg.passwordNotMeetingRequirements);
     }
   }
 

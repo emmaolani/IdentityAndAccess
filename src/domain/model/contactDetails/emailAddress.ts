@@ -1,8 +1,8 @@
 import VerificationCode from "./verificationCode";
-import EntityValueObject from "../../EntityValueObject";
-import { emailAddressError } from "../../enum/errorMsg/contactDetailErrorMsg";
+import PersistentValueObject from "../../EntityValueObject";
+import { contactDetailErrorMsg } from "./contactDetailErrorMsg";
 
-class EmailAddress extends EntityValueObject {
+class EmailAddress extends PersistentValueObject {
   private value: string;
   private isActive: boolean;
   private verificationCode: VerificationCode | null;
@@ -29,7 +29,7 @@ class EmailAddress extends EntityValueObject {
     const emailRegex = /^(?=.*@)(?=.*\.).{1,254}$/; // this regex defines the requirement for a valid email address
 
     if (!emailRegex.test(aValue)) {
-      throw new Error(emailAddressError.invalidEmail);
+      throw new Error(contactDetailErrorMsg.invalidEmail);
     }
   }
 
@@ -59,11 +59,11 @@ class EmailAddress extends EntityValueObject {
 
   activateWith(code: string) {
     if (this.isActive) {
-      throw new Error(emailAddressError.emailAlreadyActivated);
+      throw new Error(contactDetailErrorMsg.emailAlreadyActivated);
     }
 
     if (this.verificationCode === null) {
-      throw new Error(emailAddressError.noVerificationCode);
+      throw new Error(contactDetailErrorMsg.noVerificationCodeEmail);
     }
 
     this.verificationCode.throwErrorIfCodeIsInvalid(code);

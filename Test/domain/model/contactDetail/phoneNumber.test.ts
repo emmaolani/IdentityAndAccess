@@ -1,11 +1,8 @@
 import PhoneNumber from "../../../../src/domain/model/contactDetails/phoneNumber";
 import ITUAndISOSpecId from "../../../../src/domain/model/geographicEntities/ITUAndISOSpecId";
 import VerificationCode from "../../../../src/domain/model/contactDetails/verificationCode";
-import {
-  phoneNumberError,
-  verificationCodeError,
-} from "../../../../src/domain/enum/errorMsg/contactDetailErrorMsg";
-import UUIDGenerator from "../../../../src/port/adapters/controller/uUIDGenerator";
+import { contactDetailErrorMsg } from "../../../../src/domain/model/contactDetails/contactDetailErrorMsg";
+import UUIDGenerator from "../../../../src/port/util/uUIDGenerator";
 
 describe("Unit Test for PhoneNumber class", () => {
   let invalidPhoneNumber: string = " 123  456 78  ";
@@ -28,21 +25,21 @@ describe("Unit Test for PhoneNumber class", () => {
   it("should throw an error if phoneNumber is instantiated with a number that does not meet requirement", () => {
     expect(
       () => new PhoneNumber("invalidPhoneNumber", ituAndIsoSpecId, active, null)
-    ).toThrow(phoneNumberError.invalidPhoneNumber);
+    ).toThrow(contactDetailErrorMsg.invalidPhoneNumber);
     expect(() => new PhoneNumber("123", ituAndIsoSpecId, active, null)).toThrow(
-      phoneNumberError.invalidPhoneNumber
+      contactDetailErrorMsg.invalidPhoneNumber
     );
     expect(
       () => new PhoneNumber("1".repeat(17), ituAndIsoSpecId, active, null)
-    ).toThrow(phoneNumberError.invalidPhoneNumber); // phone number should not exceed 16 characters
+    ).toThrow(contactDetailErrorMsg.invalidPhoneNumber); // phone number should not exceed 16 characters
     expect(
       () => new PhoneNumber("123456abc", ituAndIsoSpecId, active, null)
-    ).toThrow(phoneNumberError.invalidPhoneNumber);
+    ).toThrow(contactDetailErrorMsg.invalidPhoneNumber);
     expect(() => new PhoneNumber("", ituAndIsoSpecId, active, null)).toThrow(
-      phoneNumberError.invalidPhoneNumber
+      contactDetailErrorMsg.invalidPhoneNumber
     );
     expect(() => new PhoneNumber("   ", ituAndIsoSpecId, active, null)).toThrow(
-      phoneNumberError.invalidPhoneNumber
+      contactDetailErrorMsg.invalidPhoneNumber
     );
   });
 
@@ -85,7 +82,7 @@ describe("Unit Test for PhoneNumber class", () => {
     );
 
     expect(() => phoneNumber.activateWith("1234567")).toThrow(
-      verificationCodeError.expiredCode
+      contactDetailErrorMsg.expiredCode
     );
   });
 
@@ -98,7 +95,7 @@ describe("Unit Test for PhoneNumber class", () => {
     );
 
     expect(() => phoneNumber.activateWith("123456")).toThrow(
-      verificationCodeError.invalidCode
+      contactDetailErrorMsg.invalidCode
     );
   });
 
@@ -111,7 +108,7 @@ describe("Unit Test for PhoneNumber class", () => {
     );
 
     expect(() => phoneNumber.activateWith("123456")).toThrow(
-      phoneNumberError.phoneAlreadyActivated
+      contactDetailErrorMsg.phoneAlreadyActivated
     ); // invalid code used (invalid code should not be checked before 'is phone number active')
   });
 
@@ -124,7 +121,7 @@ describe("Unit Test for PhoneNumber class", () => {
     );
 
     expect(() => phoneNumber.activateWith("123456")).toThrow(
-      phoneNumberError.noVerificationCode
+      contactDetailErrorMsg.noVerificationCodePhone
     ); // invalid code used (invalid code should not be checked before no verification code is found)
   });
 
@@ -137,7 +134,7 @@ describe("Unit Test for PhoneNumber class", () => {
     );
 
     expect(() => phoneNumber.activateWith("1234567")).toThrow(
-      verificationCodeError.expiredCode
+      contactDetailErrorMsg.expiredCode
     );
 
     const newVerificationCode: VerificationCode = new VerificationCode(

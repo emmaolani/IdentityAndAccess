@@ -1,7 +1,7 @@
-import EntityValueObject from "../../../EntityValueObject";
-import { UserAccountProfileIdError } from "../../../enum/errorMsg/userAccountProfileErrorMsg";
+import PersistentValueObject from "../../../EntityValueObject";
+import { UserAccountProfileErrorMsg } from "./userAccountProfileErrorMsg";
 
-class UserAccountProfileId extends EntityValueObject {
+class UserAccountProfileId extends PersistentValueObject {
   private id: string;
 
   constructor(aValue: string) {
@@ -19,7 +19,7 @@ class UserAccountProfileId extends EntityValueObject {
       /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i; // regex for UUID v4
 
     if (!uuidRegex.test(aValue)) {
-      throw new Error(UserAccountProfileIdError.invalidUUID);
+      throw new Error(UserAccountProfileErrorMsg.invalidUUID);
     }
   }
 

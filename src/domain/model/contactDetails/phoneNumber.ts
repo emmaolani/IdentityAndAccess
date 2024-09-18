@@ -1,9 +1,9 @@
-import EntityValueObject from "../../EntityValueObject";
+import PersistentValueObject from "../../EntityValueObject";
 import ITUAndISOSpecId from "../geographicEntities/ITUAndISOSpecId";
 import VerificationCode from "./verificationCode";
-import { phoneNumberError } from "../../enum/errorMsg/contactDetailErrorMsg";
+import { contactDetailErrorMsg } from "./contactDetailErrorMsg";
 
-class PhoneNumber extends EntityValueObject {
+class PhoneNumber extends PersistentValueObject {
   private value: string;
   private iTUAndISOSpecId: ITUAndISOSpecId;
   private isActive: boolean;
@@ -32,7 +32,7 @@ class PhoneNumber extends EntityValueObject {
     const phoneNumberRegex = /^\d{4,16}$/; // this regex defines the requirement for a valid phone number
 
     if (!phoneNumberRegex.test(aValue)) {
-      throw new Error(phoneNumberError.invalidPhoneNumber);
+      throw new Error(contactDetailErrorMsg.invalidPhoneNumber);
     }
   }
 
@@ -70,11 +70,11 @@ class PhoneNumber extends EntityValueObject {
 
   activateWith(aCode: string) {
     if (this.isActive) {
-      throw new Error(phoneNumberError.phoneAlreadyActivated);
+      throw new Error(contactDetailErrorMsg.phoneAlreadyActivated);
     }
 
     if (this.verificationCode === null) {
-      throw new Error(phoneNumberError.noVerificationCode);
+      throw new Error(contactDetailErrorMsg.noVerificationCodePhone);
     }
 
     this.verificationCode.throwErrorIfCodeIsInvalid(aCode);

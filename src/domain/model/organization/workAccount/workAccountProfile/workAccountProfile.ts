@@ -1,8 +1,8 @@
 import Address from "./address";
 import FullName from "./fullName";
-import EmailAddress from "../../contactDetails/emailAddress";
-import PhoneNumber from "../../contactDetails/phoneNumber";
-import VerificationCode from "../../contactDetails/verificationCode";
+import EmailAddress from "../../../contactDetails/emailAddress";
+import PhoneNumber from "../../../contactDetails/phoneNumber";
+import VerificationCode from "../../../contactDetails/verificationCode";
 
 class WorkAccountProfile {
   private fullName: FullName;

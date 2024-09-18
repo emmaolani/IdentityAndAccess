@@ -1,6 +1,6 @@
 import PhoneNumberValidator from "../../application/phoneNumberValidator";
 import libphonenumber from "google-libphonenumber";
-import { phoneNumberError } from "../../domain/enum/errorMsg/contactDetailErrorMsg";
+import { contactDetailErrorMsg } from "../../domain/model/contactDetails/contactDetailErrorMsg";
 
 class PhoneNumberValidatorImp implements PhoneNumberValidator {
   private phoneUtil = libphonenumber.PhoneNumberUtil.getInstance();
@@ -12,7 +12,7 @@ class PhoneNumberValidatorImp implements PhoneNumberValidator {
     const number = this.phoneUtil.parse(phoneNumber, countryCode);
 
     if (!this.phoneUtil.isValidNumberForRegion(number, countryCode)) {
-      throw new Error(phoneNumberError.invalidPhoneNumber);
+      throw new Error(contactDetailErrorMsg.invalidPhoneNumber);
     }
 
     return this.formatPhoneNumberToString(number.getNationalNumber());
@@ -20,7 +20,7 @@ class PhoneNumberValidatorImp implements PhoneNumberValidator {
 
   private formatPhoneNumberToString(phoneNumber: number | undefined): string {
     if (!phoneNumber) {
-      throw new Error(phoneNumberError.invalidPhoneNumber);
+      throw new Error(contactDetailErrorMsg.invalidPhoneNumber);
     }
     return phoneNumber.toString();
   }

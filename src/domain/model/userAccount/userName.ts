@@ -1,7 +1,7 @@
-import EntityValueObject from "../../EntityValueObject";
-import { userNamesError } from "../../enum/errorMsg/userAccountErrorMsg";
+import PersistentValueObject from "../../EntityValueObject";
+import { userAccountErrorMsg } from "./userAccountErrorMsg";
 
-class UserName extends EntityValueObject {
+class UserName extends PersistentValueObject {
   private value: string;
 
   constructor(aValue: string) {
@@ -27,7 +27,7 @@ class UserName extends EntityValueObject {
     if (aValue.match(regex)) {
       return;
     } else {
-      throw new Error(userNamesError.userNameNotMeetingRequirements);
+      throw new Error(userAccountErrorMsg.userNameNotMeetingRequirements);
     }
   }
 

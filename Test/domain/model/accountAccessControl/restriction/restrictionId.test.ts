@@ -1,6 +1,6 @@
 import RestrictionId from "../../../../../src/domain/model/accountAccessControl/restriction/restrictionId";
-import { restrictionIdError } from "../../../../../src/domain/enum/errorMsg/restrictionErrorMsg";
-import UUIDGenerator from "../../../../../src/port/adapters/controller/uUIDGenerator";
+import { restrictionErrorMsg } from "../../../../../src/domain/model/accountAccessControl/restriction/restrictionErrorMsg";
+import UUIDGenerator from "../../../../../src/port/util/uUIDGenerator";
 
 describe("AuthenticationId", () => {
   let restrictionId: RestrictionId;
@@ -21,6 +21,6 @@ describe("AuthenticationId", () => {
   it("should throw an error if the argument is not UUID v4 format", () => {
     expect(() => {
       new RestrictionId("not a UUID");
-    }).toThrow(restrictionIdError.invalidUUID);
+    }).toThrow(restrictionErrorMsg.invalidUUID);
   });
 });

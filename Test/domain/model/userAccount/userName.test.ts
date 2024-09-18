@@ -1,5 +1,5 @@
 import UserName from "../../../../src/domain/model/userAccount/userName";
-import { userNamesError } from "../../../../src/domain/enum/errorMsg/userAccountErrorMsg";
+import { userAccountErrorMsg } from "../../../../src/domain/model/userAccount/userAccountErrorMsg";
 
 describe("UserName", () => {
   it("should remove white space", () => {
@@ -10,13 +10,13 @@ describe("UserName", () => {
 
   it("should not set username value with value that does not meet username requirements", () => {
     expect(() => new UserName("")).toThrow(
-      userNamesError.userNameNotMeetingRequirements
+      userAccountErrorMsg.userNameNotMeetingRequirements
     );
     expect(() => new UserName(" ")).toThrow(
-      userNamesError.userNameNotMeetingRequirements
+      userAccountErrorMsg.userNameNotMeetingRequirements
     );
     expect(() => new UserName("user+")).toThrow(
-      userNamesError.userNameNotMeetingRequirements
+      userAccountErrorMsg.userNameNotMeetingRequirements
     );
   });
 

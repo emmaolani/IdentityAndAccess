@@ -1,4 +1,4 @@
-import { reasonError } from "../../../../../src/domain/enum/errorMsg/restrictionErrorMsg";
+import { restrictionErrorMsg } from "../../../../../src/domain/model/accountAccessControl/restriction/restrictionErrorMsg";
 import Reason from "../../../../../src/domain/model/accountAccessControl/restriction/reason";
 
 describe("Reason", () => {
@@ -18,10 +18,10 @@ describe("Reason", () => {
   it("should throw an error if the reason is an empty string", () => {
     expect(() => {
       new Reason("");
-    }).toThrow(reasonError.invalidReason);
+    }).toThrow(restrictionErrorMsg.invalidReason);
 
     expect(() => {
       new Reason("     ");
-    }).toThrow(reasonError.invalidReason);
+    }).toThrow(restrictionErrorMsg.invalidReason);
   });
 });

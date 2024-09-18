@@ -4,7 +4,7 @@ import UserAccountId from "../../../../../src/domain/model/userAccount/userAccou
 import EmailAddress from "../../../../../src/domain/model/contactDetails/emailAddress";
 import ITUAndISOSpecId from "../../../../../src/domain/model/geographicEntities/ITUAndISOSpecId";
 import PhoneNumber from "../../../../../src/domain/model/contactDetails/phoneNumber";
-import UUIDGenerator from "../../../../../src/port/adapters/controller/uUIDGenerator";
+import UUIDGenerator from "../../../../../src/port/util/uUIDGenerator";
 
 describe("User Account Profile", () => {
   let userAccountProfile: UserAccountProfile;

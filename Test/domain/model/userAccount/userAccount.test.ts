@@ -4,7 +4,7 @@ import RestrictionId from "../../../../src/domain/model/accountAccessControl/res
 import UserName from "../../../../src/domain/model/userAccount/userName";
 import Password from "../../../../src/domain/model/userAccount/password";
 import UserAccount from "../../../../src/domain/model/userAccount/userAccount";
-import UUIDGenerator from "../../../../src/port/adapters/controller/uUIDGenerator";
+import UUIDGenerator from "../../../../src/port/util/uUIDGenerator";
 import DomainEventPublisher from "../../../../src/domain/domainEventPublisher";
 import TestingEventSubscriber from "../../mock/domainEventSubscriberMock/TestingEventSubscriberMock";
 import NewUserAccountCreated from "../../../../src/domain/model/userAccount/newUserAccountCreated";

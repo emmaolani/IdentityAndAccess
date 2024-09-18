@@ -4,15 +4,11 @@ import RepositoryFactoryMock from "../mock/repositoryFactoryMock";
 import DomainEvent from "../../../src/domain/domainEvent";
 import UserAccount from "../../../src/domain/model/userAccount/userAccount";
 import NewUserAccountCreated from "../../../src/domain/model/userAccount/newUserAccountCreated";
-import EventName from "../../../src/domain/enum/event/eventName";
-import {
-  passwordError,
-  userAccountIdError,
-  userNamesError,
-} from "../../../src/domain/enum/errorMsg/userAccountErrorMsg";
-import UUIDGenerator from "../../../src/port/adapters/controller/uUIDGenerator";
+import EventName from "../../../src/domain/eventName";
+import { userAccountErrorMsg } from "../../../src/domain/model/userAccount/userAccountErrorMsg";
+import UUIDGenerator from "../../../src/port/util/uUIDGenerator";
 import TestPrerequisiteRepository from "../mock/testPrerequisiteRepository";
-import UserAccountRepoErrorMsg from "../../../src/port/_enums/errorMsg/repositoryErrorMsg/userAccountRepoErrorMsg";
+import UserAccountRepoErrorMsg from "../../../src/port/adapters/persistance/repositoryErrorMsg/userAccountRepoErrorMsg";
 
 describe("UserAccountApplicationService", () => {
   const repositoryFactory = new RepositoryFactoryMock();
@@ -127,7 +123,7 @@ describe("UserAccountApplicationService", () => {
 
       await expect(
         userAccountApplicationService.createUserAccount(newUserAccountCommand)
-      ).rejects.toThrow(userAccountIdError.invalidUUID);
+      ).rejects.toThrow(userAccountErrorMsg.invalidUUID);
     });
 
     it("should throw an error if the username does not meet the requirements", async () => {
@@ -139,7 +135,7 @@ describe("UserAccountApplicationService", () => {
 
       await expect(
         userAccountApplicationService.createUserAccount(command)
-      ).rejects.toThrow(userNamesError.userNameNotMeetingRequirements);
+      ).rejects.toThrow(userAccountErrorMsg.userNameNotMeetingRequirements);
     });
 
     it("should throw an error if the password does not meet the requirements", async () => {
@@ -151,7 +147,7 @@ describe("UserAccountApplicationService", () => {
 
       await expect(
         userAccountApplicationService.createUserAccount(newUserAccountCommand)
-      ).rejects.toThrow(passwordError.passwordNotMeetingRequirements);
+      ).rejects.toThrow(userAccountErrorMsg.passwordNotMeetingRequirements);
     });
 
     function storeUserAccountInDB() {

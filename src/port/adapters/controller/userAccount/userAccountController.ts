@@ -1,13 +1,9 @@
 import { Request, Response } from "express";
-import UserAccountApplicationService from "../../../application/userAccount/userAccountApplicationService";
-import NewUserAccountCommand from "../../../application/userAccount/newUserAccountCommand";
-import NewUserAccountReqObj from "./requestBodyTypes/newUserAccountReqObj.types";
-import {
-  userNamesError,
-  passwordError,
-  userAccountIdError,
-} from "../../../domain/enum/errorMsg/userAccountErrorMsg";
-import UserAccountRepoErrorMsg from "../../_enums/errorMsg/repositoryErrorMsg/userAccountRepoErrorMsg";
+import UserAccountApplicationService from "../../../../application/userAccount/userAccountApplicationService";
+import NewUserAccountCommand from "../../../../application/userAccount/newUserAccountCommand";
+import NewUserAccountReqObj from "./newUserAccountReqObj.types";
+import { userAccountErrorMsg } from "../../../../domain/model/userAccount/userAccountErrorMsg";
+import UserAccountRepoErrorMsg from "../../persistance/repositoryErrorMsg/userAccountRepoErrorMsg";
 
 class UserAccountController {
   private userAccountApplicationService: UserAccountApplicationService;
@@ -68,19 +64,21 @@ class UserAccountController {
         .status(409)
         .send({ message: UserAccountRepoErrorMsg.UserAccountAlreadyExists });
       return;
-    } else if (error.message === userAccountIdError.invalidUUID) {
+    } else if (error.message === userAccountErrorMsg.invalidUUID) {
       response.status(500).send({ message: "server error" });
     } else if (
-      error.message === userNamesError.userNameNotMeetingRequirements
+      error.message === userAccountErrorMsg.userNameNotMeetingRequirements
     ) {
       response
         .status(400)
-        .send({ message: userNamesError.userNameNotMeetingRequirements });
+        .send({ message: userAccountErrorMsg.userNameNotMeetingRequirements });
       return;
-    } else if (error.message === passwordError.passwordNotMeetingRequirements) {
+    } else if (
+      error.message === userAccountErrorMsg.passwordNotMeetingRequirements
+    ) {
       response
         .status(400)
-        .send({ message: passwordError.passwordNotMeetingRequirements });
+        .send({ message: userAccountErrorMsg.passwordNotMeetingRequirements });
       return;
     }
   }

@@ -1,7 +1,7 @@
-import EntityValueObject from "../../EntityValueObject";
-import { ITUAndISOSpecIdIdError } from "../../enum/errorMsg/iTUAndISOErrorMsg";
+import PersistentValueObject from "../../EntityValueObject";
+import { ITUAndISOSpecIdErrorMsg } from "./iTUAndISOErrorMsg";
 
-class ITUAndISOSpecId extends EntityValueObject {
+class ITUAndISOSpecId extends PersistentValueObject {
   private value: string;
 
   constructor(value: string) {
@@ -19,7 +19,7 @@ class ITUAndISOSpecId extends EntityValueObject {
       /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i; // regex for UUID v4
 
     if (!uuidRegex.test(aValue)) {
-      throw new Error(ITUAndISOSpecIdIdError.invalidUUID);
+      throw new Error(ITUAndISOSpecIdErrorMsg.invalidUUID);
     }
   }
 

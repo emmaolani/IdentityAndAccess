@@ -1,4 +1,4 @@
-import { reasonError } from "../../../enum/errorMsg/restrictionErrorMsg";
+import { restrictionErrorMsg } from "./restrictionErrorMsg";
 
 class Reason {
   private reason: string;
@@ -17,7 +17,7 @@ class Reason {
     const regex = /^\s*$/; // empty string or whitespace
 
     if (regex.test(aReason)) {
-      throw new Error(reasonError.invalidReason);
+      throw new Error(restrictionErrorMsg.invalidReason);
     }
   }
 }

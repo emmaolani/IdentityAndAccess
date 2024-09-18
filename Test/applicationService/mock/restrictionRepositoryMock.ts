@@ -1,6 +1,6 @@
 import RestrictionRepository from "../../../src/domain/model/accountAccessControl/restriction/restrictionRepository";
 import Restriction from "../../../src/domain/model/accountAccessControl/restriction/restriction";
-import restrictionErrorMsg from "../../../src/port/_enums/errorMsg/repositoryErrorMsg/restrictionErrorMsg";
+import restrictionErrorMsg from "../../../src/port/adapters/persistance/repositoryErrorMsg/restrictionErrorMsg";
 import FakeDb from "./fakeDb/fakeDb";
 
 class RestrictionRepositoryMock implements RestrictionRepository {
