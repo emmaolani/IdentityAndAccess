@@ -1,6 +1,6 @@
 import UserAccountProfileController from "../../../../../src/port/adapters/controller/userAccount/userAccountProfile/userAccountProfileController";
 import UserAccountProfileApplicationService from "../../../../../src/application/userAccount/userAccountProfile/userAccountProfileApplicationService";
-import RepositoryFactoryMock from "../../../../applicationService/mock/repositoryFactoryMock";
+import RepositoryFactoryMock from "../../../../application/mock/repositoryFactoryMock";
 import PhoneNumberValidatorImp from "../../../../../src/port/util/phoneNumberValidatorImp";
 import UserAccountProfile from "../../../../../src/domain/model/userAccount/userAccountProfile/userAccountProfile";
 import NewUserAccountProfileCreated from "../../../../../src/domain/model/userAccount/userAccountProfile/newUserAccountProfileCreated";
@@ -13,7 +13,7 @@ import NewUserAccountProfileReqObj from "../../../../../src/port/adapters/contro
 import userAccountProfileRepoError from "../../../../../src/port/adapters/persistance/repositoryErrorMsg/userAccountProfileRepoErrorMsg";
 import { ITUAndISOSpecRepoErrorMsg } from "../../../../../src/port/adapters/persistance/repositoryErrorMsg/iTuAndISOSpecRepoErrorMsg";
 import { contactDetailErrorMsg } from "../../../../../src/domain/model/contactDetails/contactDetailErrorMsg";
-import TestPrerequisiteRepository from "../../../../applicationService/mock/testPrerequisiteRepository";
+import TestPrerequisiteRepository from "../../../../application/mock/testPrerequisiteRepository";
 
 describe("userAccount", () => {
   const repositoryFactory = new RepositoryFactoryMock();

@@ -1,6 +1,6 @@
 import UserAccountController from "../../../../../src/port/adapters/controller/userAccount/userAccountController";
 import UserAccountApplicationService from "../../../../../src/application/userAccount/userAccountApplicationService";
-import RepositoryFactoryMock from "../../../../applicationService/mock/repositoryFactoryMock";
+import RepositoryFactoryMock from "../../../../application/mock/repositoryFactoryMock";
 import { Request, Response } from "express";
 import RequestMock from "../mock/requestMock";
 import ResponseMock from "../mock/responseMock";
@@ -9,7 +9,7 @@ import NewUserAccountCreated from "../../../../../src/domain/model/userAccount/n
 import DomainEvent from "../../../../../src/domain/domainEvent";
 import { userAccountErrorMsg } from "../../../../../src/domain/model/userAccount/userAccountErrorMsg";
 import EventName from "../../../../../src/domain/eventName";
-import TestPrerequisiteRepository from "../../../../applicationService/mock/testPrerequisiteRepository";
+import TestPrerequisiteRepository from "../../../../application/mock/testPrerequisiteRepository";
 import UserAccountRepoErrorMsg from "../../../../../src/port/adapters/persistance/repositoryErrorMsg/userAccountRepoErrorMsg";
 import UUIDGenerator from "../../../../../src/port/util/uUIDGenerator";
 
