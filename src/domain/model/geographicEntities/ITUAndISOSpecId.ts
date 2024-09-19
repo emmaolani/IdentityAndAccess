@@ -1,7 +1,7 @@
-import PersistentValueObject from "../../EntityValueObject";
+import PersistedValueObject from "../../persistedValueObject";
 import { ITUAndISOSpecIdErrorMsg } from "./iTUAndISOErrorMsg";
 
-class ITUAndISOSpecId extends PersistentValueObject {
+class ITUAndISOSpecId extends PersistedValueObject {
   private value: string;
 
   constructor(value: string) {

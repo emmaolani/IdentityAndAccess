@@ -1,7 +1,7 @@
-import PersistentValueObject from "../../EntityValueObject";
+import PersistedValueObject from "../../persistedValueObject";
 import { userAccountErrorMsg } from "./userAccountErrorMsg";
 
-class UserAccountId extends PersistentValueObject {
+class UserAccountId extends PersistedValueObject {
   private id: string;
 
   constructor(aValue: string) {

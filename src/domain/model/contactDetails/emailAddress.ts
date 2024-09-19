@@ -1,8 +1,8 @@
 import VerificationCode from "./verificationCode";
-import PersistentValueObject from "../../EntityValueObject";
+import PersistedValueObject from "../../persistedValueObject";
 import { contactDetailErrorMsg } from "./contactDetailErrorMsg";
 
-class EmailAddress extends PersistentValueObject {
+class EmailAddress extends PersistedValueObject {
   private value: string;
   private isActive: boolean;
   private verificationCode: VerificationCode | null;

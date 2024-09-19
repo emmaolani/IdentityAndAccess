@@ -1,7 +1,7 @@
-import PersistentValueObject from "../../../../EntityValueObject";
+import PersistedValueObject from "../../../../persistedValueObject";
 import workAccountProfileErrorMsg from "./workAccountProfileErrorMsg";
 
-class FullName extends PersistentValueObject {
+class FullName extends PersistedValueObject {
   private name: string;
 
   constructor(aName: string) {

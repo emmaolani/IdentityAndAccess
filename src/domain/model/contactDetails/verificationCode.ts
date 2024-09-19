@@ -1,7 +1,7 @@
-import PersistentValueObject from "../../EntityValueObject";
+import PersistedValueObject from "../../persistedValueObject";
 import { contactDetailErrorMsg } from "./contactDetailErrorMsg";
 
-class VerificationCode extends PersistentValueObject {
+class VerificationCode extends PersistedValueObject {
   private value: string;
   private timeStamp: number;
   private allowedTimeDurationOfCode: number = 300000; // 5 minutes

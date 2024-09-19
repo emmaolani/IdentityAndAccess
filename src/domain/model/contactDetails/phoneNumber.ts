@@ -1,9 +1,9 @@
-import PersistentValueObject from "../../EntityValueObject";
+import PersistedValueObject from "../../persistedValueObject";
 import ITUAndISOSpecId from "../geographicEntities/ITUAndISOSpecId";
 import VerificationCode from "./verificationCode";
 import { contactDetailErrorMsg } from "./contactDetailErrorMsg";
 
-class PhoneNumber extends PersistentValueObject {
+class PhoneNumber extends PersistedValueObject {
   private value: string;
   private iTUAndISOSpecId: ITUAndISOSpecId;
   private isActive: boolean;

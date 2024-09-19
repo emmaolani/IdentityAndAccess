@@ -1,7 +1,7 @@
-import PersistentValueObject from "../../EntityValueObject";
+import PersistedValueObject from "../../persistedValueObject";
 import { userAccountErrorMsg } from "./userAccountErrorMsg";
 
-class Password extends PersistentValueObject {
+class Password extends PersistedValueObject {
   private value: string;
 
   constructor(aValue: string) {
@@ -24,7 +24,6 @@ class Password extends PersistentValueObject {
   private ThrowErrorIfPasswordDontMeetMinRequirements(aValue: string) {
     const regex =
       /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.,])[A-Za-z\d@$!%*?&.,]{8,20}$/; // this regex defines the requirement for a valid password
-
     if (aValue.match(regex)) {
       return;
     } else {
