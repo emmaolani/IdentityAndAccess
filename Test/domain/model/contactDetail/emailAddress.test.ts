@@ -3,26 +3,18 @@ import VerificationCode from "../../../../src/domain/model/contactDetails/verifi
 import { contactDetailErrorMsg } from "../../../../src/domain/model/contactDetails/contactDetailErrorMsg";
 
 describe("Unit Test for EmailAddress class", () => {
-  let whiteSpacedEmail: string = " tes t@coral.com ";
   let validEmail: string = "test@coral.com";
 
   let active: boolean = true;
   let notActive: boolean = false;
 
-  it("should remove white spaces from email address", () => {
-    const emailAddress = new EmailAddress(
-      whiteSpacedEmail,
-      active,
-      createVerificationCode("1234567", Date.now())
-    );
-
-    expect(emailAddress.getValue()).toBe(validEmail);
-  });
-
   it("should throw an error if emailAddress is instantiated with an address that does not meet requirement", () => {
     expect(() => new EmailAddress("invalidEmail@Coral", active, null)).toThrow(
       contactDetailErrorMsg.invalidEmail
     );
+    expect(
+      () => new EmailAddress("invalid  Email@Coral.com", active, null)
+    ).toThrow(contactDetailErrorMsg.invalidEmail);
     expect(() => new EmailAddress("invalidEmail.Coral", active, null)).toThrow(
       contactDetailErrorMsg.invalidEmail
     );

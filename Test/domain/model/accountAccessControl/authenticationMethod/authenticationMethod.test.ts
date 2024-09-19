@@ -1,6 +1,6 @@
 import AuthenticationMethod from "../../../../../src/domain/model/accountAccessControl/authenticationMethod/authenticationMethod";
+import { authenticationMethodErrorMsg } from "../../../../../src/domain/model/accountAccessControl/authenticationMethod/authenticationMethodErrorMsg";
 import AuthenticationMethodId from "../../../../../src/domain/model/accountAccessControl/authenticationMethod/authenticationMethodId";
-import Type from "../../../../../src/domain/model/accountAccessControl/authenticationMethod/type";
 import UUIDGenerator from "../../../../../src/port/util/uUIDGenerator";
 
 describe("AuthenticationMethod", () => {
@@ -11,7 +11,7 @@ describe("AuthenticationMethod", () => {
     const typeName = "password";
     authenticationMethod = new AuthenticationMethod(
       new AuthenticationMethodId(id),
-      new Type(typeName)
+      "password"
     );
 
     assertThat_AuthenticationMethod_propertiesMatches(id, typeName);
@@ -23,13 +23,28 @@ describe("AuthenticationMethod", () => {
   ) {
     expect(authenticationMethod).toBeInstanceOf(AuthenticationMethod);
     expect(authenticationMethod["id"]["id"]).toBe(id);
-    expect(authenticationMethod["type"]["type"]).toBe(typeName);
+    expect(authenticationMethod["type"]).toBe(typeName);
   }
+
+  it("should throw error if type is an empty string", () => {
+    expect(() => {
+      new AuthenticationMethod(
+        new AuthenticationMethodId(new UUIDGenerator().generate()),
+        ""
+      );
+    }).toThrow(authenticationMethodErrorMsg.invalidType);
+    expect(() => {
+      new AuthenticationMethod(
+        new AuthenticationMethodId(new UUIDGenerator().generate()),
+        "     "
+      );
+    }).toThrow(authenticationMethodErrorMsg.invalidType);
+  });
 
   it("should return Id", () => {
     authenticationMethod = new AuthenticationMethod(
       new AuthenticationMethodId(new UUIDGenerator().generate()),
-      new Type("password")
+      "password"
     );
 
     expect(authenticationMethod.getId()).toBeInstanceOf(AuthenticationMethodId);

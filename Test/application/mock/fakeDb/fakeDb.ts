@@ -22,7 +22,7 @@ class FakeDb {
     if (data instanceof ITUAndISOSpec) {
       table = this.db.get(tableName);
       table?.set(data["countryCode"], data);
-      table?.set(data["id"]["value"], data);
+      table?.set(data["id"]["id"], data);
     } else if (data instanceof UserAccountProfile) {
       table = this.db.get(tableName);
       table?.set(data["id"]["id"], data);
@@ -37,11 +37,11 @@ class FakeDb {
     } else if (data instanceof AuthenticationMethod) {
       table = this.db.get(tableName);
       table?.set(data["id"]["id"], data);
-      table?.set(data["type"]["type"], data);
+      table?.set(data["type"], data);
     } else if (data instanceof Restriction) {
       table = this.db.get(tableName);
       table?.set(data["id"]["id"], data);
-      table?.set(data["reason"]["reason"], data);
+      table?.set(data["reason"], data);
     }
   }
 

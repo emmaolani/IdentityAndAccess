@@ -1,4 +1,6 @@
-class PersistedValueObject {
+import AssertionConcern from "./assertionConcern";
+
+class PersistedValueObject extends AssertionConcern {
   private persistanceId: string;
 }
 

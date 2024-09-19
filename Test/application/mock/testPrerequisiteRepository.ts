@@ -1,8 +1,6 @@
 import AuthenticationMethodId from "../../../src/domain/model/accountAccessControl/authenticationMethod/authenticationMethodId";
-import Type from "../../../src/domain/model/accountAccessControl/authenticationMethod/type";
 import AuthenticationMethod from "../../../src/domain/model/accountAccessControl/authenticationMethod/authenticationMethod";
 import RestrictionId from "../../../src/domain/model/accountAccessControl/restriction/restrictionId";
-import Reason from "../../../src/domain/model/accountAccessControl/restriction/reason";
 import Restriction from "../../../src/domain/model/accountAccessControl/restriction/restriction";
 import FakeDb from "./fakeDb/fakeDb";
 import UserAccount from "../../../src/domain/model/userAccount/userAccount";
@@ -142,14 +140,14 @@ class TestPrerequisiteRepository {
       new AuthenticationMethodId(
         TestPrerequisiteRepository.authenticationMethodProperties.id
       ),
-      new Type(TestPrerequisiteRepository.authenticationMethodProperties.type)
+      TestPrerequisiteRepository.authenticationMethodProperties.type
     );
   }
 
   private createRestriction(): Restriction {
     return new Restriction(
       new RestrictionId(TestPrerequisiteRepository.restrictionProperties.id),
-      new Reason(TestPrerequisiteRepository.restrictionProperties.reason)
+      TestPrerequisiteRepository.restrictionProperties.reason
     );
   }
 

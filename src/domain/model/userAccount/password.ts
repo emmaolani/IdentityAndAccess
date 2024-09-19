@@ -3,6 +3,8 @@ import { userAccountErrorMsg } from "./userAccountErrorMsg";
 
 class Password extends PersistedValueObject {
   private value: string;
+  private passwordRequirement =
+    /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.,])[A-Za-z\d@$!%*?&.,]{8,20}$/;
 
   constructor(aValue: string) {
     super();
@@ -10,25 +12,18 @@ class Password extends PersistedValueObject {
   }
 
   private setValue(aValue: string) {
-    const value = this.removeWhiteSpace(aValue);
+    this.assertNoWhiteSpace(
+      aValue,
+      userAccountErrorMsg.passwordNotMeetingRequirements
+    );
 
-    this.ThrowErrorIfPasswordDontMeetMinRequirements(value);
+    this.assertMatchesRegExp(
+      aValue,
+      this.passwordRequirement,
+      userAccountErrorMsg.passwordNotMeetingRequirements
+    );
 
-    this.value = value;
-  }
-
-  private removeWhiteSpace(aValue: string): string {
-    return aValue.replace(/\s+/g, "");
-  }
-
-  private ThrowErrorIfPasswordDontMeetMinRequirements(aValue: string) {
-    const regex =
-      /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.,])[A-Za-z\d@$!%*?&.,]{8,20}$/; // this regex defines the requirement for a valid password
-    if (aValue.match(regex)) {
-      return;
-    } else {
-      throw new Error(userAccountErrorMsg.passwordNotMeetingRequirements);
-    }
+    this.value = aValue;
   }
 
   getValue(): string {

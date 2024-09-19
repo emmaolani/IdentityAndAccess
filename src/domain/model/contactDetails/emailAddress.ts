@@ -6,6 +6,7 @@ class EmailAddress extends PersistedValueObject {
   private value: string;
   private isActive: boolean;
   private verificationCode: VerificationCode | null;
+  private emailRequirement = /^(?=.*@)(?=.*\.).{1,254}$/;
 
   constructor(
     aValue: string,
@@ -19,22 +20,14 @@ class EmailAddress extends PersistedValueObject {
   }
 
   private setValue(aValue: string) {
-    const newValue = this.removeWhiteSpace(aValue);
+    this.assertNoWhiteSpace(aValue, contactDetailErrorMsg.invalidEmail);
+    this.assertMatchesRegExp(
+      aValue,
+      this.emailRequirement,
+      contactDetailErrorMsg.invalidEmail
+    );
 
-    this.throwErrorIfEmailIsInvalid(newValue);
-    this.value = newValue;
-  }
-
-  private throwErrorIfEmailIsInvalid(aValue: string) {
-    const emailRegex = /^(?=.*@)(?=.*\.).{1,254}$/; // this regex defines the requirement for a valid email address
-
-    if (!emailRegex.test(aValue)) {
-      throw new Error(contactDetailErrorMsg.invalidEmail);
-    }
-  }
-
-  private removeWhiteSpace(aValue: string): string {
-    return aValue.replace(/\s+/g, "");
+    this.value = aValue;
   }
 
   private setActiveStatus(aStatus: boolean) {

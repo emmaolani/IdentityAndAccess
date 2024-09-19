@@ -8,6 +8,7 @@ class PhoneNumber extends PersistedValueObject {
   private iTUAndISOSpecId: ITUAndISOSpecId;
   private isActive: boolean;
   private verificationCode: VerificationCode | null;
+  private phoneNumberRequirement = /^\d{4,16}$/;
 
   constructor(
     aValue: string,
@@ -23,21 +24,13 @@ class PhoneNumber extends PersistedValueObject {
   }
 
   private setValue(aValue: string) {
-    const newValue = this.removeWhiteSpace(aValue);
-    this.throwErrorIfPhoneNumberIsInvalid(newValue);
-    this.value = newValue;
-  }
-
-  private throwErrorIfPhoneNumberIsInvalid(aValue: string) {
-    const phoneNumberRegex = /^\d{4,16}$/; // this regex defines the requirement for a valid phone number
-
-    if (!phoneNumberRegex.test(aValue)) {
-      throw new Error(contactDetailErrorMsg.invalidPhoneNumber);
-    }
-  }
-
-  private removeWhiteSpace(aValue: string): string {
-    return aValue.replace(/\s+/g, "");
+    this.assertNoWhiteSpace(aValue, contactDetailErrorMsg.invalidPhoneNumber);
+    this.assertMatchesRegExp(
+      aValue,
+      this.phoneNumberRequirement,
+      contactDetailErrorMsg.invalidPhoneNumber
+    );
+    this.value = aValue;
   }
 
   private setItuAndIsoSpecId(aItuAndIsoSpecId: ITUAndISOSpecId) {

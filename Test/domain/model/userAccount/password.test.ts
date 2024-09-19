@@ -6,18 +6,19 @@ describe("Password", () => {
     expect(() => new Password("password")).toThrow(
       userAccountErrorMsg.passwordNotMeetingRequirements
     );
+    expect(() => new Password("pass word")).toThrow(
+      userAccountErrorMsg.passwordNotMeetingRequirements
+    );
     expect(() => new Password("")).toThrow(
       userAccountErrorMsg.passwordNotMeetingRequirements
     );
-    expect(() => new Password(" ")).toThrow(
+    expect(() => new Password("  ")).toThrow(
       userAccountErrorMsg.passwordNotMeetingRequirements
     );
-  });
 
-  it("should remove white space from password", () => {
-    const password = new Password("  SecureP@ss123  ");
-
-    expect(password.getValue()).toEqual("SecureP@ss123");
+    expect(() => new Password("SecureP@ss123")).not.toThrow(
+      userAccountErrorMsg.passwordNotMeetingRequirements
+    );
   });
 
   it("should correctly compare password", () => {

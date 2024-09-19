@@ -5,6 +5,7 @@ class VerificationCode extends PersistedValueObject {
   private value: string;
   private timeStamp: number;
   private allowedTimeDurationOfCode: number = 300000; // 5 minutes
+  private codeRequirement = /^\d{7}$/;
 
   constructor(aValue: string, aTimeStamp: number) {
     super();
@@ -13,24 +14,21 @@ class VerificationCode extends PersistedValueObject {
   }
 
   private setValue(aValue: string) {
-    this.throwErrorIfCodeIsNotValid(aValue);
+    this.assertMatchesRegExp(
+      aValue,
+      this.codeRequirement,
+      contactDetailErrorMsg.invalidCode
+    );
+
     this.value = aValue;
   }
 
-  private throwErrorIfCodeIsNotValid(aValue: string) {
-    const sevenDigitRegex = /^\d{7}$/;
-
-    if (!sevenDigitRegex.test(aValue)) {
-      throw new Error(contactDetailErrorMsg.invalidCode);
-    }
-  }
-
   private setTimeStamp(aTimeStamp: number) {
-    this.checkIfTimeStampIsInvalid(aTimeStamp);
+    this.throwErrorIfTimeStampIsInvalid(aTimeStamp);
     this.timeStamp = aTimeStamp;
   }
 
-  private checkIfTimeStampIsInvalid(aTimeStamp: number) {
+  private throwErrorIfTimeStampIsInvalid(aTimeStamp: number) {
     if (aTimeStamp > Date.now() || aTimeStamp < 0) {
       throw Error(contactDetailErrorMsg.invalidTimeStamp);
     } else {

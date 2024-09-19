@@ -1,11 +1,13 @@
+import AssertionConcern from "../../../assertionConcern";
+import { restrictionErrorMsg } from "./restrictionErrorMsg";
 import RestrictionId from "./restrictionId";
-import Reason from "./reason";
 
-class Restriction {
+class Restriction extends AssertionConcern {
   private id: RestrictionId;
-  private reason: Reason;
+  private reason: string;
 
-  constructor(anId: RestrictionId, aReason: Reason) {
+  constructor(anId: RestrictionId, aReason: string) {
+    super();
     this.setId(anId);
     this.setReason(aReason);
   }
@@ -14,7 +16,15 @@ class Restriction {
     this.id = anId;
   }
 
-  setReason(aReason: Reason): void {
+  setReason(aReason: string): void {
+    this.assertNotNull(aReason, restrictionErrorMsg.invalidReason);
+    this.assertLengthIsCorrect(
+      aReason,
+      1,
+      60,
+      restrictionErrorMsg.invalidReason
+    );
+
     this.reason = aReason;
   }
 

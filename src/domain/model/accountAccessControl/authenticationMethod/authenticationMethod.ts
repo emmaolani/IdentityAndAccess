@@ -1,11 +1,13 @@
+import AssertionConcern from "../../../assertionConcern";
+import { authenticationMethodErrorMsg } from "./authenticationMethodErrorMsg";
 import AuthenticationMethodId from "./authenticationMethodId";
-import Type from "./type";
 
-class AuthenticationMethod {
+class AuthenticationMethod extends AssertionConcern {
   private id: AuthenticationMethodId;
-  private type: Type;
+  private type: string;
 
-  constructor(anId: AuthenticationMethodId, aType: Type) {
+  constructor(anId: AuthenticationMethodId, aType: string) {
+    super();
     this.setId(anId);
     this.setType(aType);
   }
@@ -14,7 +16,15 @@ class AuthenticationMethod {
     this.id = anId;
   }
 
-  private setType(aType: Type): void {
+  private setType(aType: string): void {
+    this.assertNotNull(aType, authenticationMethodErrorMsg.invalidType);
+    this.assertLengthIsCorrect(
+      aType,
+      1,
+      15,
+      authenticationMethodErrorMsg.invalidType
+    );
+
     this.type = aType;
   }
 

@@ -44,7 +44,7 @@ class ITUAndISOSpec {
   }
 
   getId() {
-    return this.id.getValue();
+    return this.id.getId();
   }
 }
 

@@ -5,26 +5,19 @@ import { contactDetailErrorMsg } from "../../../../src/domain/model/contactDetai
 import UUIDGenerator from "../../../../src/port/util/uUIDGenerator";
 
 describe("Unit Test for PhoneNumber class", () => {
-  let invalidPhoneNumber: string = " 123  456 78  ";
+  let whiteSpacedPhoneNumber: string = " 123  456 78  ";
   let validPhoneNumber: string = "12345678";
   let ituAndIsoSpecId = new ITUAndISOSpecId(new UUIDGenerator().generate());
   let active: boolean = true;
   let notActive: boolean = false;
 
-  it("should remove white spaces from phone number", () => {
-    const phoneNumber = new PhoneNumber(
-      invalidPhoneNumber,
-      ituAndIsoSpecId,
-      active,
-      null
-    );
-
-    expect(phoneNumber.getValue()).toBe(validPhoneNumber);
-  });
-
   it("should throw an error if phoneNumber is instantiated with a number that does not meet requirement", () => {
     expect(
       () => new PhoneNumber("invalidPhoneNumber", ituAndIsoSpecId, active, null)
+    ).toThrow(contactDetailErrorMsg.invalidPhoneNumber);
+    expect(
+      () =>
+        new PhoneNumber(whiteSpacedPhoneNumber, ituAndIsoSpecId, active, null)
     ).toThrow(contactDetailErrorMsg.invalidPhoneNumber);
     expect(() => new PhoneNumber("123", ituAndIsoSpecId, active, null)).toThrow(
       contactDetailErrorMsg.invalidPhoneNumber

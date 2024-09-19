@@ -1,6 +1,6 @@
 import RestrictionRepository from "../../../src/domain/model/accountAccessControl/restriction/restrictionRepository";
 import Restriction from "../../../src/domain/model/accountAccessControl/restriction/restriction";
-import restrictionErrorMsg from "../../../src/port/adapters/persistance/repositoryErrorMsg/restrictionErrorMsg";
+import restrictionRepoErrorMsg from "../../../src/port/adapters/persistance/repositoryErrorMsg/restrictionRepoErrorMsg";
 import FakeDb from "./fakeDb/fakeDb";
 
 class RestrictionRepositoryMock implements RestrictionRepository {
@@ -21,7 +21,7 @@ class RestrictionRepositoryMock implements RestrictionRepository {
       return data;
     }
 
-    throw Error(restrictionErrorMsg.notFound);
+    throw Error(restrictionRepoErrorMsg.notFound);
   }
 
   async remove(anId: string): Promise<void> {

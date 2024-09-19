@@ -3,6 +3,7 @@ import { userAccountErrorMsg } from "./userAccountErrorMsg";
 
 class UserName extends PersistedValueObject {
   private value: string;
+  private usernameRequirements = /^[a-zA-Z0-9_]{2,15}$/;
 
   constructor(aValue: string) {
     super();
@@ -10,25 +11,18 @@ class UserName extends PersistedValueObject {
   }
 
   setValue(aValue: string) {
-    const value = this.removeWhiteSpace(aValue);
+    this.assertNoWhiteSpace(
+      aValue,
+      userAccountErrorMsg.userNameNotMeetingRequirements
+    );
 
-    this.throwErrorIfUsernameDoesNotMeetMinRequirements(value);
+    this.assertMatchesRegExp(
+      aValue,
+      this.usernameRequirements,
+      userAccountErrorMsg.userNameNotMeetingRequirements
+    );
 
-    this.value = value;
-  }
-
-  private removeWhiteSpace(aValue: string): string {
-    return aValue.replace(/\s+/g, "");
-  }
-
-  private throwErrorIfUsernameDoesNotMeetMinRequirements(aValue: string) {
-    const regex = /^[a-zA-Z0-9_]{2,15}$/; // this regex defines the requirement for a valid username
-
-    if (aValue.match(regex)) {
-      return;
-    } else {
-      throw new Error(userAccountErrorMsg.userNameNotMeetingRequirements);
-    }
+    this.value = aValue;
   }
 
   getValue(): string {
