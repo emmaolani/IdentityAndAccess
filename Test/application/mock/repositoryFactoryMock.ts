@@ -10,7 +10,7 @@ import UserAccountProfileRepositoryMock from "./userAccountProfileRepositoryMock
 import ITUAndISOSpecRepositoryMock from "./iTUAndISOSpecRepositoryMock";
 import AuthenticationMethodRepositoryMock from "./authenticationMethodRepositoryMock";
 import RestrictionRepositoryMock from "./restrictionRepositoryMock";
-import TestPrerequisiteRepository from "./testPrerequisiteRepository";
+import { TestPrerequisiteRepository } from "./testPrerequisiteRepository";
 
 class RepositoryFactoryMock implements RepositoryFactory {
   private db: FakeDb;

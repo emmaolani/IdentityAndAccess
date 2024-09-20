@@ -9,7 +9,10 @@ import NewUserAccountCreated from "../../../../../src/domain/model/userAccount/n
 import DomainEvent from "../../../../../src/domain/domainEvent";
 import { userAccountErrorMsg } from "../../../../../src/domain/model/userAccount/userAccountErrorMsg";
 import EventName from "../../../../../src/domain/eventName";
-import TestPrerequisiteRepository from "../../../../application/mock/testPrerequisiteRepository";
+import {
+  TestPrerequisiteRepository,
+  prerequisiteObjects,
+} from "../../../../application/mock/testPrerequisiteRepository";
 import UserAccountRepoErrorMsg from "../../../../../src/port/adapters/persistance/repositoryErrorMsg/userAccountRepoErrorMsg";
 import UUIDGenerator from "../../../../../src/port/util/uUIDGenerator";
 
@@ -68,50 +71,6 @@ describe("UserAccountController", () => {
       });
     });
 
-    async function retrieveUserAccountAndEventStored(aRequest: Request) {
-      const repositories = repositoryFactory.getRepositories(
-        "UserAccountRepository",
-        "EventStore"
-      );
-
-      const userAccount = await repositories.UserAccountRepository.getById(
-        aRequest.body.userAccountId
-      );
-      const events = (await repositories.EventStore.getAllEventWithName(
-        EventName.NewUserAccountCreated
-      )) as NewUserAccountCreated[];
-
-      return { userAccount, events };
-    }
-
-    function assertThatPropertiesIn_userAccount_match(
-      userAccount: UserAccount,
-      aRequest: Request
-    ) {
-      expect(userAccount).toBeInstanceOf(UserAccount);
-      expect(userAccount["id"]["id"]).toBe(aRequest.body.userAccountId);
-      expect(userAccount["username"]["value"]).toBe(aRequest.body.username);
-      expect(userAccount["password"]["value"]).toBe(aRequest.body.password);
-      expect(userAccount["authenticationMethodId"]["id"]).toBe(
-        TestPrerequisiteRepository.authenticationMethodProperties.id
-      );
-      expect(userAccount["restrictionId"]["id"]).toBe(
-        TestPrerequisiteRepository.restrictionProperties.id
-      );
-    }
-
-    function assertThatPropertiesIn_newUserAccountCreated_match(
-      event: DomainEvent,
-      aRequest: Request
-    ) {
-      expect(event).toBeInstanceOf(NewUserAccountCreated);
-
-      if (event instanceof NewUserAccountCreated) {
-        expect(event["userAccountId"]).toBe(aRequest.body.userAccountId);
-        expect(event["userName"]).toBe(aRequest.body.username);
-      }
-    }
-
     it("should send response with status 400 if request body is invalid", async () => {
       const request: unknown = new RequestMock({}); // invalid request body
       const response: unknown = new ResponseMock();
@@ -136,7 +95,7 @@ describe("UserAccountController", () => {
 
       const response: unknown = new ResponseMock();
 
-      storeUserAccountInDB();
+      add("userAccount");
 
       await userAccountController.createUserAccount(
         request as Required<Request>,
@@ -145,10 +104,10 @@ describe("UserAccountController", () => {
 
       expect((response as ResponseMock).getStatus()).toBe(409);
       expect((response as ResponseMock).getResponse()).toEqual({
-        message: UserAccountRepoErrorMsg.UserAccountAlreadyExists,
+        message: UserAccountRepoErrorMsg.conflict,
       });
 
-      removeUserAccountInDB();
+      remove("userAccount");
     });
 
     it("should send a status code 500 if UUID for userAccount is invalid", async () => {
@@ -210,17 +169,107 @@ describe("UserAccountController", () => {
       });
     });
 
-    function storeUserAccountInDB() {
-      const testPrerequisiteRepository =
-        repositoryFactory.getTestPrerequisiteRepository();
-      testPrerequisiteRepository.savePrerequisiteObjects("userAccount");
+    it("should respond with a 500 error if password authenticationMethod not found in db", async () => {
+      const request: unknown = new RequestMock({
+        userAccountId: new UUIDGenerator().generate(),
+        username: "username",
+        password: "SecureP@ss1234",
+      });
+      const response: unknown = new ResponseMock();
+
+      remove("authenticationMethod");
+
+      await userAccountController.createUserAccount(
+        request as Required<Request>,
+        response as Required<Response>
+      );
+
+      expect((response as ResponseMock).getStatus()).toBe(500);
+      expect((response as ResponseMock).getResponse()).toEqual({
+        message: "server error",
+      });
+
+      add("authenticationMethod");
+    });
+
+    it("should respond with a 500 error if password restriction not found in db", async () => {
+      const request: unknown = new RequestMock({
+        userAccountId: new UUIDGenerator().generate(),
+        username: "username",
+        password: "SecureP@ss1234",
+      });
+      const response: unknown = new ResponseMock();
+
+      remove("restriction");
+
+      await userAccountController.createUserAccount(
+        request as Required<Request>,
+        response as Required<Response>
+      );
+
+      expect((response as ResponseMock).getStatus()).toBe(500);
+      expect((response as ResponseMock).getResponse()).toEqual({
+        message: "server error",
+      });
+
+      add("restriction");
+    });
+
+    async function retrieveUserAccountAndEventStored(aRequest: Request) {
+      const repositories = repositoryFactory.getRepositories(
+        "UserAccountRepository",
+        "EventStore"
+      );
+
+      const userAccount = await repositories.UserAccountRepository.getById(
+        aRequest.body.userAccountId
+      );
+      const events = (await repositories.EventStore.getAllEventWithName(
+        EventName.NewUserAccountCreated
+      )) as NewUserAccountCreated[];
+
+      return { userAccount, events };
     }
 
-    function removeUserAccountInDB() {
+    function assertThatPropertiesIn_userAccount_match(
+      userAccount: UserAccount,
+      aRequest: Request
+    ) {
+      expect(userAccount).toBeInstanceOf(UserAccount);
+      expect(userAccount["id"]["id"]).toBe(aRequest.body.userAccountId);
+      expect(userAccount["username"]["value"]).toBe(aRequest.body.username);
+      expect(userAccount["password"]["value"]).toBe(aRequest.body.password);
+      expect(userAccount["authenticationMethodId"]["id"]).toBe(
+        TestPrerequisiteRepository.authenticationMethodProperties.id
+      );
+      expect(userAccount["restrictionId"]["id"]).toBe(
+        TestPrerequisiteRepository.restrictionProperties.id
+      );
+    }
+
+    function assertThatPropertiesIn_newUserAccountCreated_match(
+      event: DomainEvent,
+      aRequest: Request
+    ) {
+      expect(event).toBeInstanceOf(NewUserAccountCreated);
+
+      if (event instanceof NewUserAccountCreated) {
+        expect(event["userAccountId"]).toBe(aRequest.body.userAccountId);
+        expect(event["userName"]).toBe(aRequest.body.username);
+      }
+    }
+
+    function add(anObjectName: prerequisiteObjects) {
+      const testPrerequisiteRepository =
+        repositoryFactory.getTestPrerequisiteRepository();
+      testPrerequisiteRepository.savePrerequisiteObjects(anObjectName);
+    }
+
+    function remove(anObjectName: prerequisiteObjects) {
       const testPrerequisiteRepository =
         repositoryFactory.getTestPrerequisiteRepository();
 
-      testPrerequisiteRepository.removePrerequisiteObjects("userAccount");
+      testPrerequisiteRepository.removePrerequisiteObjects(anObjectName);
     }
   });
 });

@@ -15,7 +15,7 @@ class UserAccountProfileRepositoryMock implements UserAccountProfileRepository {
 
     if (!(userAccountProfile instanceof UserAccountProfile)) return;
 
-    throw new Error(userAccountProfileRepoError.userAccountProfileAlreadyExist);
+    throw new Error(userAccountProfileRepoError.conflict);
   }
 
   async save(aUserAccountProfile: UserAccountProfile): Promise<void> {

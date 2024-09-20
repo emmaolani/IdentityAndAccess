@@ -14,7 +14,7 @@ class UserAccountRepositoryMock implements UserAccountRepository {
     const userAccount = this.db.find(UserAccount, aUsername);
 
     if (userAccount instanceof UserAccount) {
-      throw Error(UserAccountRepoErrorMsg.UserAccountAlreadyExists);
+      throw Error(UserAccountRepoErrorMsg.conflict);
     }
 
     return;
@@ -42,7 +42,7 @@ class UserAccountRepositoryMock implements UserAccountRepository {
       return userAccount;
     }
 
-    throw new Error(UserAccountRepoErrorMsg.UserAccountNotFound);
+    throw new Error(UserAccountRepoErrorMsg.notFound);
   }
 
   async commit(): Promise<void> {

@@ -4,6 +4,8 @@ import NewUserAccountCommand from "../../../../application/userAccount/newUserAc
 import NewUserAccountReqObj from "./newUserAccountReqObj.types";
 import { userAccountErrorMsg } from "../../../../domain/model/userAccount/userAccountErrorMsg";
 import UserAccountRepoErrorMsg from "../../persistance/repositoryErrorMsg/userAccountRepoErrorMsg";
+import { authenticationMethodRepoErrorMsg } from "../../persistance/repositoryErrorMsg/authenticationMethodErrorMsg";
+import restrictionRepoErrorMsg from "../../persistance/repositoryErrorMsg/restrictionRepoErrorMsg";
 
 class UserAccountController {
   private userAccountApplicationService: UserAccountApplicationService;
@@ -57,12 +59,8 @@ class UserAccountController {
   private errorResponse(response: Response, error: Error) {
     if (error.message === "invalid request body") {
       response.status(400).send({ message: "invalid request body" });
-    } else if (
-      error.message === UserAccountRepoErrorMsg.UserAccountAlreadyExists
-    ) {
-      response
-        .status(409)
-        .send({ message: UserAccountRepoErrorMsg.UserAccountAlreadyExists });
+    } else if (error.message === UserAccountRepoErrorMsg.conflict) {
+      response.status(409).send({ message: UserAccountRepoErrorMsg.conflict });
       return;
     } else if (error.message === userAccountErrorMsg.invalidUUID) {
       response.status(500).send({ message: "server error" });
@@ -80,6 +78,10 @@ class UserAccountController {
         .status(400)
         .send({ message: userAccountErrorMsg.passwordNotMeetingRequirements });
       return;
+    } else if (error.message === authenticationMethodRepoErrorMsg.notFound) {
+      response.status(500).send({ message: "server error" });
+    } else if (error.message === restrictionRepoErrorMsg.notFound) {
+      response.status(500).send({ message: "server error" });
     }
   }
 }

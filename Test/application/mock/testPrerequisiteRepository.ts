@@ -215,4 +215,4 @@ type prerequisiteObjects =
   | "userAccountProfile"
   | "ALL";
 
-export default TestPrerequisiteRepository;
+export { TestPrerequisiteRepository, prerequisiteObjects };

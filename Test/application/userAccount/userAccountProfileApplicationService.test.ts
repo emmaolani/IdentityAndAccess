@@ -10,7 +10,10 @@ import { contactDetailErrorMsg } from "../../../src/domain/model/contactDetails/
 import userAccountProfileRepoError from "../../../src/port/adapters/persistance/repositoryErrorMsg/userAccountProfileRepoErrorMsg";
 import { UserAccountProfileErrorMsg } from "../../../src/domain/model/userAccount/userAccountProfile/userAccountProfileErrorMsg";
 import { ITUAndISOSpecRepoErrorMsg } from "../../../src/port/adapters/persistance/repositoryErrorMsg/iTuAndISOSpecRepoErrorMsg";
-import TestPrerequisiteRepository from "../mock/testPrerequisiteRepository";
+import {
+  TestPrerequisiteRepository,
+  prerequisiteObjects,
+} from "../mock/testPrerequisiteRepository";
 import UserAccountRepoErrorMsg from "../../../src/port/adapters/persistance/repositoryErrorMsg/userAccountRepoErrorMsg";
 
 describe("UserAccountProfileApplicationService", () => {
@@ -69,15 +72,13 @@ describe("UserAccountProfileApplicationService", () => {
         "NG"
       );
 
-      await storeUserAccountProfileInDb(); // store userAccountProfile in db to simulate conflict in application service
+      add("userAccountProfile"); // store userAccountProfile in db to simulate conflict in application service
 
       await expect(
         userAccountProfileApplicationService.createUserAccountProfile(command)
-      ).rejects.toThrow(
-        userAccountProfileRepoError.userAccountProfileAlreadyExist
-      );
+      ).rejects.toThrow(userAccountProfileRepoError.conflict);
 
-      await removeUserAccountProfileFromDb();
+      remove("userAccountProfile");
     });
 
     /* This is a rare case; it occurs when phoneNumberValidator those not throw an error this may happen if the
@@ -93,7 +94,7 @@ describe("UserAccountProfileApplicationService", () => {
 
       await expect(
         userAccountProfileApplicationService.createUserAccountProfile(command)
-      ).rejects.toThrow(ITUAndISOSpecRepoErrorMsg.ITUAndISOSpecNotFound);
+      ).rejects.toThrow(ITUAndISOSpecRepoErrorMsg.notFound);
     });
 
     // phoneNumberValidator should always validate the phone number before the ITUAndISOSpec is retrieved
@@ -127,20 +128,20 @@ describe("UserAccountProfileApplicationService", () => {
 
     it("should throw an error if userAccount is not found in db", async () => {
       const command = new NewUserAccountProfileCommand(
-        "invalid Id",
+        new UUIDGenerator().generate(),
         TestPrerequisiteRepository.userAccountProperties.id,
         "test@tester.com",
         "08112345678",
         "NG"
       );
 
-      removePrerequisiteUserAccountFromDB();
+      remove("userAccount");
 
       await expect(
         userAccountProfileApplicationService.createUserAccountProfile(command)
-      ).rejects.toThrow(UserAccountRepoErrorMsg.UserAccountNotFound);
+      ).rejects.toThrow(UserAccountRepoErrorMsg.notFound);
 
-      addPrerequisiteUserAccountToDB();
+      add("userAccount");
     });
 
     it("should throw error if userAccountProfile id is not of format UUID v4", async () => {
@@ -204,34 +205,18 @@ describe("UserAccountProfileApplicationService", () => {
       );
     }
 
-    function storeUserAccountProfileInDb() {
+    function add(anObjectName: prerequisiteObjects) {
       const testPrerequisiteRepository =
         repositoryFactory.getTestPrerequisiteRepository();
 
-      testPrerequisiteRepository.savePrerequisiteObjects("userAccountProfile");
+      testPrerequisiteRepository.savePrerequisiteObjects(anObjectName);
     }
 
-    function removeUserAccountProfileFromDb() {
+    function remove(anObjectName: prerequisiteObjects) {
       const testPrerequisiteRepository =
         repositoryFactory.getTestPrerequisiteRepository();
 
-      testPrerequisiteRepository.removePrerequisiteObjects(
-        "userAccountProfile"
-      );
-    }
-
-    function removePrerequisiteUserAccountFromDB() {
-      const testPrerequisiteRepository =
-        repositoryFactory.getTestPrerequisiteRepository();
-
-      testPrerequisiteRepository.removePrerequisiteObjects("userAccount");
-    }
-
-    function addPrerequisiteUserAccountToDB() {
-      const testPrerequisiteRepository =
-        repositoryFactory.getTestPrerequisiteRepository();
-
-      testPrerequisiteRepository.savePrerequisiteObjects("userAccount");
+      testPrerequisiteRepository.removePrerequisiteObjects(anObjectName);
     }
   });
 });

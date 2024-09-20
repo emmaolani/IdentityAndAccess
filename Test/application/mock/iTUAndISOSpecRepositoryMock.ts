@@ -25,7 +25,7 @@ class ITUAndISOSpecRepositoryMock implements ITUAndISOSpecRepository {
       return ituAndISOSpec;
     }
 
-    throw new Error(ITUAndISOSpecRepoErrorMsg.ITUAndISOSpecNotFound);
+    throw new Error(ITUAndISOSpecRepoErrorMsg.notFound);
   }
 }
 

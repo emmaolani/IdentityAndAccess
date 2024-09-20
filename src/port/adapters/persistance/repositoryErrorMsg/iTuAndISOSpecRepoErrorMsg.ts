@@ -1,5 +1,5 @@
 enum ITUAndISOSpecRepoErrorMsg {
-  ITUAndISOSpecNotFound = "ITUAndISOSpec not found",
+  notFound = "ITUAndISOSpec not found",
 }
 
 export { ITUAndISOSpecRepoErrorMsg };

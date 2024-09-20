@@ -72,18 +72,13 @@ class UserAccountProfileController {
   private errorResponse(aResponse: Response, error: Error) {
     if (error.message === "Invalid request body") {
       aResponse.status(400).send({ message: "Invalid request body" });
-    } else if (
-      error.message ===
-      userAccountProfileRepoError.userAccountProfileAlreadyExist
-    ) {
+    } else if (error.message === userAccountProfileRepoError.conflict) {
       aResponse.status(409).send({
-        message: userAccountProfileRepoError.userAccountProfileAlreadyExist,
+        message: userAccountProfileRepoError.conflict,
       });
-    } else if (
-      error.message === ITUAndISOSpecRepoErrorMsg.ITUAndISOSpecNotFound
-    ) {
+    } else if (error.message === ITUAndISOSpecRepoErrorMsg.notFound) {
       aResponse.status(404).send({
-        message: ITUAndISOSpecRepoErrorMsg.ITUAndISOSpecNotFound,
+        message: "phone number is not supported",
       });
     } else if (error.message === contactDetailErrorMsg.invalidPhoneNumber) {
       aResponse.status(400).send({
@@ -93,8 +88,10 @@ class UserAccountProfileController {
       aResponse.status(400).send({
         message: contactDetailErrorMsg.invalidEmail,
       });
-    } else if (error.message === UserAccountRepoErrorMsg.UserAccountNotFound) {
-      aResponse.status(500).send({ message: "server error" });
+    } else if (error.message === UserAccountRepoErrorMsg.notFound) {
+      aResponse
+        .status(400)
+        .send({ message: "user account account does not exist" });
     } else if (error.message === userAccountErrorMsg.invalidUUID) {
       aResponse.status(500).send({
         message: "server error",
