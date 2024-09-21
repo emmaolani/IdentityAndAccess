@@ -13,14 +13,9 @@ import ITUAndISOSpecId from "../../../domain/model/geographicEntities/ITUAndISOS
 
 class UserAccountProfileApplicationService {
   private repositoryFactory: RepositoryFactory;
-  private phoneNumberValidator: PhoneNumberValidator;
 
-  constructor(
-    aRepositoryFactory: RepositoryFactory,
-    aPhoneNumberValidator: PhoneNumberValidator
-  ) {
+  constructor(aRepositoryFactory: RepositoryFactory) {
     this.repositoryFactory = aRepositoryFactory;
-    this.phoneNumberValidator = aPhoneNumberValidator;
   }
 
   async createUserAccountProfile(
@@ -33,11 +28,10 @@ class UserAccountProfileApplicationService {
       "ITUAndISOSpecRepository"
     );
 
-    const mobileNumber =
-      this.phoneNumberValidator.getValidNationalNumberForRegion(
-        aCommand.getPhoneNumber().number,
-        aCommand.getPhoneNumber().countryCode
-      ); // This returns a valid ITU E.164 formatted phone number for a region
+    const mobileNumber = this.getNationalPhoneNumber(
+      aCommand.getPhoneNumber().number,
+      aCommand.getPhoneNumber().countryCode
+    ); // This returns a valid ITU E.164 formatted phone number for a region
 
     await repositories.UserAccountRepository.lockUserAccount(
       aCommand.getUserAccountId()
@@ -74,7 +68,15 @@ class UserAccountProfileApplicationService {
     );
 
     repositories.UserAccountProfileRepository.save(userAccountProfile);
+
     repositories.UserAccountProfileRepository.commit();
+  }
+
+  private getNationalPhoneNumber(aNumber: string, aCountryCode: string) {
+    return new PhoneNumberValidator().getValidNationalNumberForRegion(
+      aNumber,
+      aCountryCode
+    );
   }
 
   private initializeDomainEventPublisher(subscriber: DomainEventSubscriber) {

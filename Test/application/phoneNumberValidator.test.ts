@@ -1,8 +1,8 @@
-import PhoneNumberValidatorImp from "../../../src/port/util/phoneNumberValidatorImp";
-import { contactDetailErrorMsg } from "../../../src/domain/model/contactDetails/contactDetailErrorMsg";
+import PhoneNumberValidator from "../../src/application/phoneNumberValidator";
+import { contactDetailErrorMsg } from "../../src/domain/model/contactDetails/contactDetailErrorMsg";
 
 describe("PhoneNumberValidator", () => {
-  const phoneNumberValidator = new PhoneNumberValidatorImp();
+  const phoneNumberValidator = new PhoneNumberValidator();
 
   it("should validate number and return national number of mobile number", () => {
     expect(

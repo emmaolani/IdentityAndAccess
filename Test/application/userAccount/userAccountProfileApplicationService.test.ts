@@ -1,6 +1,5 @@
 import UserAccountProfileApplicationService from "../../../src/application/userAccount/userAccountProfile/userAccountProfileApplicationService";
 import NewUserAccountProfileCommand from "../../../src/application/userAccount/userAccountProfile/newUserAccountProfileCommand";
-import PhoneNumberValidatorImp from "../../../src/port/util/phoneNumberValidatorImp";
 import RepositoryFactoryMock from "../mock/repositoryFactoryMock";
 import NewUserAccountProfileCreated from "../../../src/domain/model/userAccount/userAccountProfile/newUserAccountProfileCreated";
 import UUIDGenerator from "../../../src/port/util/uUIDGenerator";
@@ -18,12 +17,8 @@ import UserAccountRepoErrorMsg from "../../../src/port/adapters/persistance/repo
 
 describe("UserAccountProfileApplicationService", () => {
   const repositoryFactory = new RepositoryFactoryMock();
-  const phoneNumberValidator = new PhoneNumberValidatorImp();
   const userAccountProfileApplicationService =
-    new UserAccountProfileApplicationService(
-      repositoryFactory,
-      phoneNumberValidator
-    );
+    new UserAccountProfileApplicationService(repositoryFactory);
 
   describe("createUserAccountProfile", () => {
     beforeAll(async () => {

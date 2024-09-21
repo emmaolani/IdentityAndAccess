@@ -1,7 +1,6 @@
 import UserAccountProfileController from "../../../../../src/port/adapters/controller/userAccount/userAccountProfile/userAccountProfileController";
 import UserAccountProfileApplicationService from "../../../../../src/application/userAccount/userAccountProfile/userAccountProfileApplicationService";
 import RepositoryFactoryMock from "../../../../application/mock/repositoryFactoryMock";
-import PhoneNumberValidatorImp from "../../../../../src/port/util/phoneNumberValidatorImp";
 import UserAccountProfile from "../../../../../src/domain/model/userAccount/userAccountProfile/userAccountProfile";
 import NewUserAccountProfileCreated from "../../../../../src/domain/model/userAccount/userAccountProfile/newUserAccountProfileCreated";
 import RequestMock from "../mock/requestMock";
@@ -19,12 +18,8 @@ import {
 
 describe("userAccountProfileController", () => {
   const repositoryFactory = new RepositoryFactoryMock();
-  const phoneNumberValidator = new PhoneNumberValidatorImp();
   const userAccountProfileApplicationService =
-    new UserAccountProfileApplicationService(
-      repositoryFactory,
-      phoneNumberValidator
-    );
+    new UserAccountProfileApplicationService(repositoryFactory);
   const userAccountProfileController = new UserAccountProfileController(
     userAccountProfileApplicationService
   );
