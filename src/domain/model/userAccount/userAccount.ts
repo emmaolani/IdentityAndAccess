@@ -8,15 +8,15 @@ import DomainEventPublisher from "../../domainEventPublisher";
 
 class UserAccount {
   private id: UserAccountId;
-  private authenticationMethodId: AuthenticationMethodId;
-  private restrictionId: RestrictionId;
+  private authenticationMethodId: AuthenticationMethodId[];
+  private restrictionId: RestrictionId | null;
   private username: UserName;
   private password: Password;
 
   constructor(
     anId: UserAccountId,
-    aAuthenticationId: AuthenticationMethodId,
-    aRestrictionId: RestrictionId,
+    aAuthenticationId: AuthenticationMethodId[],
+    aRestrictionId: RestrictionId | null,
     aUsername: UserName,
     aPassword: Password
   ) {
@@ -40,12 +40,12 @@ class UserAccount {
   }
 
   private setAuthenticationMethodId(
-    anAuthenticationMethodId: AuthenticationMethodId
+    anAuthenticationMethodId: AuthenticationMethodId[]
   ) {
     this.authenticationMethodId = anAuthenticationMethodId;
   }
 
-  private setRestrictionId(aRestrictionId: RestrictionId) {
+  private setRestrictionId(aRestrictionId: RestrictionId | null) {
     this.restrictionId = aRestrictionId;
   }
 

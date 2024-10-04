@@ -9,10 +9,8 @@ import { contactDetailErrorMsg } from "../../../src/domain/model/contactDetails/
 import userAccountProfileRepoError from "../../../src/port/adapters/persistance/repositoryErrorMsg/userAccountProfileRepoErrorMsg";
 import { UserAccountProfileErrorMsg } from "../../../src/domain/model/userAccount/userAccountProfile/userAccountProfileErrorMsg";
 import { ITUAndISOSpecRepoErrorMsg } from "../../../src/port/adapters/persistance/repositoryErrorMsg/iTuAndISOSpecRepoErrorMsg";
-import {
-  TestPrerequisiteRepository,
-  prerequisiteObjects,
-} from "../mock/testPrerequisiteRepository";
+import TestPrerequisiteData from "../mock/testPrerequisiteData";
+import { prerequisiteObjects } from "../mock/testPrerequisiteRepository";
 import UserAccountRepoErrorMsg from "../../../src/port/adapters/persistance/repositoryErrorMsg/userAccountRepoErrorMsg";
 
 describe("UserAccountProfileApplicationService", () => {
@@ -34,7 +32,7 @@ describe("UserAccountProfileApplicationService", () => {
     it("should create and store userAccountProfile with published NewUserAccountProfileCreated event", async () => {
       const command = new NewUserAccountProfileCommand(
         new UUIDGenerator().generate(),
-        TestPrerequisiteRepository.userAccountProperties.id,
+        TestPrerequisiteData.userAccountProperties.id,
         "test@tester.com",
         "08012345678",
         "NG"
@@ -61,7 +59,7 @@ describe("UserAccountProfileApplicationService", () => {
     it("should throw error if userAccountProfile with userAccountId already exists", async () => {
       const command = new NewUserAccountProfileCommand(
         new UUIDGenerator().generate(),
-        TestPrerequisiteRepository.userAccountProperties.id,
+        TestPrerequisiteData.userAccountProperties.id,
         "test@tester.com",
         "08012345678",
         "NG"
@@ -81,7 +79,7 @@ describe("UserAccountProfileApplicationService", () => {
     it("it should throw an error if the a valid country code does not have a ITUAndISOSpec in the DB", async () => {
       const command = new NewUserAccountProfileCommand(
         new UUIDGenerator().generate(),
-        TestPrerequisiteRepository.userAccountProperties.id,
+        TestPrerequisiteData.userAccountProperties.id,
         "test@tester.com",
         "2234567899",
         "US" // US is a valid country code but does not have a corresponding ITUAndISOSpec in the test database
@@ -96,7 +94,7 @@ describe("UserAccountProfileApplicationService", () => {
     it("should throw error if phoneNumber is invalid", async () => {
       const command = new NewUserAccountProfileCommand(
         new UUIDGenerator().generate(),
-        TestPrerequisiteRepository.userAccountProperties.id,
+        TestPrerequisiteData.userAccountProperties.id,
         "test@tester.com",
         "22345678", // invalid mobile number for usa
         "US"
@@ -110,7 +108,7 @@ describe("UserAccountProfileApplicationService", () => {
     it("should throw error if email is invalid", async () => {
       const command = new NewUserAccountProfileCommand(
         new UUIDGenerator().generate(),
-        TestPrerequisiteRepository.userAccountProperties.id,
+        TestPrerequisiteData.userAccountProperties.id,
         "testTester.com", // invalid email
         "08112345678",
         "NG"
@@ -124,7 +122,7 @@ describe("UserAccountProfileApplicationService", () => {
     it("should throw an error if userAccount is not found in db", async () => {
       const command = new NewUserAccountProfileCommand(
         new UUIDGenerator().generate(),
-        TestPrerequisiteRepository.userAccountProperties.id,
+        TestPrerequisiteData.userAccountProperties.id,
         "test@tester.com",
         "08112345678",
         "NG"
@@ -142,7 +140,7 @@ describe("UserAccountProfileApplicationService", () => {
     it("should throw error if userAccountProfile id is not of format UUID v4", async () => {
       const command = new NewUserAccountProfileCommand(
         "invalid Id",
-        TestPrerequisiteRepository.userAccountProperties.id,
+        TestPrerequisiteData.userAccountProperties.id,
         "test@tester.com",
         "08112345678",
         "NG"

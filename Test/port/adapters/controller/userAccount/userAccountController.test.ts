@@ -9,10 +9,8 @@ import NewUserAccountCreated from "../../../../../src/domain/model/userAccount/n
 import DomainEvent from "../../../../../src/domain/domainEvent";
 import { userAccountErrorMsg } from "../../../../../src/domain/model/userAccount/userAccountErrorMsg";
 import EventName from "../../../../../src/domain/eventName";
-import {
-  TestPrerequisiteRepository,
-  prerequisiteObjects,
-} from "../../../../application/mock/testPrerequisiteRepository";
+import TestPrerequisiteData from "../../../../application/mock/testPrerequisiteData";
+import { prerequisiteObjects } from "../../../../application/mock/testPrerequisiteRepository";
 import UserAccountRepoErrorMsg from "../../../../../src/port/adapters/persistance/repositoryErrorMsg/userAccountRepoErrorMsg";
 import UUIDGenerator from "../../../../../src/port/util/uUIDGenerator";
 
@@ -30,7 +28,7 @@ describe("UserAccountController", () => {
       repositoryFactory.getTestPrerequisiteRepository();
 
     testPrerequisiteRepository.savePrerequisiteObjects(
-      "authenticationMethod",
+      "passwordAuthenticationMethod",
       "restriction"
     );
   });
@@ -88,9 +86,9 @@ describe("UserAccountController", () => {
 
     it("should send 409 if there is conflict with username", async () => {
       const request: unknown = new RequestMock({
-        userAccountId: TestPrerequisiteRepository.userAccountProperties.id,
-        username: TestPrerequisiteRepository.userAccountProperties.username,
-        password: TestPrerequisiteRepository.userAccountProperties.password,
+        userAccountId: TestPrerequisiteData.userAccountProperties.id,
+        username: TestPrerequisiteData.userAccountProperties.username,
+        password: TestPrerequisiteData.userAccountProperties.password,
       });
 
       const response: unknown = new ResponseMock();
@@ -177,7 +175,7 @@ describe("UserAccountController", () => {
       });
       const response: unknown = new ResponseMock();
 
-      remove("authenticationMethod");
+      remove("passwordAuthenticationMethod");
 
       await userAccountController.createUserAccount(
         request as Required<Request>,
@@ -189,7 +187,7 @@ describe("UserAccountController", () => {
         message: "server error",
       });
 
-      add("authenticationMethod");
+      add("passwordAuthenticationMethod");
     });
 
     it("should respond with a 500 error if password restriction not found in db", async () => {
@@ -239,11 +237,11 @@ describe("UserAccountController", () => {
       expect(userAccount["id"]["id"]).toBe(aRequest.body.userAccountId);
       expect(userAccount["username"]["value"]).toBe(aRequest.body.username);
       expect(userAccount["password"]["value"]).toBe(aRequest.body.password);
-      expect(userAccount["authenticationMethodId"]["id"]).toBe(
-        TestPrerequisiteRepository.authenticationMethodProperties.id
+      expect(userAccount["authenticationMethodId"][0]["id"]).toBe(
+        TestPrerequisiteData.passwordAuthenticationMethodProperties.id
       );
-      expect(userAccount["restrictionId"]["id"]).toBe(
-        TestPrerequisiteRepository.restrictionProperties.id
+      expect(userAccount["restrictionId"]?.["id"]).toBe(
+        TestPrerequisiteData.restrictionProperties.id
       );
     }
 

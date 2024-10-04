@@ -43,7 +43,7 @@ class UserAccountApplicationService {
 
     const userAccount: UserAccount = new UserAccount(
       new UserAccountId(aCommand.getId()),
-      authenticationMethod.getId(),
+      [authenticationMethod.getId()],
       restriction.getId(),
       new UserName(aCommand.getUsername()),
       new Password(aCommand.getPassword())

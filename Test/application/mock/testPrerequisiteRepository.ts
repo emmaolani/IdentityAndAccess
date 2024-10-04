@@ -1,3 +1,4 @@
+import TestPrerequisiteData from "./testPrerequisiteData";
 import AuthenticationMethodId from "../../../src/domain/model/accountAccessControl/authenticationMethod/authenticationMethodId";
 import AuthenticationMethod from "../../../src/domain/model/accountAccessControl/authenticationMethod/authenticationMethod";
 import RestrictionId from "../../../src/domain/model/accountAccessControl/restriction/restrictionId";
@@ -17,30 +18,6 @@ import PhoneNumber from "../../../src/domain/model/contactDetails/phoneNumber";
 class TestPrerequisiteRepository {
   private db: FakeDb;
   private listOfAllPrerequisiteObjects: prerequisiteObjects[];
-  static authenticationMethodProperties = {
-    id: "550e8400-e29b-41d4-a716-446655440000",
-    type: "password",
-  };
-  static restrictionProperties = {
-    id: "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    reason: "awaiting profile creation",
-  };
-  static userAccountProperties = {
-    id: "e47ac10b-58cc-4372-a567-0e02b2c3d406",
-    username: "username",
-    password: "123Emm@oaa",
-  };
-  static ITUAndISOSpecificationProperties = {
-    id: "f47bc10b-58cc-4392-a567-0e02b2c3d606",
-    countryId: "id",
-    countryCode: "NG",
-    callingCode: "234",
-  };
-  static userAccountProfileProperties = {
-    id: "c69bc10b-58cc-4392-a567-0e02b2b3d606",
-    email: "test@tester.com",
-    phone: "8127456800",
-  };
 
   constructor(aDb: FakeDb) {
     this.db = aDb;
@@ -58,7 +35,7 @@ class TestPrerequisiteRepository {
   private saveObjectsSpecified(objects: prerequisiteObjects[]) {
     objects.forEach((object) => {
       switch (object) {
-        case "authenticationMethod":
+        case "passwordAuthenticationMethod":
           this.db.save(this.createAuthenticationMethod());
           break;
         case "restriction":
@@ -90,43 +67,43 @@ class TestPrerequisiteRepository {
   private removeObjectsSpecified(objects: prerequisiteObjects[]) {
     objects.forEach((object) => {
       switch (object) {
-        case "authenticationMethod":
+        case "passwordAuthenticationMethod":
           this.db.remove(
             AuthenticationMethod,
-            TestPrerequisiteRepository.authenticationMethodProperties.id
+            TestPrerequisiteData.passwordAuthenticationMethodProperties.id
           );
           this.db.remove(
             AuthenticationMethod,
-            TestPrerequisiteRepository.authenticationMethodProperties.type
+            TestPrerequisiteData.passwordAuthenticationMethodProperties.type
           );
           break;
         case "restriction":
           this.db.remove(
             Restriction,
-            TestPrerequisiteRepository.restrictionProperties.id
+            TestPrerequisiteData.restrictionProperties.id
           );
           this.db.remove(
             Restriction,
-            TestPrerequisiteRepository.restrictionProperties.reason
+            TestPrerequisiteData.restrictionProperties.reason
           );
         case "userAccount":
           this.db.remove(
             UserAccount,
-            TestPrerequisiteRepository.userAccountProperties.id
+            TestPrerequisiteData.userAccountProperties.id
           );
           this.db.remove(
             UserAccount,
-            TestPrerequisiteRepository.userAccountProperties.username
+            TestPrerequisiteData.userAccountProperties.username
           );
           break;
         case "userAccountProfile":
           this.db.remove(
             UserAccountProfile,
-            TestPrerequisiteRepository.userAccountProfileProperties.id
+            TestPrerequisiteData.userAccountProfileProperties.id
           );
           this.db.remove(
             UserAccountProfile,
-            TestPrerequisiteRepository.userAccountProperties.id
+            TestPrerequisiteData.userAccountProperties.id
           );
           break;
         default:
@@ -138,57 +115,59 @@ class TestPrerequisiteRepository {
   private createAuthenticationMethod(): AuthenticationMethod {
     return new AuthenticationMethod(
       new AuthenticationMethodId(
-        TestPrerequisiteRepository.authenticationMethodProperties.id
+        TestPrerequisiteData.passwordAuthenticationMethodProperties.id
       ),
-      TestPrerequisiteRepository.authenticationMethodProperties.type
+      TestPrerequisiteData.passwordAuthenticationMethodProperties.type
     );
   }
 
   private createRestriction(): Restriction {
     return new Restriction(
-      new RestrictionId(TestPrerequisiteRepository.restrictionProperties.id),
-      TestPrerequisiteRepository.restrictionProperties.reason
+      new RestrictionId(TestPrerequisiteData.restrictionProperties.id),
+      TestPrerequisiteData.restrictionProperties.reason
     );
   }
 
   private createUserAccount(): UserAccount {
     return new UserAccount(
-      new UserAccountId(TestPrerequisiteRepository.userAccountProperties.id),
-      new AuthenticationMethodId(
-        TestPrerequisiteRepository.authenticationMethodProperties.id
-      ),
-      new RestrictionId(TestPrerequisiteRepository.restrictionProperties.id),
-      new UserName(TestPrerequisiteRepository.userAccountProperties.username),
-      new Password(TestPrerequisiteRepository.userAccountProperties.password)
+      new UserAccountId(TestPrerequisiteData.userAccountProperties.id),
+      [
+        new AuthenticationMethodId(
+          TestPrerequisiteData.passwordAuthenticationMethodProperties.id
+        ),
+      ],
+      new RestrictionId(TestPrerequisiteData.restrictionProperties.id),
+      new UserName(TestPrerequisiteData.userAccountProperties.username),
+      new Password(TestPrerequisiteData.userAccountProperties.password)
     );
   }
 
   private createITUAndISOSpecification() {
     return new ITUAndISOSpec(
       new ITUAndISOSpecId(
-        TestPrerequisiteRepository.ITUAndISOSpecificationProperties.id
+        TestPrerequisiteData.ITUAndISOSpecificationProperties.id
       ),
-      TestPrerequisiteRepository.ITUAndISOSpecificationProperties.countryId,
-      TestPrerequisiteRepository.ITUAndISOSpecificationProperties.countryCode,
-      TestPrerequisiteRepository.ITUAndISOSpecificationProperties.callingCode
+      TestPrerequisiteData.ITUAndISOSpecificationProperties.countryId,
+      TestPrerequisiteData.ITUAndISOSpecificationProperties.countryCode,
+      TestPrerequisiteData.ITUAndISOSpecificationProperties.callingCode
     );
   }
 
   private createUserAccountProfile() {
     return new UserAccountProfile(
       new UserAccountProfileId(
-        TestPrerequisiteRepository.userAccountProfileProperties.id
+        TestPrerequisiteData.userAccountProfileProperties.id
       ),
-      new UserAccountId(TestPrerequisiteRepository.userAccountProperties.id),
+      new UserAccountId(TestPrerequisiteData.userAccountProperties.id),
       new EmailAddress(
-        TestPrerequisiteRepository.userAccountProfileProperties.email,
+        TestPrerequisiteData.userAccountProfileProperties.email,
         false,
         null
       ),
       new PhoneNumber(
-        TestPrerequisiteRepository.userAccountProfileProperties.phone,
+        TestPrerequisiteData.userAccountProfileProperties.phone,
         new ITUAndISOSpecId(
-          TestPrerequisiteRepository.ITUAndISOSpecificationProperties.id
+          TestPrerequisiteData.ITUAndISOSpecificationProperties.id
         ),
         false,
         null
@@ -198,7 +177,7 @@ class TestPrerequisiteRepository {
 
   private setPlaceHolderList() {
     this.listOfAllPrerequisiteObjects = [
-      "authenticationMethod",
+      "passwordAuthenticationMethod",
       "restriction",
       "userAccount",
       "ITUAndISOSpec",
@@ -208,7 +187,7 @@ class TestPrerequisiteRepository {
 }
 
 type prerequisiteObjects =
-  | "authenticationMethod"
+  | "passwordAuthenticationMethod"
   | "restriction"
   | "userAccount"
   | "ITUAndISOSpec"

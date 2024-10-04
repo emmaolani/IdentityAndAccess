@@ -7,10 +7,8 @@ import NewUserAccountCreated from "../../../src/domain/model/userAccount/newUser
 import EventName from "../../../src/domain/eventName";
 import { userAccountErrorMsg } from "../../../src/domain/model/userAccount/userAccountErrorMsg";
 import UUIDGenerator from "../../../src/port/util/uUIDGenerator";
-import {
-  TestPrerequisiteRepository,
-  prerequisiteObjects,
-} from "../mock/testPrerequisiteRepository";
+import TestPrerequisiteData from "../mock/testPrerequisiteData";
+import { prerequisiteObjects } from "../mock/testPrerequisiteRepository";
 import UserAccountRepoErrorMsg from "../../../src/port/adapters/persistance/repositoryErrorMsg/userAccountRepoErrorMsg";
 import { authenticationMethodRepoErrorMsg } from "../../../src/port/adapters/persistance/repositoryErrorMsg/authenticationMethodErrorMsg";
 import restrictionRepoErrorMsg from "../../../src/port/adapters/persistance/repositoryErrorMsg/restrictionRepoErrorMsg";
@@ -26,7 +24,7 @@ describe("UserAccountApplicationService", () => {
       repositoryFactory.getTestPrerequisiteRepository();
 
     testPrerequisiteRepository.savePrerequisiteObjects(
-      "authenticationMethod",
+      "passwordAuthenticationMethod",
       "restriction"
     );
   });
@@ -60,8 +58,8 @@ describe("UserAccountApplicationService", () => {
     it("should throw an error if there is a username conflict", async () => {
       const newUserAccountCommand = new NewUserAccountCommand(
         new UUIDGenerator().generate(),
-        TestPrerequisiteRepository.userAccountProperties.username,
-        TestPrerequisiteRepository.userAccountProperties.password
+        TestPrerequisiteData.userAccountProperties.username,
+        TestPrerequisiteData.userAccountProperties.password
       );
 
       add("userAccount"); // store the user account in the database to simulate a conflict in application service
@@ -116,13 +114,13 @@ describe("UserAccountApplicationService", () => {
         "SecureP@ss1233"
       );
 
-      remove("authenticationMethod");
+      remove("passwordAuthenticationMethod");
 
       await expect(
         userAccountApplicationService.createUserAccount(newUserAccountCommand)
       ).rejects.toThrow(authenticationMethodRepoErrorMsg.notFound);
 
-      add("authenticationMethod");
+      add("passwordAuthenticationMethod");
     });
 
     it("should throw error if restriction not found in db", async () => {
@@ -167,11 +165,11 @@ describe("UserAccountApplicationService", () => {
       expect(userAccount["id"]["id"]).toBe(aCommand.getId());
       expect(userAccount["username"]["value"]).toBe(aCommand.getUsername());
       expect(userAccount["password"]["value"]).toBe(aCommand.getPassword());
-      expect(userAccount["authenticationMethodId"]["id"]).toBe(
-        TestPrerequisiteRepository.authenticationMethodProperties.id
+      expect(userAccount["authenticationMethodId"][0]["id"]).toBe(
+        TestPrerequisiteData.passwordAuthenticationMethodProperties.id
       );
-      expect(userAccount["restrictionId"]["id"]).toBe(
-        TestPrerequisiteRepository.restrictionProperties.id
+      expect(userAccount["restrictionId"]?.["id"]).toBe(
+        TestPrerequisiteData.restrictionProperties.id
       );
     }
 

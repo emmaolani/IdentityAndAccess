@@ -11,10 +11,8 @@ import EventName from "../../../../../src/domain/eventName";
 import NewUserAccountProfileReqObj from "../../../../../src/port/adapters/controller/userAccount/userAccountProfile/newUserAccountProfileReqObj.type";
 import userAccountProfileRepoError from "../../../../../src/port/adapters/persistance/repositoryErrorMsg/userAccountProfileRepoErrorMsg";
 import { contactDetailErrorMsg } from "../../../../../src/domain/model/contactDetails/contactDetailErrorMsg";
-import {
-  TestPrerequisiteRepository,
-  prerequisiteObjects,
-} from "../../../../application/mock/testPrerequisiteRepository";
+import TestPrerequisiteData from "../../../../application/mock/testPrerequisiteData";
+import { prerequisiteObjects } from "../../../../application/mock/testPrerequisiteRepository";
 
 describe("userAccountProfileController", () => {
   const repositoryFactory = new RepositoryFactoryMock();
@@ -53,7 +51,7 @@ describe("userAccountProfileController", () => {
     it("should create userAccountProfile and an event, and send a 201 status code", async () => {
       const request: unknown = new RequestMock({
         userAccountProfileId: new UUIDGenerator().generate(),
-        userAccountId: TestPrerequisiteRepository.userAccountProperties.id,
+        userAccountId: TestPrerequisiteData.userAccountProperties.id,
         email: "tester@test.com",
         phoneNumber: {
           countryCode: "NG",
@@ -91,7 +89,7 @@ describe("userAccountProfileController", () => {
     it("should respond with a status of 409 if a userAccount already have a userAccountProfile", async () => {
       const request: unknown = new RequestMock({
         userAccountProfileId: new UUIDGenerator().generate(),
-        userAccountId: TestPrerequisiteRepository.userAccountProperties.id,
+        userAccountId: TestPrerequisiteData.userAccountProperties.id,
         email: "tester@test.com",
         phoneNumber: {
           countryCode: "NG",
@@ -120,7 +118,7 @@ describe("userAccountProfileController", () => {
     it("it should return 404 status code if a valid country code does not have a ITUAndISOSpec in the DB", async () => {
       const request: unknown = new RequestMock({
         userAccountProfileId: new UUIDGenerator().generate(),
-        userAccountId: TestPrerequisiteRepository.userAccountProperties.id,
+        userAccountId: TestPrerequisiteData.userAccountProperties.id,
         email: "tester@test.com",
         phoneNumber: {
           countryCode: "US",
@@ -144,7 +142,7 @@ describe("userAccountProfileController", () => {
     it("should respond with a status of 400 if the phoneNumber is invalid", async () => {
       const request: unknown = new RequestMock({
         userAccountProfileId: new UUIDGenerator().generate(),
-        userAccountId: TestPrerequisiteRepository.userAccountProperties.id,
+        userAccountId: TestPrerequisiteData.userAccountProperties.id,
         email: "tester@test.com",
         phoneNumber: {
           countryCode: "US",
@@ -167,7 +165,7 @@ describe("userAccountProfileController", () => {
     it("should respond with a 400 error if email address is not valid", async () => {
       const request: unknown = new RequestMock({
         userAccountProfileId: new UUIDGenerator().generate(),
-        userAccountId: TestPrerequisiteRepository.userAccountProperties.id,
+        userAccountId: TestPrerequisiteData.userAccountProperties.id,
         email: "testerTestCom",
         phoneNumber: {
           countryCode: "NG",
@@ -190,7 +188,7 @@ describe("userAccountProfileController", () => {
     it("should respond with a 400 error if the userAccount is not found in DB", async () => {
       const request: unknown = new RequestMock({
         userAccountProfileId: new UUIDGenerator().generate(),
-        userAccountId: TestPrerequisiteRepository.userAccountProperties.id,
+        userAccountId: TestPrerequisiteData.userAccountProperties.id,
         email: "tester@test.com",
         phoneNumber: {
           countryCode: "NG",
@@ -217,7 +215,7 @@ describe("userAccountProfileController", () => {
     it("should respond with a 500 error if the userAccountProfileId is not a valid UUID", async () => {
       const request: unknown = new RequestMock({
         userAccountProfileId: "invalidUUID",
-        userAccountId: TestPrerequisiteRepository.userAccountProperties.id,
+        userAccountId: TestPrerequisiteData.userAccountProperties.id,
         email: "tester@test.com",
         phoneNumber: {
           countryCode: "NG",

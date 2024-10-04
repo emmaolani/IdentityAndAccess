@@ -21,7 +21,7 @@ describe("UserAccount", () => {
 
     userAccount = new UserAccount(
       new UserAccountId(userAccountId),
-      new AuthenticationMethodId(authenticationMethodId),
+      [new AuthenticationMethodId(authenticationMethodId)],
       new RestrictionId(restrictionId),
       new UserName(username),
       new Password(password)
@@ -47,16 +47,16 @@ describe("UserAccount", () => {
     expect(userAccount["id"]["id"]).toBe(anId);
     expect(userAccount["username"]["value"]).toBe(aUsername);
     expect(userAccount["password"]["value"]).toBe(aPassword);
-    expect(userAccount["authenticationMethodId"]["id"]).toBe(
+    expect(userAccount["authenticationMethodId"][0]["id"]).toBe(
       anAuthenticationMethodId
     );
-    expect(userAccount["restrictionId"]["id"]).toBe(aRestrictionId);
+    expect(userAccount["restrictionId"]?.["id"]).toBe(aRestrictionId);
   }
 
   it("should publish new user account created event", async () => {
     userAccount = new UserAccount(
       new UserAccountId(new UUIDGenerator().generate()),
-      new AuthenticationMethodId(new UUIDGenerator().generate()),
+      [new AuthenticationMethodId(new UUIDGenerator().generate())],
       new RestrictionId(new UUIDGenerator().generate()),
       new UserName("username"),
       new Password("SecureP@ss123")

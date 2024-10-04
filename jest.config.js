@@ -5,7 +5,7 @@ module.exports = {
   roots: ["<rootDir>/src", "<rootDir>/test"],
   moduleDirectories: ["node_modules", "src"],
   moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
-  moduleNameMapper: {
-    "^@/(.*)$": "<rootDir>/src/$1",
-  },
+  // moduleNameMapper: {
+  //   "^@/(.*)$": "<rootDir>/src/$1",
+  // },
 };

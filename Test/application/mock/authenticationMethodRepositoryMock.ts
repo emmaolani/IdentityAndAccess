@@ -16,14 +16,30 @@ class AuthenticationMethodRepositoryMock
     this.db.save(aAuthenticationMethod);
   }
 
-  async getByType(type: string): Promise<AuthenticationMethod> {
-    const data = this.db.find(AuthenticationMethod, type);
+  async getByType(methodType: string): Promise<AuthenticationMethod> {
+    const authenticationMethod = this.db.find(AuthenticationMethod, methodType);
 
-    if (data instanceof AuthenticationMethod) {
-      return data;
+    if (authenticationMethod instanceof AuthenticationMethod) {
+      return authenticationMethod;
     }
 
     throw Error(authenticationMethodRepoErrorMsg.notFound);
+  }
+
+  async getAllByType(types: string[]): Promise<AuthenticationMethod[]> {
+    let authenticationMethods: AuthenticationMethod[] = [];
+
+    types.forEach((type) => {
+      const authenticationMethod = this.db.find(AuthenticationMethod, type);
+
+      if (authenticationMethod instanceof AuthenticationMethod) {
+        authenticationMethods.push(authenticationMethod);
+      }
+
+      throw Error(authenticationMethodRepoErrorMsg.notFound);
+    });
+
+    return authenticationMethods;
   }
 
   async remove(anId: string): Promise<void> {
